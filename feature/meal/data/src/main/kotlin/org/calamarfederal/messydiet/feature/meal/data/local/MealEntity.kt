@@ -98,6 +98,9 @@ internal interface SavedMealDao {
 
     @Query("DELETE FROM meal WHERE id = :id")
     suspend fun deleteMeal(id: Long): Int
+
+    @Query("DELETE FROM meal WHERE id IN (:ids)")
+    suspend fun deleteMeals(ids: List<Long>)
 }
 
 private const val DB_VERSION = 1

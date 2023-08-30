@@ -47,6 +47,7 @@ internal interface MealLocalSource {
      * find and delete [Meal] by [id] returns `true` iff [Meal] is found and removed
      */
     suspend fun deleteMeal(id: Long): Boolean
+    suspend fun deleteMeals(ids: List<Long>)
 }
 
 internal fun MealEntity.toMeal(): Meal = Meal(
@@ -143,5 +144,9 @@ internal class MealLocalSourceImplementation @Inject constructor(
 
     override suspend fun deleteMeal(id: Long): Boolean = withContext(ioDispatcher) {
         dao.deleteMeal(id = id) > 0
+    }
+
+    override suspend fun deleteMeals(ids: List<Long>) {
+        return dao.deleteMeals(ids)
     }
 }

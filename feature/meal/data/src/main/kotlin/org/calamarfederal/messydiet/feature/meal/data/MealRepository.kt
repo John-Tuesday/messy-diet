@@ -12,15 +12,41 @@ interface MealRepository {
      * Cold flow of [Meal] with [id] (emits when changed)
      */
     fun getMeal(id: Long): Flow<Meal?>
+
+    /**
+     * Cold flow of all [Meal] (emits when changed)
+     */
     fun getAllMeals(): Flow<List<Meal>>
+
+    /**
+     * insert [meal]. Returns `true` iff [meal] is successfully added. No change on failure
+     *
+     * if [generateId] is `true` [meal]'s id will be ignored and a new one will be generated
+     * otherwise [meal] is added 'as-is'
+     */
     suspend fun insertMeal(meal: Meal, generateId: Boolean = true): Long
+
+    /**
+     * insert or replace meal with matching [Meal.id] with [meal]
+     *
+     * if [meal] has `0L` a new id will be generated
+     */
     suspend fun insertOrUpdateMeal(meal: Meal)
-    suspend fun updateMeal(meal: Meal, abortIfNotFound: Boolean = true): Boolean
+
+    /**
+     * find matching [Meal] by [Meal.id] and return if found and atomically updated.
+     */
+    suspend fun updateMeal(meal: Meal): Boolean
 
     /**
      * Delete [Meal] identified by [id] and return `true` if [Meal] was removed
      */
     suspend fun deleteMeal(id: Long): Boolean
+
+    /**
+     * Delete every [Meal] whose [Meal.id] is contained in [ids]
+     */
+    suspend fun deleteMeals(ids: List<Long>)
 }
 
 internal class MealRepositoryImplementation @Inject constructor(
@@ -33,10 +59,11 @@ internal class MealRepositoryImplementation @Inject constructor(
     override suspend fun insertMeal(meal: Meal, generateId: Boolean): Long =
         mealLocalSource.insertMeal(meal = meal, generateId = generateId)
 
-    override suspend fun updateMeal(meal: Meal, abortIfNotFound: Boolean): Boolean = mealLocalSource.updateMeal(meal)
+    override suspend fun updateMeal(meal: Meal): Boolean = mealLocalSource.updateMeal(meal)
 
     override suspend fun insertOrUpdateMeal(meal: Meal) = mealLocalSource.insertOrUpdate(meal)
 
     override suspend fun deleteMeal(id: Long): Boolean = mealLocalSource.deleteMeal(id = id)
+    override suspend fun deleteMeals(ids: List<Long>) = mealLocalSource.deleteMeals(ids = ids)
 
 }
