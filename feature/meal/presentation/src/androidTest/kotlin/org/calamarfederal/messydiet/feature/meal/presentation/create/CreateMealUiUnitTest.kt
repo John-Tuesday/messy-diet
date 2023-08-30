@@ -78,4 +78,107 @@ internal class CreateMealUiUnitTest {
             .onNodeWithText(optionalFatChild)
             .assertIsNotDisplayed()
     }
+
+    @Test
+    fun `Fat group always shows non empty optional fats`() {
+        val fatGroupContentDescription = composeRule.stringResource(R.string.expand_fat_group)
+        val optionalFatChild = composeRule.stringResource(M.string.omega3_fat)
+
+        uiState.omega3Input.input = "5"
+
+        composeRule
+            .onNodeWithText(optionalFatChild)
+            .assertExists()
+            .performScrollTo()
+            .assertIsDisplayed()
+
+        composeRule
+            .onNodeWithContentDescription(fatGroupContentDescription)
+            .assertExists()
+            .assertHasClickAction()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(optionalFatChild)
+            .assertExists()
+            .performScrollTo()
+            .assertIsDisplayed()
+
+        composeRule
+            .onNodeWithContentDescription(fatGroupContentDescription)
+            .performScrollTo()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(optionalFatChild)
+            .assertExists()
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun `Carbohydrate group expands and hides on arrow button click`() {
+        val carbohydrateGroupContentDescription = composeRule.stringResource(R.string.expand_carbohydrate_group)
+        val optionalCarbohydrateChild = composeRule.stringResource(M.string.sugar)
+
+        composeRule
+            .onNodeWithText(optionalCarbohydrateChild)
+            .assertDoesNotExist()
+
+        composeRule
+            .onNodeWithContentDescription(carbohydrateGroupContentDescription)
+            .assertExists()
+            .assertHasClickAction()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(optionalCarbohydrateChild)
+            .assertExists()
+
+        composeRule
+            .onNodeWithContentDescription(carbohydrateGroupContentDescription)
+            .performScrollTo()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(optionalCarbohydrateChild)
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun `Carbohydrate group always shows non empty optional child`() {
+        val carbohydrateGroupContentDescription = composeRule.stringResource(R.string.expand_carbohydrate_group)
+        val optionalCarbohydrateChild = composeRule.stringResource(M.string.sugar)
+
+        uiState.sugarInput.input = "5"
+
+        composeRule
+            .onNodeWithText(optionalCarbohydrateChild)
+            .assertExists()
+            .performScrollTo()
+            .assertIsDisplayed()
+
+        composeRule
+            .onNodeWithContentDescription(carbohydrateGroupContentDescription)
+            .assertExists()
+            .assertHasClickAction()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(optionalCarbohydrateChild)
+            .assertExists()
+            .performScrollTo()
+            .assertIsDisplayed()
+
+        composeRule
+            .onNodeWithContentDescription(carbohydrateGroupContentDescription)
+            .performScrollTo()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(optionalCarbohydrateChild)
+            .assertExists()
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
 }

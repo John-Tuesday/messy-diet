@@ -3,17 +3,25 @@ package org.calamarfederal.messydiet.feature.measure
 import android.icu.number.LocalizedNumberFormatter
 import android.icu.number.NumberFormatter
 import android.icu.number.Precision
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontStyle.Companion
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -86,274 +94,337 @@ fun NutritionInfoColumn(
     modifier: Modifier = Modifier,
     textStyles: NutrientInfoTextStyle = NutrientInfoTextStyle.default(),
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier,
     ) {
-        NutritionRow(
-            label = stringResource(id = R.string.serving_size),
-            amount = nutrition.portion.inGrams(),
-            unitLabel = stringResource(id = R.string.gram_label),
-            labelStyle = textStyles.servingSizeLabelStyle,
-            amountStyle = textStyles.servingSizeValueStyle,
-            unitStyle = textStyles.servingSizeValueStyle,
-        )
+        item(key = R.string.serving_size) {
+            NutritionRow(
+                label = stringResource(id = R.string.serving_size),
+                amount = nutrition.portion.inGrams(),
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.servingSizeLabelStyle,
+                amountStyle = textStyles.servingSizeValueStyle,
+                unitStyle = textStyles.servingSizeValueStyle,
+            )
 
-        HorizontalDivider(
-            modifier = Modifier.padding(bottom = 4.dp),
-            thickness = 2.dp,
-        )
-
-        NutritionRow(
-            label = stringResource(id = R.string.calories),
-            amount = nutrition.foodEnergy.inKilocalories(),
-            unitLabel = "",//stringResource(id = R.string.kilocalories_label),
-            labelStyle = textStyles.caloriesLabelStyle,
-            amountStyle = textStyles.caloriesValueStyle,
-            unitStyle = textStyles.caloriesValueStyle,
-        )
-
-        HorizontalDivider(
-            modifier = Modifier.padding(bottom = 4.dp),
-            thickness = 2.dp,
-        )
+//            HorizontalDivider(
+//                thickness = 2.dp,
+//                modifier = Modifier
+//                    .padding(bottom = 4.dp)
+////                    .width(IntrinsicSize.Min),
+//            )
+        }
 
 
-        NutritionRow(
-            label = stringResource(id = R.string.fat),
-            amount = nutrition.totalFat.inGrams(),
-            unitLabel = stringResource(id = R.string.gram_label),
-            labelStyle = textStyles.macroNutrientLabelStyle,
-            amountStyle = textStyles.macroNutrientValueStyle,
-            unitStyle = textStyles.macroNutrientValueStyle,
-        )
-        NutrientGroup {
-            nutrition.polyunsaturatedFat?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.polyunsaturated_fat),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-            nutrition.monounsaturatedFat?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.monounsaturated_fat),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-            nutrition.saturatedFat?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.saturated_fat),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-            nutrition.transFat?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.trans_fat),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-            nutrition.omega3?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.omega3_fat),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-            nutrition.omega6?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.omega6_fat),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
+        item(key = R.string.calories) {
+            NutritionRow(
+                label = stringResource(id = R.string.calories),
+                amount = nutrition.foodEnergy.inKilocalories(),
+                unitLabel = "",//stringResource(id = R.string.kilocalories_label),
+                labelStyle = textStyles.caloriesLabelStyle,
+                amountStyle = textStyles.caloriesValueStyle,
+                unitStyle = textStyles.caloriesValueStyle,
+            )
+
+//            HorizontalDivider(
+//                modifier = Modifier.padding(bottom = 4.dp),
+//                thickness = 2.dp,
+//            )
+        }
+
+
+        item(key = R.string.fat) {
+            NutritionRow(
+                label = stringResource(id = R.string.fat),
+                amount = nutrition.totalFat.inGrams(),
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.macroNutrientLabelStyle,
+                amountStyle = textStyles.macroNutrientValueStyle,
+                unitStyle = textStyles.macroNutrientValueStyle,
+            )
+        }
+
+        childNutritionRow(
+            nutrition.polyunsaturatedFat?.inGrams(),
+            key = R.string.polyunsaturated_fat,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.polyunsaturated_fat),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
+        }
+        childNutritionRow(
+            nutrition.monounsaturatedFat?.inGrams(),
+            key = R.string.monounsaturated_fat,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.monounsaturated_fat),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
+        }
+        childNutritionRow(
+            nutrition.saturatedFat?.inGrams(),
+            key = R.string.saturated_fat,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.saturated_fat),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
+        }
+        childNutritionRow(
+            nutrition.transFat?.inGrams(),
+            key = R.string.trans_fat,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.trans_fat),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
+        }
+        childNutritionRow(
+            nutrition.omega3?.inGrams(),
+            key = R.string.omega3_fat,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.omega3_fat),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
+        }
+        childNutritionRow(
+            nutrition.omega6?.inGrams(),
+            key = R.string.omega6_fat,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.omega6_fat),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
         }
 
         nutrition.sodium?.let {
-            NutritionRow(
-                label = stringResource(id = R.string.sodium),
-                amount = it.inMilligrams(),
-                unitLabel = stringResource(id = R.string.milligram_label),
-                labelStyle = textStyles.macroNutrientLabelStyle,
-                amountStyle = textStyles.macroNutrientValueStyle,
-                unitStyle = textStyles.macroNutrientValueStyle,
-            )
+            item(key = R.string.sodium) {
+                NutritionRow(
+                    label = stringResource(id = R.string.sodium),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.macroNutrientLabelStyle,
+                    amountStyle = textStyles.macroNutrientValueStyle,
+                    unitStyle = textStyles.macroNutrientValueStyle,
+                )
+            }
         }
 
         nutrition.cholesterol?.let {
+            item(key = R.string.cholesterol) {
+                NutritionRow(
+                    label = stringResource(id = R.string.cholesterol),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.macroNutrientLabelStyle,
+                    amountStyle = textStyles.macroNutrientValueStyle,
+                    unitStyle = textStyles.macroNutrientValueStyle,
+                )
+            }
+        }
+
+        item(key = R.string.carbohydrates) {
             NutritionRow(
-                label = stringResource(id = R.string.cholesterol),
-                amount = it.inMilligrams(),
-                unitLabel = stringResource(id = R.string.milligram_label),
+                label = stringResource(id = R.string.carbohydrates),
+                amount = nutrition.totalCarbohydrates.inGrams(),
+                unitLabel = stringResource(id = R.string.gram_label),
                 labelStyle = textStyles.macroNutrientLabelStyle,
                 amountStyle = textStyles.macroNutrientValueStyle,
                 unitStyle = textStyles.macroNutrientValueStyle,
             )
         }
 
-        NutritionRow(
-            label = stringResource(id = R.string.carbohydrates),
-            amount = nutrition.totalCarbohydrates.inGrams(),
-            unitLabel = stringResource(id = R.string.gram_label),
-            labelStyle = textStyles.macroNutrientLabelStyle,
-            amountStyle = textStyles.macroNutrientValueStyle,
-            unitStyle = textStyles.macroNutrientValueStyle,
-        )
-        NutrientGroup {
-            nutrition.fiber?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.fiber),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-            nutrition.starch?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.starch),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-            nutrition.sugar?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.sugar),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-            nutrition.sugarAlcohol?.let {
-                NutritionRow(
-                    label = stringResource(id = R.string.sugar_alcohol),
-                    amount = it.inGrams(),
-                    unitLabel = stringResource(id = R.string.gram_label),
-                    labelStyle = textStyles.childNutrientLabelStyle,
-                    amountStyle = textStyles.childNutrientValueStyle,
-                    unitStyle = textStyles.childNutrientValueStyle,
-                )
-            }
-        }
-        NutritionRow(
-            label = stringResource(id = R.string.protein),
-            amount = nutrition.totalProtein.inGrams(),
-            unitLabel = stringResource(id = R.string.gram_label),
-            labelStyle = textStyles.macroNutrientLabelStyle,
-            amountStyle = textStyles.macroNutrientValueStyle,
-            unitStyle = textStyles.macroNutrientValueStyle,
-        )
-
-        if (nutrition.hasMinerals || nutrition.hasVitamins) {
-            HorizontalDivider(
-                thickness = 2.dp,
-                modifier = Modifier.padding(bottom = 2.dp)
+        childNutritionRow(
+            nutrition.fiber?.inGrams(),
+            key = R.string.fiber,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.fiber),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
             )
         }
+        childNutritionRow(
+            nutrition.starch?.inGrams(),
+            key = R.string.starch,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.starch),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
+        }
+        childNutritionRow(
+            nutrition.sugar?.inGrams(),
+            key = R.string.sugar,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.sugar),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
+        }
+        childNutritionRow(
+            nutrition.sugarAlcohol?.inGrams(),
+            key = R.string.sugar_alcohol,
+        ) {
+            NutritionRow(
+                label = stringResource(id = R.string.sugar_alcohol),
+                amount = it,
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.childNutrientLabelStyle,
+                amountStyle = textStyles.childNutrientValueStyle,
+                unitStyle = textStyles.childNutrientValueStyle,
+            )
+        }
+
+        item(key = R.string.protein) {
+            NutritionRow(
+                label = stringResource(id = R.string.protein),
+                amount = nutrition.totalProtein.inGrams(),
+                unitLabel = stringResource(id = R.string.gram_label),
+                labelStyle = textStyles.macroNutrientLabelStyle,
+                amountStyle = textStyles.macroNutrientValueStyle,
+                unitStyle = textStyles.macroNutrientValueStyle,
+            )
+
+//            if (nutrition.hasMinerals || nutrition.hasVitamins) {
+//                HorizontalDivider(
+//                    thickness = 2.dp,
+//                    modifier = Modifier.padding(bottom = 2.dp)
+//                )
+//            }
+        }
+
 
         nutrition.calcium?.let {
-            NutritionRow(
-                label = stringResource(id = R.string.calcium),
-                amount = it.inMilligrams(),
-                unitLabel = stringResource(id = R.string.milligram_label),
-                labelStyle = textStyles.mineralLabelStyle,
-                amountStyle = textStyles.mineralValueStyle,
-                unitStyle = textStyles.mineralValueStyle,
-            )
+            item(R.string.calcium) {
+                NutritionRow(
+                    label = stringResource(id = R.string.calcium),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.mineralLabelStyle,
+                    amountStyle = textStyles.mineralValueStyle,
+                    unitStyle = textStyles.mineralValueStyle,
+                )
+            }
         }
         nutrition.iron?.let {
-            NutritionRow(
-                label = stringResource(id = R.string.iron),
-                amount = it.inMilligrams(),
-                unitLabel = stringResource(id = R.string.milligram_label),
-                labelStyle = textStyles.mineralLabelStyle,
-                amountStyle = textStyles.mineralValueStyle,
-                unitStyle = textStyles.mineralValueStyle,
-            )
+            item(R.string.iron) {
+                NutritionRow(
+                    label = stringResource(id = R.string.iron),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.mineralLabelStyle,
+                    amountStyle = textStyles.mineralValueStyle,
+                    unitStyle = textStyles.mineralValueStyle,
+                )
+            }
         }
         nutrition.magnesium?.let {
-            NutritionRow(
-                label = stringResource(id = R.string.magnesium),
-                amount = it.inMilligrams(),
-                unitLabel = stringResource(id = R.string.milligram_label),
-                labelStyle = textStyles.mineralLabelStyle,
-                amountStyle = textStyles.mineralValueStyle,
-                unitStyle = textStyles.mineralValueStyle,
-            )
+            item(R.string.magnesium) {
+                NutritionRow(
+                    label = stringResource(id = R.string.magnesium),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.mineralLabelStyle,
+                    amountStyle = textStyles.mineralValueStyle,
+                    unitStyle = textStyles.mineralValueStyle,
+                )
+            }
         }
 
         nutrition.potassium?.let {
-            NutritionRow(
-                label = stringResource(id = R.string.potassium),
-                amount = it.inMilligrams(),
-                unitLabel = stringResource(id = R.string.milligram_label),
-                labelStyle = textStyles.mineralLabelStyle,
-                amountStyle = textStyles.mineralValueStyle,
-                unitStyle = textStyles.mineralValueStyle,
-            )
+            item(key = R.string.potassium) {
+                NutritionRow(
+                    label = stringResource(id = R.string.potassium),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.mineralLabelStyle,
+                    amountStyle = textStyles.mineralValueStyle,
+                    unitStyle = textStyles.mineralValueStyle,
+                )
+            }
         }
         nutrition.phosphorous?.let {
-            NutritionRow(
-                label = stringResource(id = R.string.phosphorus),
-                amount = it.inMilligrams(),
-                unitLabel = stringResource(id = R.string.milligram_label),
-                labelStyle = textStyles.mineralLabelStyle,
-                amountStyle = textStyles.mineralValueStyle,
-                unitStyle = textStyles.mineralValueStyle,
-            )
+            item(key = R.string.phosphorus) {
+                NutritionRow(
+                    label = stringResource(id = R.string.phosphorus),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.mineralLabelStyle,
+                    amountStyle = textStyles.mineralValueStyle,
+                    unitStyle = textStyles.mineralValueStyle,
+                )
+            }
         }
         nutrition.vitaminC?.let {
-            NutritionRow(
-                label = stringResource(id = R.string.vitamin_c),
-                amount = it.inMilligrams(),
-                unitLabel = stringResource(id = R.string.milligram_label),
-                labelStyle = textStyles.mineralLabelStyle,
-                amountStyle = textStyles.mineralValueStyle,
-                unitStyle = textStyles.mineralValueStyle,
-            )
+            item(key = R.string.vitamin_c) {
+                NutritionRow(
+                    label = stringResource(id = R.string.vitamin_c),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.mineralLabelStyle,
+                    amountStyle = textStyles.mineralValueStyle,
+                    unitStyle = textStyles.mineralValueStyle,
+                )
+            }
         }
     }
 
 }
 
-@Composable
-private fun NutrientGroup(
-    modifier: Modifier = Modifier,
+private fun LazyListScope.childNutritionRow(
+    amount: Double?,
+    key: Any? = null,
     indentStartWidth: Dp = 8.dp,
     indentEndWidth: Dp = 8.dp,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable (Double) -> Unit,
 ) {
-    Row(modifier = modifier) {
-        Column(
-            modifier = Modifier.padding(start = indentStartWidth, end = indentEndWidth),
-            content = content,
-        )
+    if (amount != null) {
+        item(key = key) {
+            Box(
+                propagateMinConstraints = true,
+                modifier = Modifier.padding(start = indentStartWidth, end = indentEndWidth)
+            ) {
+                content(amount)
+            }
+        }
     }
 }
 
@@ -430,7 +501,7 @@ private fun NutritionInfoPreview() {
             )
             NutritionInfoColumn(
                 nutrition = allFilledNutrition,
-                modifier = Modifier.width(IntrinsicSize.Min)
+//                modifier = Modifier.width(IntrinsicSize.Min)
             )
         }
     }
