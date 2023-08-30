@@ -227,21 +227,25 @@ private fun LazyListScope.carbohydrateGroup(
         state = state.sugarInput,
         label = { stringResource(id = M.string.sugar) },
         forceShow = expanded,
+        key = M.string.sugar,
     )
     nutrientWeightOptionalField(
         state = state.sugarAlcoholInput,
         label = { stringResource(id = M.string.sugar_alcohol)},
         forceShow = expanded,
+        key = M.string.sugar_alcohol,
     )
     nutrientWeightOptionalField(
         state = state.starchInput,
         label = { stringResource(id = M.string.starch) },
         forceShow = expanded,
+        key = M.string.starch,
     )
     nutrientWeightOptionalField(
         state = state.fiberInput,
         label = { stringResource(id = M.string.fiber) },
         forceShow = expanded,
+        key = M.string.fiber,
     )
 }
 
@@ -263,36 +267,43 @@ private fun LazyListScope.fatGroup(
         state = state.monounsaturatedFatInput,
         label = { stringResource(id = M.string.monounsaturated_fat) },
         forceShow = expanded,
+        key = M.string.monounsaturated_fat,
     )
     nutrientWeightOptionalField(
         state = state.polyunsaturatedFatInput,
         label = { stringResource(id = M.string.polyunsaturated_fat) },
         forceShow = expanded,
+        key = M.string.polyunsaturated_fat,
     )
     nutrientWeightOptionalField(
         state = state.omega3Input,
         label = { stringResource(id = M.string.omega3_fat) },
         forceShow = expanded,
+        key = M.string.omega3_fat,
     )
     nutrientWeightOptionalField(
         state = state.omega6Input,
         label = { stringResource(id = M.string.omega6_fat) },
         forceShow = expanded,
+        key = M.string.omega6_fat,
     )
     nutrientWeightOptionalField(
         state = state.saturatedFatInput,
         label = { stringResource(id = M.string.saturated_fat) },
         forceShow = expanded,
+        key = M.string.saturated_fat
     )
     nutrientWeightOptionalField(
         state = state.transFatInput,
         label = { stringResource(id = M.string.trans_fat) },
         forceShow = expanded,
+        key = M.string.trans_fat,
     )
     nutrientWeightOptionalField(
         state = state.cholesterolFatInput,
         label = { stringResource(id = M.string.cholesterol) },
         forceShow = expanded,
+        key = M.string.cholesterol,
     )
 }
 
@@ -302,7 +313,7 @@ private fun LazyListScope.nutrientWeightOptionalField(
     modifier: Modifier = Modifier,
     forceShow: Boolean = false,
     placeholderString: String = "0",
-    key: Any? = label,
+    key: Any? = null,
 ) {
     if (forceShow || state.input.isNotEmpty()) {
         item(key = key) {
