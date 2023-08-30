@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Label of a field requesting person's height  -->
+    <string name="height">Height</string>
+    <!--  Label of a field requesting person's weight  -->
+    <string name="weight">Weight</string>
+
+    <string name="feet_inch_height">Feet and Inches</string>
+
+    <string name="bmi">BMI</string>
+    <string name="bmi_very_severely_underweight">Very severely underweight</string>
+    <string name="bmi_severely_underweight">Severely underweight</string>
+    <string name="bmi_underweight">Underweight</string>
+    <string name="bmi_normal">Normal</string>
+    <string name="bmi_overweight">Overweight</string>
+    <string name="bmi_moderately_obese">Moderately obese</string>
+    <string name="bmi_severely_obese">Moderately obese</string>
+    <string name="bmi_very_severely_obese">Moderately obese</string>
+</resources>
