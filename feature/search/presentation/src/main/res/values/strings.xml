@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unknown_search_error">Unknown error</string>
+    <string name="unknown_get_details_error">Unknown error fetching details (id: %1$d type: %2$d)</string>
+
+    <!--  FAB prompting to convert remote food item into local Meal  -->
+    <string name="add_meal">Add meal</string>
+</resources>

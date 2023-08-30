@@ -1,0 +1,133 @@
+[versions]
+composeMaterial3Version = "1.2.0-alpha06" # "1.1.1"
+composeUiVersion = "1.5.0"
+androidJUnitVersion = "1.1.5"
+androidCoreVersion = "1.10.1"
+androidEspressoVersion = "3.5.1"
+androidActivityVersion = "1.7.2"
+androidLifecycleVersion = "2.6.1"
+androidDatastoreVersion = "1.0.0"
+
+navVersion = "2.7.1"
+
+hiltVersion = "2.47"
+hiltNavComposeVersion = "1.0.0"
+
+roomVersion = "2.5.2"
+
+retrofitVersion = "2.9.0"
+moshiVersion = "1.14.0"
+
+coroutineVersion = "1.7.3"
+
+# Plugins
+kotlinVersion = "1.9.0"
+kotlinSerialization = "1.5.1"
+kaptVersion = "1.9.0"
+kspVersion = "1.9.0-1.0.13"
+androidBuildVersion = "8.1.1"
+
+[libraries]
+# Compose Implementation
+compose-ui-ui = { module = "androidx.compose.ui:ui", version.ref = "composeUiVersion" }
+compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "composeUiVersion" }
+compose-ui-toolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeUiVersion" }
+compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3Version" }
+compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "composeMaterial3Version" }
+
+# Compose Debug
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeUiVersion" }
+compose-ui-testManifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "composeUiVersion" }
+
+# Compose AndroidTest
+compose-ui-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeUiVersion" }
+
+# Lifecycle
+lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidLifecycleVersion"}
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidLifecycleVersion" }
+lifecycle-compose-utils = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidLifecycleVersion" }
+
+# Hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltVersion" }
+hilt-navigation-compsoe = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavComposeVersion" }
+
+# Room
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVersion" }
+
+# Retrofit
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
+retrofit-mock = { module = "com.squareup.retrofit2:retrofit-mock", version.ref = "retrofitVersion" }
+retrofit-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofitVersion"}
+# Moshi
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshiVersion" }
+moshi-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiVersion"}
+moshi-reflect = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiVersion" }
+
+# Datastore
+datastore-proto = { module = "androidx.datastore:datastore", version.ref = "androidDatastoreVersion" }
+
+# Kotlin coroutine
+kotlin-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutineVersion" }
+kotlin-coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineVersion" }
+
+# Kotlin serialization
+kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinSerialization"}
+kotlin-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinSerialization" }
+
+# General Android Test
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidJUnitVersion" }
+androidx-test-ext-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidJUnitVersion" }
+androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "androidEspressoVersion" }
+
+# General Implementation
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidCoreVersion" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidActivityVersion" }
+androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidLifecycleVersion" }
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navVersion" }
+androidx-navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navVersion" }
+
+# General Test
+junit = { module = "junit:junit", version = "4.13.2" }
+
+# Plugins
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinVersion" }
+kotlin-android = { module = "org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin", version.ref = "kotlinVersion" }
+kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlinVersion" }
+kotlin-serialization-plugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlinVersion" }
+kotlin-ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "kspVersion" }
+kotlin-kapt = { module = "org.jetbrains.kotlin.kapt:org.jetbrains.kotlin.kapt.gradle.plugin", version.ref = "kotlinVersion" }
+android-build = { module = "com.android.build.gradle:com.android.application", version.ref = "androidBuildVersion" }
+android-tools = { module = "com.android.tools.build:gradle", version.ref = "androidBuildVersion" }
+hilt-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltVersion" }
+
+[plugins]
+#kotlin-ksp = { id = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "kspVersion"}
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kaptVersion" }
+kotlin-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion"}
+kotlin-serialization-gradle = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
+kotlin-serialization-compiler = { id = "kotlinx-serialization-compiler-plugin", version.ref = "kotlinVersion"}
+kotlin-serialization-compiler-embeddable = { id = "kotlinx-serialization-compiler-plugin-embeddable", version.ref = "kotlinVersion" }
+#kotlin-gradle = {  }
+
+[bundles]
+compose-implementation = [
+    "compose-ui-ui",
+    "compose-ui-graphics",
+    "compose-ui-toolingPreview",
+    "compose-material3",
+]
+compose-debug = [
+    "compose-ui-tooling",
+    "compose-ui-testManifest",
+]
+compose-androidTest = [
+    "compose-ui-junit4",
+    "androidx-test-espresso",
+    "androidx-test-ext-junit",
+    "androidx-test-ext-junit-ktx",
+]

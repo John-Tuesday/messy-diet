@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_meal_title">Create Meal</string>
+    <string name="all_meals_title">All Meals</string>
+
+    <!--  Save button text on Create Meal screen  -->
+    <string name="save">Save</string>
+    <!--  Delete meal button text on view all meals screen  -->
+    <string name="delete">Delete</string>
+    <!--  Delete all meals button text on view all meals screen  -->
+    <string name="delete_all">Delete all</string>
+    <!--  Edit meal button text on view all meals screen  -->
+    <string name="edit">Edit</string>
+
+    <!--  Meal name placeholder  -->
+    <string name="serving_size">Serving size</string>
+    <string name="meal_name_placeholder">Name</string>
+    <string name="meal_protein_label">Protein</string>
+    <string name="meal_total_fats_label">Fat total</string>
+    <string name="meal_total_carbohydrates_label">Carbohydrate total</string>
+
+    <!--  Content description for create new meal button  -->
+    <string name="create_new_meal">Create new meal</string>
+    <!--  Expand fat group content description -->
+    <string name="expand_fat_group">Expand fat group</string>
+    <!--  Expand carbohydrate group content description -->
+    <string name="expand_carbohydrate_group">Expand carbohydrate group</string>
+</resources>
