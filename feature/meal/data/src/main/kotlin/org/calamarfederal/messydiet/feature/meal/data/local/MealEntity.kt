@@ -3,6 +3,7 @@ package org.calamarfederal.messydiet.feature.meal.data.local
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import org.calamarfederal.messydiet.diet_data.model.FoodEnergy
+import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
 import org.calamarfederal.messydiet.diet_data.model.inKilocalories
 import org.calamarfederal.messydiet.diet_data.model.kcal
 import org.calamarfederal.messydiet.measure.Weight
@@ -42,34 +43,34 @@ internal data class MealEntity(
     @ColumnInfo(index = true)
     val name: String,
     @ColumnInfo(name = "total_protein")
-    val totalProtein: Weight,
-    val fiber: Weight?,
-    val sugar: Weight?,
+    override val totalProtein: Weight,
+    override val fiber: Weight?,
+    override val sugar: Weight?,
     @ColumnInfo(name = "sugar_alcohol")
-    val sugarAlcohol: Weight?,
-    val starch: Weight?,
+    override val sugarAlcohol: Weight?,
+    override val starch: Weight?,
     @ColumnInfo(name = "total_carbohydrates")
-    val totalCarbohydrates: Weight,
-    val monounsaturated: Weight?,
-    val polyunsaturated: Weight?,
-    val omega3: Weight?,
-    val omega6: Weight?,
-    val saturated: Weight?,
-    val trans: Weight?,
-    val cholesterol: Weight?,
+    override val totalCarbohydrates: Weight,
+    override val monounsaturatedFat: Weight?,
+    override val polyunsaturatedFat: Weight?,
+    override val omega3: Weight?,
+    override val omega6: Weight?,
+    override val saturatedFat: Weight?,
+    override val transFat: Weight?,
+    override val cholesterol: Weight?,
     @ColumnInfo(name = "total_fat")
-    val totalFat: Weight,
-    val calcium: Weight?,
-    val chloride: Weight?,
-    val iron: Weight?,
-    val magnesium: Weight?,
-    val phosphorous: Weight?,
-    val potassium: Weight?,
-    val sodium: Weight?,
-    val portion: Weight,
+    override val totalFat: Weight,
+    override val calcium: Weight?,
+    override val chloride: Weight?,
+    override val iron: Weight?,
+    override val magnesium: Weight?,
+    override val phosphorous: Weight?,
+    override val potassium: Weight?,
+    override val sodium: Weight?,
+    override val portion: Weight,
     @ColumnInfo(name = "food_energy")
-    val foodEnergy: FoodEnergy,
-) {
+    override val foodEnergy: FoodEnergy,
+): NutritionInfo {
     companion object {
         internal const val UNSET_ID: Long = 0L
     }
@@ -103,7 +104,7 @@ internal interface SavedMealDao {
     suspend fun deleteMeals(ids: List<Long>)
 }
 
-private const val DB_VERSION = 1
+private const val DB_VERSION = 2
 
 @Database(
     entities = [MealEntity::class],
