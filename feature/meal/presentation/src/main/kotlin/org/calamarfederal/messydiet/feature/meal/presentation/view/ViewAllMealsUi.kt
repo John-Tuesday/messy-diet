@@ -44,7 +44,7 @@ fun ViewAllMealsUi(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewAllMealsLayout(
     meals: List<Meal>,
@@ -93,10 +93,10 @@ private fun ViewAllFab(
         SmallFloatingActionButton(onClick = onSearchRemoteMeal) {
             Icon(Icons.Default.Search, null)
         }
-        LargeFloatingActionButton(
+        FloatingActionButton(
             onClick = onCreateMeal,
         ) {
-            Icon(Icons.Default.Add, stringResource(id = R.string.create_new_meal))
+            Icon(Icons.Default.Create, stringResource(id = R.string.create_new_meal))
         }
     }
 
@@ -126,6 +126,9 @@ private fun MealsLazyColumn(
 ) {
     val selectedMeals = remember { mutableStateListOf<Long>() }
     val sheetState = rememberModalBottomSheetState()
+    val showOptions by remember(selectedMeals) {
+        derivedStateOf { selectedMeals.isNotEmpty()}
+    }
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -162,7 +165,7 @@ private fun MealsLazyColumn(
         }
     }
 
-    if (selectedMeals.isNotEmpty()) {
+    if (showOptions) {
         ModalBottomSheet(
             onDismissRequest = { selectedMeals.clear() },
             sheetState = sheetState,
@@ -202,8 +205,6 @@ private fun MealListItem(
         leadingContent = {
             if (selected) {
                 Icon(Icons.Default.CheckCircle, null)
-            } else {
-//                Icon(Icons.Default.CheckCircle, null)
             }
         },
         headlineContent = { Text(text = meal.name) },
