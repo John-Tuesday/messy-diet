@@ -2,6 +2,7 @@ package org.calamarfederal.messydiet.feature.meal.presentation.create
 
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -36,6 +37,27 @@ internal class CreateMealUiUnitTest {
         }
     }
 
+    private val fatExpandButton
+        get() = composeRule.onNodeWithContentDescription(composeRule.activity.getString(R.string.expand_fat_group))
+    private val carbohydrateExpandButton
+        get() = composeRule.onNodeWithContentDescription(composeRule.activity.getString(R.string.expand_carbohydrate_group))
+
+    private val totalCarbohydratesTextField
+        get() = composeRule
+            .onNodeWithText(composeRule.activity.getString(R.string.meal_total_carbohydrates_label))
+
+    private val totalFatTextField
+        get() = composeRule
+            .onNodeWithText(composeRule.activity.getString(R.string.meal_total_fats_label))
+
+    private val proteinTextField
+        get() = composeRule
+            .onNodeWithText(composeRule.activity.getString(R.string.meal_protein_label))
+
+    private val cholesterolTextField
+        get() = composeRule
+            .onNodeWithText(composeRule.activity.getString(M.string.cholesterol))
+
     @Test
     fun `Name Input correctly reflects input`() {
         val testName = "new name test"
@@ -52,36 +74,30 @@ internal class CreateMealUiUnitTest {
 
     @Test
     fun `Fat group expands and hides on arrow button click`() {
-        val fatGroupContentDescription = composeRule.stringResource(R.string.expand_fat_group)
         val optionalFatChild = composeRule.stringResource(M.string.omega3_fat)
 
         composeRule
             .onNodeWithText(optionalFatChild)
             .assertDoesNotExist()
 
-        composeRule
-            .onNodeWithContentDescription(fatGroupContentDescription)
-            .assertExists()
-            .assertHasClickAction()
+        fatExpandButton
             .performClick()
 
         composeRule
             .onNodeWithText(optionalFatChild)
             .assertExists()
 
-        composeRule
-            .onNodeWithContentDescription(fatGroupContentDescription)
+        fatExpandButton
             .performScrollTo()
             .performClick()
 
         composeRule
             .onNodeWithText(optionalFatChild)
-            .assertIsNotDisplayed()
+            .assertDoesNotExist()
     }
 
     @Test
     fun `Fat group always shows non empty optional fats`() {
-        val fatGroupContentDescription = composeRule.stringResource(R.string.expand_fat_group)
         val optionalFatChild = composeRule.stringResource(M.string.omega3_fat)
 
         uiState.omega3Input.input = "5"
@@ -92,8 +108,7 @@ internal class CreateMealUiUnitTest {
             .performScrollTo()
             .assertIsDisplayed()
 
-        composeRule
-            .onNodeWithContentDescription(fatGroupContentDescription)
+        fatExpandButton
             .assertExists()
             .assertHasClickAction()
             .performClick()
@@ -104,8 +119,7 @@ internal class CreateMealUiUnitTest {
             .performScrollTo()
             .assertIsDisplayed()
 
-        composeRule
-            .onNodeWithContentDescription(fatGroupContentDescription)
+        fatExpandButton
             .performScrollTo()
             .performClick()
 
@@ -118,15 +132,13 @@ internal class CreateMealUiUnitTest {
 
     @Test
     fun `Carbohydrate group expands and hides on arrow button click`() {
-        val carbohydrateGroupContentDescription = composeRule.stringResource(R.string.expand_carbohydrate_group)
         val optionalCarbohydrateChild = composeRule.stringResource(M.string.sugar)
 
         composeRule
             .onNodeWithText(optionalCarbohydrateChild)
             .assertDoesNotExist()
 
-        composeRule
-            .onNodeWithContentDescription(carbohydrateGroupContentDescription)
+        carbohydrateExpandButton
             .assertExists()
             .assertHasClickAction()
             .performClick()
@@ -135,19 +147,17 @@ internal class CreateMealUiUnitTest {
             .onNodeWithText(optionalCarbohydrateChild)
             .assertExists()
 
-        composeRule
-            .onNodeWithContentDescription(carbohydrateGroupContentDescription)
+        carbohydrateExpandButton
             .performScrollTo()
             .performClick()
 
         composeRule
             .onNodeWithText(optionalCarbohydrateChild)
-            .assertIsNotDisplayed()
+            .assertDoesNotExist()
     }
 
     @Test
     fun `Carbohydrate group always shows non empty optional child`() {
-        val carbohydrateGroupContentDescription = composeRule.stringResource(R.string.expand_carbohydrate_group)
         val optionalCarbohydrateChild = composeRule.stringResource(M.string.sugar)
 
         uiState.sugarInput.input = "5"
@@ -158,8 +168,7 @@ internal class CreateMealUiUnitTest {
             .performScrollTo()
             .assertIsDisplayed()
 
-        composeRule
-            .onNodeWithContentDescription(carbohydrateGroupContentDescription)
+        carbohydrateExpandButton
             .assertExists()
             .assertHasClickAction()
             .performClick()
@@ -170,8 +179,7 @@ internal class CreateMealUiUnitTest {
             .performScrollTo()
             .assertIsDisplayed()
 
-        composeRule
-            .onNodeWithContentDescription(carbohydrateGroupContentDescription)
+        carbohydrateExpandButton
             .performScrollTo()
             .performClick()
 
@@ -180,5 +188,124 @@ internal class CreateMealUiUnitTest {
             .assertExists()
             .performScrollTo()
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun `When focused text field is out of view the app does not crash`() {
+        totalCarbohydratesTextField
+            .performScrollTo()
+            .performTextReplacement("1")
+
+        fatExpandButton
+            .performClick()
+
+        carbohydrateExpandButton
+            .performScrollTo()
+            .performClick()
+
+        cholesterolTextField
+            .performScrollTo()
+            .performSemanticsAction(SemanticsActions.RequestFocus)
+            .assertIsFocused()
+
+        composeRule
+            .onNodeWithText(composeRule.activity.getString(R.string.meal_name_placeholder))
+            .performScrollTo()
+
+        cholesterolTextField
+            .assertIsFocused()
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun `Ime action goes to the next field`() {
+        val nameInput = "new name"
+
+        fatExpandButton
+            .performClick()
+        carbohydrateExpandButton
+            .performScrollTo()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(composeRule.activity.getString(R.string.meal_name_placeholder))
+            .performScrollTo()
+            .performTextReplacement(nameInput)
+
+        composeRule
+            .onNodeWithText(nameInput)
+            .performImeAction()
+
+        for (index in 1..16) {
+            val inputString = "1"
+            composeRule
+                .onNode(isFocused())
+                .assertIsDisplayed()
+                .performTextReplacement(inputString)
+            composeRule
+                .onNode(isFocused())
+                .assertTextContains(inputString)
+                .performImeAction()
+        }
+    }
+
+    @Test
+    fun `Enter data in every field`() {
+
+        composeRule
+            .onNodeWithText(composeRule.activity.getString(R.string.meal_name_placeholder))
+            .performScrollTo()
+            .performTextReplacement("TestTest TestTest")
+
+        composeRule
+            .onNodeWithText(composeRule.activity.getString(R.string.serving_size))
+            .performScrollTo()
+            .performTextReplacement("1")
+
+        proteinTextField
+            .performScrollTo()
+            .performTextReplacement("1")
+
+        totalFatTextField
+            .performScrollTo()
+            .performTextReplacement("1")
+
+        totalCarbohydratesTextField
+            .performScrollTo()
+            .performTextReplacement("1")
+
+        fatExpandButton
+            .performScrollTo()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(composeRule.activity.getString(M.string.omega3_fat))
+            .performScrollTo()
+            .performTextReplacement("1")
+
+        composeRule
+            .onNodeWithText(composeRule.activity.getString(M.string.omega6_fat))
+            .performScrollTo()
+            .performTextReplacement("1")
+
+        composeRule
+            .onNodeWithContentDescription(composeRule.activity.getString(R.string.expand_fat_group))
+            .performScrollTo()
+            .performClick()
+
+        composeRule
+            .onNodeWithContentDescription(composeRule.activity.getString(R.string.expand_fat_group))
+            .performScrollTo()
+            .performClick()
+
+        composeRule
+            .onNodeWithText(composeRule.activity.getString(M.string.trans_fat))
+            .performScrollTo()
+            .performTextReplacement("1")
+
+        composeRule
+            .onNodeWithContentDescription(composeRule.activity.getString(R.string.expand_carbohydrate_group))
+            .performScrollTo()
+            .performClick()
     }
 }
