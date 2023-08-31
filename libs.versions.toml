@@ -1,6 +1,6 @@
 [versions]
 composeMaterial3Version = "1.2.0-alpha06" # "1.1.1"
-composeUiVersion = "1.5.0"
+composeUiVersion = "1.6.0-alpha04"
 androidJUnitVersion = "1.1.5"
 androidCoreVersion = "1.10.1"
 androidEspressoVersion = "3.5.1"
@@ -21,10 +21,10 @@ moshiVersion = "1.14.0"
 coroutineVersion = "1.7.3"
 
 # Plugins
-kotlinVersion = "1.9.0"
+kotlinVersion = "1.9.10"
 kotlinSerialization = "1.5.1"
-kaptVersion = "1.9.0"
-kspVersion = "1.9.0-1.0.13"
+kaptVersion = "1.9.10"
+kspVersion = "1.9.10-1.0.13"
 androidBuildVersion = "8.1.1"
 
 [libraries]
@@ -86,6 +86,7 @@ androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", vers
 # General Implementation
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidCoreVersion" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidActivityVersion" }
+androidx-activity = { module = "androidx.activity:activity-ktx", version.ref = "androidActivityVersion" }
 androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidLifecycleVersion" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navVersion" }
 androidx-navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navVersion" }
