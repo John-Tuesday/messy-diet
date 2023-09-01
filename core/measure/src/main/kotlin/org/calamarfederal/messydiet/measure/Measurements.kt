@@ -22,16 +22,28 @@
 
 package org.calamarfederal.messydiet.measure
 
+import kotlin.math.absoluteValue
+
+/**
+ * Weight (technically mass)
+ *
+ * internally stored in grams as a [Double]
+ */
 data class Weight internal constructor(
     internal val grams: Double = 0.00
-) {
+) : Comparable<Weight> {
+
+    override operator fun compareTo(other: Weight): Int = grams.compareTo(other.grams)
     fun inMilligrams(): Double = grams * 1000.00
     fun inGrams(): Double = grams
     fun inKilograms(): Double = grams / 1000.00
 
     fun inOunces(): Double = gramsToOz(grams)
     fun inPounds(): Double = gramsToLbs(grams)
+
 }
+
+val Weight.absoluteValue get() = Weight(grams.absoluteValue)
 
 operator fun Weight.plus(other: Weight): Weight = Weight(grams + other.grams)
 operator fun Weight.minus(other: Weight): Weight = Weight(grams - other.grams)
@@ -84,9 +96,16 @@ val Number.kilograms: Weight get() = Weight(toDouble() * 1_000.00)
 val Number.lbs: Weight get() = Weight(lbsToGrams(toDouble()))
 val Number.oz: Weight get() = Weight(ozToGrams(toDouble()))
 
+/**
+ * Volume
+ *
+ * internally stored as liters as a [Double]
+ */
 data class Volume internal constructor(
     internal val liters: Double = 0.00
-) {
+): Comparable<Volume> {
+
+    override fun compareTo(other: Volume): Int = liters.compareTo(other.liters)
     fun inLiters() = liters
     fun inMilliliters() = liters * 1_000.00
 
@@ -123,9 +142,16 @@ val Number.usFlOz: Volume get() = Volume(usFlOzToLiters(toDouble()))
 val Number.usTablespoons: Volume get() = Volume(usTablespoonsToLiters(toDouble()))
 val Number.usTeaspoons: Volume get() = Volume(usTeaspoonsToLiters(toDouble()))
 
+/**
+ * Length
+ *
+ * internally stored as meters [Double]
+ */
 data class Length internal constructor(
     internal val meter: Double = 0.00,
-) {
+): Comparable<Length> {
+    override fun compareTo(other: Length): Int = meter.compareTo(other.meter)
+
     fun inMeters() = meter
     fun inKilometers() = meter / 1_000
     fun inCentimeters() = meter * 100

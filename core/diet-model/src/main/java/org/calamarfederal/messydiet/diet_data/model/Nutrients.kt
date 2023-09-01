@@ -28,8 +28,8 @@ class Portion private constructor(
     val weight: Weight?,
     val volume: Volume?,
 ) {
-    constructor(weight: Weight): this(weight = weight, volume = null)
-    constructor(volume: Volume): this(weight = null, volume = volume)
+    constructor(weight: Weight) : this(weight = weight, volume = null)
+    constructor(volume: Volume) : this(weight = null, volume = volume)
     constructor() : this(null, null)
 
     override fun toString(): String =
@@ -51,6 +51,7 @@ class Portion private constructor(
             else -> null
         }
     }
+
     operator fun div(other: Portion): Double? {
         if (other.weight != null && weight != null) {
             return weight / other.weight
@@ -173,6 +174,7 @@ data class Nutrition(
             vitaminC = vitaminC + other.vitaminC,
         )
     }
+
     fun scaleToPortion(newPortion: Portion): Nutrition {
         val ratio = (newPortion / portion)!!
 
@@ -203,4 +205,48 @@ data class Nutrition(
             vitaminC = vitaminC?.times(ratio),
         )
     }
+}
+
+fun NutritionInfo.asSequence(): Sequence<Weight?> = sequenceOf(
+    totalProtein,
+    fiber,
+    sugar,
+    sugarAlcohol,
+    starch,
+    totalCarbohydrates,
+    monounsaturatedFat,
+    polyunsaturatedFat,
+    omega3,
+    omega6,
+    saturatedFat,
+    transFat,
+    cholesterol,
+    totalFat,
+    calcium,
+    chloride,
+    iron,
+    magnesium,
+    phosphorous,
+    potassium,
+    sodium,
+    vitaminC,
+)
+
+fun NutritionInfo.compareWith(
+    other: NutritionInfo,
+    compareWeight: (Weight?, Weight?) -> Boolean,
+    comparePortion: (Portion, Portion) -> Boolean,
+    compareEnergy: (FoodEnergy, FoodEnergy) -> Boolean,
+    breakOnFalse: Boolean = true,
+): Boolean {
+    val checks = sequence<Boolean> {
+        yield(comparePortion(portion, other.portion))
+        yield(compareEnergy(foodEnergy, other.foodEnergy))
+        val nutrientSeq = asSequence().zip(other.asSequence())
+        yieldAll(nutrientSeq.map { compareWeight(it.first, it.second) })
+    }
+    return if (breakOnFalse)
+        checks.none { !it }
+    else
+        checks.all { it }
 }
