@@ -5,24 +5,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.calamarfederal.messydiet.diet_data.model.Nutrition
+import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
-import org.calamarfederal.messydiet.feature.meal.presentation.R
 import org.calamarfederal.messydiet.feature.measure.NutritionInfoColumn
-import org.calamarfederal.messydiet.feature.measure.fullString
-import org.calamarfederal.messydiet.measure.Weight
-import org.calamarfederal.messydiet.measure.WeightUnit
-import org.calamarfederal.messydiet.measure.inUnits
+import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.messydiet.measure.milliliters
 
 @Composable
 fun ViewMealUi(
@@ -99,12 +94,34 @@ private fun ViewMealInnerLayout(
             text = meal.name,
             style = nameStyle,
         )
+        var portionState by remember(meal) {
+            mutableFloatStateOf(
+                (meal.portion.weight?.inGrams() ?: meal.portion.volume?.inMilliliters())!!.toFloat()
+            )
+        }
+
+        val adjustedNutrition by remember(meal) {
+            derivedStateOf {
+                val portion = meal.portion.weight?.let {
+                    Portion(portionState.grams)
+                } ?: meal.portion.volume?.let {
+                    Portion(portionState.milliliters)
+                } ?: Portion()
+                (Nutrition() + meal).scaleToPortion(portion)
+            }
+        }
+        Slider(
+            value = portionState,
+            onValueChange = { portionState = it },
+            valueRange = 0f..1000f,
+            steps = 1001 / 5,
+        )
         Surface(
             shape = MaterialTheme.shapes.small,
             tonalElevation = 1.dp,
         ) {
             NutritionInfoColumn(
-                nutrition = meal,
+                nutrition = adjustedNutrition,
                 modifier = Modifier
                     .padding(
                         horizontal = 4.dp,

@@ -2,6 +2,7 @@ package org.calamarfederal.messydiet.feature.meal.data.model
 
 import org.calamarfederal.messydiet.diet_data.model.FoodEnergy
 import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
+import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.diet_data.model.kcal
 import org.calamarfederal.messydiet.feature.meal.data.local.MealEntity
 import org.calamarfederal.messydiet.measure.Weight
@@ -31,7 +32,7 @@ data class Meal(
     override val phosphorous: Weight? = null,
     override val potassium: Weight? = null,
     override val sodium: Weight? = null,
-    override val portion: Weight = 0.grams,
+    override val portion: Portion = Portion(),
     override val foodEnergy: FoodEnergy = 0.kcal,
 ) : NutritionInfo {
     constructor(name: String, nutritionInfo: NutritionInfo, id: Long = MealEntity.UNSET_ID) : this(

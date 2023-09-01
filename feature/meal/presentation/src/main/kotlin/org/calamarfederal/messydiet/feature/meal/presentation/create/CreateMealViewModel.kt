@@ -123,7 +123,8 @@ internal fun CreateMealUiState.matchMeal(meal: Meal, locale: Locale) {
 
     val simpleFormatter = NumberFormatter.withLocale(locale)
 
-    servingSizeInput.setInputFromWeight(meal.portion, simpleFormatter)
+    val servingSize = meal.portion.weight?.inGrams() ?: meal.portion.volume?.inMilliliters() ?: 0.00
+    servingSizeInput.setInputFromWeight(servingSize.grams, simpleFormatter)
 
     foodEnergyInput = simpleFormatter.format(meal.foodEnergy.inKilocalories()).toString()
 

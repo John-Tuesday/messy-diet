@@ -2,12 +2,11 @@ package org.calamarfederal.messydiet.feature.meal.data.local
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import org.calamarfederal.messydiet.diet_data.model.FoodEnergy
-import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
-import org.calamarfederal.messydiet.diet_data.model.inKilocalories
-import org.calamarfederal.messydiet.diet_data.model.kcal
+import org.calamarfederal.messydiet.diet_data.model.*
 import org.calamarfederal.messydiet.measure.Weight
 import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.messydiet.measure.liters
+import kotlin.math.absoluteValue
 
 internal class MealConverters {
     @TypeConverter
@@ -33,8 +32,21 @@ internal class MealConverters {
 
     @TypeConverter
     fun fromDoubleToWeight(grams: Double): Weight = grams.grams
-}
 
+    @TypeConverter
+    fun fromPortionToPair(portion: Portion): Double {
+        portion.weight?.let { return it.inGrams() }
+        portion.volume?.let { return -it.inLiters() }
+        return 0.00
+    }
+
+    @TypeConverter
+    fun fromPairToPortion(amount: Double): Portion = when {
+        amount > 0 -> Portion(amount.absoluteValue.grams)
+        amount < 0 -> Portion(amount.absoluteValue.liters)
+        else -> Portion()
+    }
+}
 @Entity(tableName = "meal")
 @TypeConverters(MealConverters::class)
 internal data class MealEntity(
@@ -67,10 +79,10 @@ internal data class MealEntity(
     override val phosphorous: Weight?,
     override val potassium: Weight?,
     override val sodium: Weight?,
-    override val portion: Weight,
+    override val portion: Portion,
     @ColumnInfo(name = "food_energy")
     override val foodEnergy: FoodEnergy,
-): NutritionInfo {
+) : NutritionInfo {
     companion object {
         internal const val UNSET_ID: Long = 0L
     }
@@ -104,7 +116,7 @@ internal interface SavedMealDao {
     suspend fun deleteMeals(ids: List<Long>)
 }
 
-private const val DB_VERSION = 2
+private const val DB_VERSION = 4
 
 @Database(
     entities = [MealEntity::class],

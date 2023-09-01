@@ -27,6 +27,13 @@
     <string name="inch">Inches</string>
     <string name="inch_label">in</string>
 
+    <string name="kiloliter">Kiloliter</string>
+    <string name="kiloliter_label">kL</string>
+    <string name="liter">Liter</string>
+    <string name="liter_label">l</string>
+    <string name="milliliter">Milliliter</string>
+    <string name="milliliter_label">mL</string>
+
     <string name="serving_size">Serving size</string>
 
     <string name="calories">Calories</string>

@@ -9,6 +9,10 @@ enum class FoodEnergyUnit {
 }
 
 operator fun FoodEnergy.plus(other: FoodEnergy): FoodEnergy = FoodEnergy(kcals + other.kcals)
+operator fun FoodEnergy.minus(other: FoodEnergy): FoodEnergy = FoodEnergy(kcals - other.kcals)
+operator fun FoodEnergy.times(number: Number): FoodEnergy = FoodEnergy(kcals * number.toDouble())
+operator fun FoodEnergy.div(number: Number): FoodEnergy = FoodEnergy(kcals / number.toDouble())
+operator fun FoodEnergy.div(other: FoodEnergy): Double = kcals / other.kcals
 
 private fun foodEnergyInUnitsOf(foodEnergy: FoodEnergy, foodEnergyUnit: FoodEnergyUnit): Double =
     when (foodEnergyUnit) {

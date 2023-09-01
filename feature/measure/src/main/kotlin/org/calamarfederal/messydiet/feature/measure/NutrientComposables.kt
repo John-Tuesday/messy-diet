@@ -26,10 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
-import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
-import org.calamarfederal.messydiet.diet_data.model.inKilocalories
-import org.calamarfederal.messydiet.diet_data.model.kcal
+import org.calamarfederal.messydiet.diet_data.model.*
 import org.calamarfederal.messydiet.measure.R
 import org.calamarfederal.messydiet.measure.grams
 
@@ -51,12 +48,15 @@ data class NutrientInfoTextStyle(
     companion object
 }
 
-private val NutritionInfo.hasMinerals: Boolean get() = sequenceOf(
-    calcium,
-    iron,
-    magnesium,
-    potassium,
-    phosphorous,
+class NoServingSizeSpecified : Throwable("Expected portion.weight or portion.volume to not be null")
+
+private val NutritionInfo.hasMinerals: Boolean
+    get() = sequenceOf(
+        calcium,
+        iron,
+        magnesium,
+        potassium,
+        phosphorous,
     ).any { it != null }
 private val NutritionInfo.hasVitamins: Boolean
     get() = sequenceOf(
@@ -100,19 +100,16 @@ fun NutritionInfoColumn(
         item(key = R.string.serving_size) {
             NutritionRow(
                 label = stringResource(id = R.string.serving_size),
-                amount = nutrition.portion.inGrams(),
-                unitLabel = stringResource(id = R.string.gram_label),
+                amount = nutrition.portion.weight?.inGrams() ?: nutrition.portion.volume?.inMilliliters()
+                ?: throw (NoServingSizeSpecified()),
+                unitLabel = if (nutrition.portion.volume != null)
+                    stringResource(id = R.string.milliliter_label)
+                else
+                    stringResource(id = R.string.gram_label),
                 labelStyle = textStyles.servingSizeLabelStyle,
                 amountStyle = textStyles.servingSizeValueStyle,
                 unitStyle = textStyles.servingSizeValueStyle,
             )
-
-//            HorizontalDivider(
-//                thickness = 2.dp,
-//                modifier = Modifier
-//                    .padding(bottom = 4.dp)
-////                    .width(IntrinsicSize.Min),
-//            )
         }
 
 
@@ -125,11 +122,6 @@ fun NutritionInfoColumn(
                 amountStyle = textStyles.caloriesValueStyle,
                 unitStyle = textStyles.caloriesValueStyle,
             )
-
-//            HorizontalDivider(
-//                modifier = Modifier.padding(bottom = 4.dp),
-//                thickness = 2.dp,
-//            )
         }
 
 
@@ -489,7 +481,7 @@ private fun NutritionInfoPreview() {
                 totalProtein = 13.grams,
                 cholesterol = 14.grams,
                 foodEnergy = 15.kcal,
-                portion = 16.grams,
+                portion = Portion(16.grams),
                 vitaminC = 17.grams,
                 magnesium = 18.grams,
                 iron = 19.grams,

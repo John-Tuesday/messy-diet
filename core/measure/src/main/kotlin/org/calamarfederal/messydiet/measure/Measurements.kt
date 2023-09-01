@@ -35,6 +35,9 @@ data class Weight internal constructor(
 
 operator fun Weight.plus(other: Weight): Weight = Weight(grams + other.grams)
 operator fun Weight.minus(other: Weight): Weight = Weight(grams - other.grams)
+operator fun Weight.times(ratio: Number): Weight = Weight(grams * ratio.toDouble())
+operator fun Weight.div(factor: Number): Weight = Weight(grams / factor.toDouble())
+operator fun Weight.div(other: Weight): Double = grams / other.grams
 
 enum class WeightUnit {
     Milligram,
@@ -95,6 +98,9 @@ data class Volume internal constructor(
 
 operator fun Volume.plus(other: Volume): Volume = Volume(liters + other.liters)
 operator fun Volume.minus(other: Volume): Volume = Volume(liters - other.liters)
+operator fun Volume.times(number: Number): Volume = Volume(liters * number.toDouble())
+operator fun Volume.div(number: Number): Volume = Volume(liters / number.toDouble())
+operator fun Volume.div(other: Volume): Double = liters / other.liters
 
 private const val US_GAL_X_LITER = 3.785_411_784
 private fun litersToUsGallons(liter: Double) = liter / US_GAL_X_LITER

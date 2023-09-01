@@ -22,9 +22,50 @@
 
 package org.calamarfederal.messydiet.diet_data.model
 
-import org.calamarfederal.messydiet.measure.Weight
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.plus
+import org.calamarfederal.messydiet.measure.*
+
+class Portion private constructor(
+    val weight: Weight?,
+    val volume: Volume?,
+) {
+    constructor(weight: Weight): this(weight = weight, volume = null)
+    constructor(volume: Volume): this(weight = null, volume = volume)
+    constructor() : this(null, null)
+
+    override fun toString(): String =
+        "${this::class.simpleName}(weight=${weight.toString()}, volume=${volume.toString()})"
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Portion) {
+            return weight == other.weight && volume == other.volume
+        }
+        return false
+    }
+
+    operator fun plus(other: Portion): Portion? {
+        return when {
+            other.weight != null && volume == null -> Portion((weight ?: 0.grams) + other.weight)
+            other.volume != null && weight == null -> Portion((volume ?: 0.liters) + other.volume)
+            volume == null && weight == null -> other
+            other.volume == null && other.weight == null -> this
+            else -> null
+        }
+    }
+    operator fun div(other: Portion): Double? {
+        if (other.weight != null && weight != null) {
+            return weight / other.weight
+        } else if (other.volume != null && volume != null) {
+            return volume / other.volume
+        }
+        return null
+    }
+
+    override fun hashCode(): Int {
+        var result = weight?.hashCode() ?: 0
+        result = 31 * result + (volume?.hashCode() ?: 0)
+        return result
+    }
+}
 
 sealed interface Nutrient
 
@@ -68,12 +109,12 @@ interface Vitamin : Nutrient {
 }
 
 interface NutritionInfo : MacroNutrients, Mineral, Vitamin {
-    val portion: Weight
+    val portion: Portion
     val foodEnergy: FoodEnergy
 }
 
-data class Nutrition constructor(
-    override val portion: Weight = 0.grams,
+data class Nutrition(
+    override val portion: Portion = Portion(),
     override val totalProtein: Weight = 0.grams,
     override val fiber: Weight? = null,
     override val sugar: Weight? = null,
@@ -104,7 +145,7 @@ data class Nutrition constructor(
         else -> (this.inGrams() + other.inGrams()).grams
     }
 
-    operator fun plus(other: NutritionInfo): Nutrition{
+    operator fun plus(other: NutritionInfo): Nutrition {
         return copy(
             portion = (portion + other.portion)!!,
             totalProtein = (totalProtein + other.totalProtein)!!,
@@ -130,6 +171,36 @@ data class Nutrition constructor(
             potassium = potassium + other.potassium,
             sodium = sodium + other.sodium,
             vitaminC = vitaminC + other.vitaminC,
+        )
+    }
+    fun scaleToPortion(newPortion: Portion): Nutrition {
+        val ratio = (newPortion / portion)!!
+
+        return copy(
+            portion = newPortion,
+            totalProtein = totalProtein * ratio,
+            fiber = fiber?.times(ratio),
+            sugar = sugar?.times(ratio),
+            sugarAlcohol = sugarAlcohol?.times(ratio),
+            starch = starch?.times(ratio),
+            totalCarbohydrates = totalCarbohydrates * ratio,
+            monounsaturatedFat = monounsaturatedFat?.times(ratio),
+            polyunsaturatedFat = polyunsaturatedFat?.times(ratio),
+            omega3 = omega3?.times(ratio),
+            omega6 = omega6?.times(ratio),
+            saturatedFat = saturatedFat?.times(ratio),
+            transFat = transFat?.times(ratio),
+            cholesterol = cholesterol?.times(ratio),
+            totalFat = totalFat * ratio,
+            foodEnergy = foodEnergy * ratio,
+            calcium = calcium?.times(ratio),
+            chloride = chloride?.times(ratio),
+            iron = iron?.times(ratio),
+            magnesium = magnesium?.times(ratio),
+            phosphorous = phosphorous?.times(ratio),
+            potassium = potassium?.times(ratio),
+            sodium = sodium?.times(ratio),
+            vitaminC = vitaminC?.times(ratio),
         )
     }
 }
