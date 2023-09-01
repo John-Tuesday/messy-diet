@@ -1,8 +1,12 @@
 package org.calamarfederal.messydiet.food.data.central.remote
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapter
 import org.calamarfederal.messydiet.food.data.central.*
 import org.calamarfederal.messydiet.food.data.central.di.API_KEY_TAG
 import org.calamarfederal.messydiet.food.data.central.di.testDi
+import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodItemSchema
+import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSchema.Foundation
 import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSchema.SRLegacy
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodSearchCriteriaSchema
@@ -79,17 +83,38 @@ internal class FoodDataCentralRemoteApiPrettyPrinter {
         testApiKey = testDi.direct.instance(tag = API_KEY_TAG)
     }
 
-    private fun prettyPrintGetFoodBranded(fdcId: String) {
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun prettyPrintGetFoodAbridged(fdcId: String, nutrients: List<Int>? = null) {
+        val result = fdcApi.getFoodWithFdcIdAbridged(
+            apiKey = testApiKey,
+            fdcId = fdcId,
+            format = "abridged",
+            nutrients = nutrients,
+        ).execute().assertSuccessful().body()!!
+
+        println(
+            Moshi.Builder().build().adapter<AbridgedFoodItemSchema>().indent("    ").toJson(result)
+        )
+//        println(prettyFormatDataClassString(result.toString()))
+    }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun prettyPrintGetFoodBranded(fdcId: String, nutrients: List<Int>? = null) {
         val result = fdcApi.getFoodWithFdcIdBranded(
             apiKey = testApiKey,
             fdcId = fdcId,
+            nutrients = nutrients,
         ).execute().assertSuccessful().body()!!
 
-        println(prettyFormatDataClassString(result.toString()))
+        println(
+            Moshi.Builder().build().adapter<BrandedFoodItemSchema>().indent("    ").toJson(result)
+        )
+//        println(prettyFormatDataClassString(result.toString()))
     }
 
     @KTest
     fun `One off testing`() {
         prettyPrintGetFoodBranded(CheeriosTestA.cheeriosFdcIdString)
+
     }
 }

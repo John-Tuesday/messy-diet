@@ -20,7 +20,7 @@ moshiVersion = "1.14.0"
 
 coroutineVersion = "1.7.3"
 
-kodeinVersion = "7.19.0"
+kodeinVersion = "7.20.2"
 
 # Plugins
 kotlinVersion = "1.9.10"

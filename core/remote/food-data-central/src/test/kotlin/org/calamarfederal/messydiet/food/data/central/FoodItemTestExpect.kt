@@ -6,6 +6,7 @@ import org.calamarfederal.messydiet.food.data.central.model.FDCDataType
 import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSchema
 import org.calamarfederal.messydiet.measure.grams
 import org.calamarfederal.messydiet.measure.milligrams
+import org.calamarfederal.messydiet.measure.milliliters
 
 internal fun prettyFormatDataClassString(str: String, tab: String = "    "): String = str
     .replace("(", "(\n$tab")
@@ -27,16 +28,21 @@ internal data object SpriteTest {
     val spriteFdcId = BrandedFDCId(spriteFdcIdInt)
     const val spriteName = "Sprite Bottle, 1.75 Liters"
     val spriteNutrition = Nutrition(
+        portion = Portion(360.milliliters),
         totalProtein = 0.grams,
         totalFat = 0.grams,
+        saturatedFat = 0.grams,
+        transFat = 0.grams,
         totalCarbohydrates = 10.8.grams,
         foodEnergy = 39.kcal,
         //caffeine = 0.grams,
         sugar = 10.6.grams,
         fiber = 0.grams,
+        cholesterol = 0.grams,
         calcium = 0.grams,
         iron = 0.grams,
         sodium = 19.0.milligrams,
+        vitaminC = 0.milligrams,
     )
 }
 
@@ -80,12 +86,12 @@ internal data object CheeriosTestA {
         sugar = 5.13.grams, // 5.1 added
         calcium = 333.milligrams,
         iron = 32.3.milligrams,
-        magnesium = 154.milligrams, // 700 from DV
+//        magnesium = 700.milligrams, // 700 from DV
 //        phosphorous = 123.milligrams, // 256 from DV ?? 750
         potassium = 641.milligrams,
         sodium = 487.milligrams,
 //        zinc
-        vitaminC = 90.milligrams, // ?? 15.4 3.7
+//        vitaminC = 90.milligrams, // ?? 15.4 3.7
         saturatedFat = 1.28.grams,
         monounsaturatedFat = 2.56.grams,
         polyunsaturatedFat = 2.56.grams,
@@ -107,7 +113,7 @@ internal data object CheeriosTestA {
         potassium = 278.milligrams,
         sodium = 487.milligrams,
 //        zinc
-        vitaminC = 3.7.milligrams, // ?? 15.4 3.7
+        vitaminC = 90.milligrams, // ?? 15.4 3.7
         saturatedFat = 0.62.grams,
         monounsaturatedFat = 0.62.grams,
         polyunsaturatedFat = 0.62.grams,

@@ -61,5 +61,7 @@ internal class FoodDataCentralRemoteSourceTest {
 
         val nutrition = foodItem.nutritionalInfo!!
         prettyPrint(nutrition)
+
+        assertAboutEqual(CheeriosTestA.cheeriosNutritionPer100.scaleToPortion(CheeriosTestA.cheeriosNutritionPerServing.portion), nutrition)
     }
 }

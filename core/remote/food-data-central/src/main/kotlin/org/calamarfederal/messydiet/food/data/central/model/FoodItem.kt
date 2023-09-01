@@ -123,7 +123,7 @@ private fun parseNutrientNumber(
         "417" -> FDCNutritionInfo(/* totalFolate */)
         "418" -> FDCNutritionInfo(/* vitaminB12 */)
         "431" -> FDCNutritionInfo(/* folicAcid */)
-        "539" -> FDCNutritionInfo(sugar = weightUnit!!.weightOf(amount)) // sugar added
+        "539" -> FDCNutritionInfo(/* sugar = weightUnit!!.weightOf(amount) */) // sugar added
         "601" -> FDCNutritionInfo(cholesterol = weightUnit!!.weightOf(amount))
         "605" -> FDCNutritionInfo(transFat = weightUnit!!.weightOf(amount))
         "606" -> FDCNutritionInfo(saturatedFat = weightUnit!!.weightOf(amount))
