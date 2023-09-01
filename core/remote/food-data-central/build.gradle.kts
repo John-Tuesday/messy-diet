@@ -10,6 +10,8 @@ dependencies {
     implementation(project(":core:diet-model"))
     implementation(project(":core:measure"))
 
+    implementation(libs.kotlin.kodein.di)
+
     implementation(libs.kotlin.coroutine)
     testImplementation(libs.kotlin.coroutine.test)
 

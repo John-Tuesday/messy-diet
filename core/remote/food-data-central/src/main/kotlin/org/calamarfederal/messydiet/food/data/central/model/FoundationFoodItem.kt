@@ -19,7 +19,7 @@ data class FoundationFdcId internal constructor(
 internal fun FoundationFoodItemSchema.toModel(): FDCFoundationFoodItem = FDCFoundationFoodItem(
     fdcId = FoundationFdcId(fdcId),
     description = description,
-    nutritionalInfo = foodNutrients?.toNutritionInfo(),
+    nutritionalInfo = foodNutrients?.toNutritionInfo()?.chooseBest(),
     ndbNumber = ndbNumber,
     publicationDate = publicationDate?.let { parseResponseDate(it) },
 )

@@ -1,12 +1,10 @@
 package org.calamarfederal.messydiet.food.data.central.model
 
-import org.calamarfederal.messydiet.diet_data.model.kcal
+import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemLabelNutrientsSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultFoodSchema
-import org.calamarfederal.messydiet.measure.Weight
 import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.weightIn
+import org.calamarfederal.messydiet.measure.milliliters
 
 
 data class BrandedFDCId internal constructor(
@@ -25,55 +23,21 @@ data class BrandedFDCFoodItem internal constructor(
     val gtin: String? get() = upcGTIN
 }
 
-internal fun BrandedFoodItemSchema.toModel(): BrandedFDCFoodItem = BrandedFDCFoodItem(
-    fdcId = BrandedFDCId(fdcId),
-    description = description,
-    nutritionalInfo = foodNutrients?.toNutritionInfo(),
-    ingredients = ingredients,
-    brandOwner = brandOwner,
-    upcGTIN = gtinUpc,
-)
-
-private fun convertAPINutrients(
-    servingSize: Weight,
-    response: BrandedFoodItemLabelNutrientsSchema,
-): FDCNutritionInfo {
-
-    return FDCNutritionInfo(
-        totalProtein = response.protein?.number?.grams ?: 0.grams,
-        fiber = response.fiber?.number?.grams,
-        sugar = response.sugars?.number?.grams,
-        sugarAlcohol = null,
-        starch = null,
-        totalCarbohydrates = response.carbohydrates?.number?.grams ?: 0.grams,
-        monounsaturatedFat = null,
-        polyunsaturatedFat = null,
-        omega3 = null,
-        omega6 = null,
-        saturatedFat = response.saturatedFat?.number?.grams,
-        transFat = response.transFat?.number?.grams,
-        cholesterol = response.cholesterol?.number?.grams,
-        totalFat = response.fat?.number?.grams ?: 0.grams,
-        foodEnergy = response.calories?.number?.kcal ?: 0.kcal,
-        portion = servingSize,
-    )
-}
-
-private fun responseToFoodItem(
-    response: BrandedFoodItemSchema,
-): BrandedFDCFoodItem {
+internal fun BrandedFoodItemSchema.toModel(): BrandedFDCFoodItem {
+    val servingSize = when (servingSizeUnit?.lowercase()) {
+        "mlt" -> Portion(servingSize!!.milliliters)
+        "grm" -> Portion(servingSize!!.grams)
+        null -> null
+        else -> throw (Throwable("Unsupported serving size schema", IllegalStateException()))
+    }
+    val nutrition = foodNutrients?.toNutritionInfo(servingSize ?: Portion(100.grams))?.chooseBest()
     return BrandedFDCFoodItem(
-        fdcId = BrandedFDCId(response.fdcId),
-        nutritionalInfo = response.labelNutrients?.let {
-            convertAPINutrients(
-                response.servingSize!!.weightIn(stringToWeightUnit(response.servingSizeUnit!!)!!),
-                it
-            )
-        },
-        description = response.description,
-        ingredients = response.ingredients,
-        brandOwner = response.brandOwner,
-        upcGTIN = response.gtinUpc,
+        fdcId = BrandedFDCId(fdcId),
+        description = description,
+        nutritionalInfo = if (nutrition != null && servingSize != null) nutrition.scaleToPortion(servingSize) else nutrition,
+        ingredients = ingredients,
+        brandOwner = brandOwner,
+        upcGTIN = gtinUpc,
     )
 }
 

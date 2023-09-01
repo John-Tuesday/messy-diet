@@ -11,7 +11,7 @@ interface FoodDataCentralRepository {
     suspend fun getFoodDetails(fdcId: FDCId): ResultResponse<FDCFoodItem, FDCError>
 }
 
-internal class FoodDataCentralRepositoryImplementation constructor(
+internal class FoodDataCentralRepositoryImplementation(
     private val dispatcher: CoroutineDispatcher,
     private val fdcSource: FoodDataCentralRemoteSource,
 ) : FoodDataCentralRepository {

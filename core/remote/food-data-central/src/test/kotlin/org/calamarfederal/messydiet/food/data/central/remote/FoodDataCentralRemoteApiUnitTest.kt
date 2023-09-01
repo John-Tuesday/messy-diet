@@ -1,26 +1,20 @@
 package org.calamarfederal.messydiet.food.data.central.remote
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
-import org.calamarfederal.messydiet.food.data.central.BadSpriteTest
-import org.calamarfederal.messydiet.food.data.central.SpriteTest
-import org.calamarfederal.messydiet.food.data.central.TestApiKey
-import org.calamarfederal.messydiet.food.data.central.di.FoodDataCentral
-import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodItemSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodNutrientSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemSchema
+import org.calamarfederal.messydiet.food.data.central.*
+import org.calamarfederal.messydiet.food.data.central.di.API_KEY_TAG
+import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSchema.Foundation
 import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSchema.SRLegacy
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodSearchCriteriaSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodSearchCriteriaSchema.TradeChannel.ChildNutritionFoodPrograms
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodSearchCriteriaSchema.TradeChannel.Grocery
-import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultFoodSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SortBySchema.DataTypeKeyword
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SortOrderSchema.Ascending
-import org.calamarfederal.messydiet.food.data.central.searchQuery
-import org.junit.Before
-import org.junit.Test
+import org.kodein.di.direct
+import org.kodein.di.instance
 import retrofit2.Response
+import kotlin.test.BeforeTest
+import kotlin.test.Test as KTest
 
 private fun <T> Response<T>.assertSuccessful(
     lazyMessage: (Response<T>) -> Unit = {},
@@ -34,49 +28,26 @@ private fun <T> Response<T>.assertSuccessful(
     return this
 }
 
-@OptIn(ExperimentalStdlibApi::class)
-private fun prettyPrint(nutrient: AbridgedFoodNutrientSchema) {
-    println(Moshi.Builder().build().adapter<AbridgedFoodNutrientSchema>().indent("    ").toJson(nutrient))
-}
-
-@OptIn(ExperimentalStdlibApi::class)
-private fun prettyPrint(item: AbridgedFoodItemSchema) {
-    println(Moshi.Builder().build().adapter<AbridgedFoodItemSchema>().indent("    ").toJson(item))
-    val nutrients = item.foodNutrients!!
-    for (n in nutrients) {
-        prettyPrint(n)
-    }
-}
-
-@OptIn(ExperimentalStdlibApi::class)
-private fun prettyPrint(item: SearchResultFoodSchema) {
-    println(Moshi.Builder().build().adapter<SearchResultFoodSchema>().indent("    ").toJson(item))
-}
-
-@OptIn(ExperimentalStdlibApi::class)
-private fun prettyPrint(item: BrandedFoodItemSchema) {
-    println(Moshi.Builder().build().adapter<BrandedFoodItemSchema>().indent("    ").toJson(item))
-}
-
 internal class FoodDataCentralRemoteApiUnitTest {
     private lateinit var fdcApi: FoodDataCentralApi
+    private lateinit var testApiKey: String
 
-    @Before
+    @BeforeTest
     fun setUp() {
-        fdcApi = FoodDataCentral.foodDataCentralApi()
+        fdcApi = testDi.direct.instance()
+        testApiKey = testDi.direct.instance(tag = API_KEY_TAG)
     }
 
-    @Test
+
+    @KTest
     fun `Post food search `() {
-        val body = fdcApi.postFoodsSearch(
-            TestApiKey,
+        val result = fdcApi.postFoodsSearch(
+            testApiKey,
             FoodSearchCriteriaSchema(
                 query = "Cheddar Cheese",
                 dataType = listOf(
-//                    DataType.Branded,
                     Foundation,
                     SRLegacy,
-//                    DataType.SURVEY_FNDDS,
                 ),
                 pageSize = 25,
                 pageNumber = 2,
@@ -94,41 +65,31 @@ internal class FoodDataCentralRemoteApiUnitTest {
             val body = it.body()!!
             println("$body")
         }.body()!!
-        println("$body")
+        println("$result")
+    }
+}
+
+internal class FoodDataCentralRemoteApiPrettyPrinter {
+    private lateinit var fdcApi: FoodDataCentralApi
+    private lateinit var testApiKey: String
+
+    @BeforeTest
+    fun setUp() {
+        fdcApi = testDi.direct.instance<FoodDataCentralApi>()
+        testApiKey = testDi.direct.instance(tag = API_KEY_TAG)
     }
 
-    @Test
-    fun `Sprite test from FoodsList`() {
-        val result = fdcApi.postFoodsSearch(
-            apiKey = TestApiKey,
-            FoodSearchCriteriaSchema(
-                query = searchQuery { withUpc(SpriteTest.spriteUpc) },
-                dataType = listOf(SpriteTest.spriteTypeSchema),
-            ),
-        ).execute().assertSuccessful().body()!!
-
-        for (f in result.foods!!) {
-            prettyPrint(f)
-        }
-    }
-
-    @Test
-    fun `Sprite test from Food`() {
+    private fun prettyPrintGetFoodBranded(fdcId: String) {
         val result = fdcApi.getFoodWithFdcIdBranded(
-            apiKey = TestApiKey,
-            fdcId = SpriteTest.spriteFdcIdString,
+            apiKey = testApiKey,
+            fdcId = fdcId,
         ).execute().assertSuccessful().body()!!
 
-        prettyPrint(result)
+        println(prettyFormatDataClassString(result.toString()))
     }
 
-    @Test
-    fun `Bad Sprite test from food`() {
-        val result = fdcApi.getFoodWithFdcIdBranded(
-            apiKey = TestApiKey,
-            fdcId = BadSpriteTest.spriteFdcIdString
-        ).execute().assertSuccessful().body()!!
-
-        prettyPrint(result)
+    @KTest
+    fun `One off testing`() {
+        prettyPrintGetFoodBranded(CheeriosTestA.cheeriosFdcIdString)
     }
 }

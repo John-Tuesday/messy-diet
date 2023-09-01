@@ -4,6 +4,8 @@ import org.calamarfederal.messydiet.diet_data.model.*
 import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodNutrientSchema
 import org.calamarfederal.messydiet.measure.WeightUnit
+import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.messydiet.measure.milliliters
 import org.calamarfederal.messydiet.measure.weightOf
 
 internal fun stringToWeightUnit(
@@ -63,17 +65,18 @@ sealed interface FDCId {
     val fdcId: Int
 }
 
-val FDCId.dataType: FDCDataType get() = when(this) {
-    is BrandedFDCId -> FDCDataType.Branded
-    is SurveyFdcId -> FDCDataType.Survey
-    is LegacyFdcId -> FDCDataType.Legacy
-    is FoundationFdcId -> FDCDataType.Foundation
-}
+val FDCId.dataType: FDCDataType
+    get() = when (this) {
+        is BrandedFDCId -> FDCDataType.Branded
+        is SurveyFdcId -> FDCDataType.Survey
+        is LegacyFdcId -> FDCDataType.Legacy
+        is FoundationFdcId -> FDCDataType.Foundation
+    }
 
 fun foodDataCentralId(
     id: Int,
     dataType: FDCDataType,
-): FDCId = when(dataType) {
+): FDCId = when (dataType) {
     FDCDataType.Foundation -> FoundationFdcId(id)
     FDCDataType.Survey -> SurveyFdcId(id)
     FDCDataType.Branded -> BrandedFDCId(id)
@@ -81,32 +84,6 @@ fun foodDataCentralId(
 }
 
 typealias FDCNutritionInfo = Nutrition
-//data class FDCNutritionInfo internal constructor(
-//    override val portion: Weight = 0.grams,
-//    override val totalProtein: Weight = 0.grams,
-//    override val fiber: Weight? = null,
-//    override val sugar: Weight? = null,
-//    override val sugarAlcohol: Weight? = null,
-//    override val starch: Weight? = null,
-//    override val totalCarbohydrates: Weight = 0.grams,
-//    override val monounsaturatedFat: Weight? = null,
-//    override val polyunsaturatedFat: Weight? = null,
-//    override val omega3: Weight? = null,
-//    override val omega6: Weight? = null,
-//    override val saturatedFat: Weight? = null,
-//    override val transFat: Weight? = null,
-//    override val cholesterol: Weight? = null,
-//    override val totalFat: Weight = 0.grams,
-//    override val foodEnergy: FoodEnergy = 0.kcal,
-//    override val calcium: Weight? = null,
-//    override val chloride: Weight? = null,
-//    override val iron: Weight? = null,
-//    override val magnesium: Weight? = null,
-//    override val phosphorous: Weight? = null,
-//    override val potassium: Weight? = null,
-//    override val sodium: Weight? = null,
-//    override val vitaminC: Weight? = null,
-//) : NutritionInfo
 
 sealed interface FDCFoodItem {
     val fdcId: FDCId
@@ -114,37 +91,120 @@ sealed interface FDCFoodItem {
     val nutritionalInfo: FDCNutritionInfo?
 }
 
-internal fun parseNutrientNumber(amount: Number, unitName: String, number: String): FDCNutritionInfo? {
+private fun parseNutrientNumber(
+    amount: Number,
+    unitName: String,
+    nutrientNumber: String,
+    nutrientId: Int,
+): FDCNutritionInfo {
     val weightUnit = stringToWeightUnit(unitName)
     val energyUnit = stringToFoodEnergyUnit(unitName)
-    return when (number) {
+    return when (nutrientNumber) {
         "203" -> FDCNutritionInfo(totalProtein = weightUnit!!.weightOf(amount))
         "204" -> FDCNutritionInfo(totalFat = weightUnit!!.weightOf(amount))
         "205" -> FDCNutritionInfo(totalCarbohydrates = weightUnit!!.weightOf(amount))
         "208" -> FDCNutritionInfo(foodEnergy = energyUnit!!.energyOf(amount))
-        "262" -> FDCNutritionInfo(/*caffeine*/)
+        "262" -> FDCNutritionInfo(/* caffeine */)
         "269" -> FDCNutritionInfo(sugar = weightUnit!!.weightOf(amount))
         "291" -> FDCNutritionInfo(fiber = weightUnit!!.weightOf(amount))
+        "295".also { (nutrientId == 1082) } -> FDCNutritionInfo(/* fiberSoluble */)
         "301" -> FDCNutritionInfo(calcium = weightUnit!!.weightOf(amount))
         "303" -> FDCNutritionInfo(iron = weightUnit!!.weightOf(amount))
+        "304" -> FDCNutritionInfo(magnesium = weightUnit!!.weightOf(amount))
+        "305" -> FDCNutritionInfo(phosphorous = weightUnit!!.weightOf(amount))
+        "306" -> FDCNutritionInfo(potassium = weightUnit!!.weightOf(amount))
         "307" -> FDCNutritionInfo(sodium = weightUnit!!.weightOf(amount))
+        "309" -> FDCNutritionInfo(/* zinc */)
+        "318" -> FDCNutritionInfo(/* vitaminA */)
+        "324" -> FDCNutritionInfo(/* vitaminD (D2 + D3) */)
         "401" -> FDCNutritionInfo(vitaminC = weightUnit!!.weightOf(amount))
+        "404" -> FDCNutritionInfo(/* thiamin */)
+        "415" -> FDCNutritionInfo(/* vitaminB6 */)
+        "417" -> FDCNutritionInfo(/* totalFolate */)
+        "418" -> FDCNutritionInfo(/* vitaminB12 */)
+        "431" -> FDCNutritionInfo(/* folicAcid */)
         "539" -> FDCNutritionInfo(sugar = weightUnit!!.weightOf(amount)) // sugar added
         "601" -> FDCNutritionInfo(cholesterol = weightUnit!!.weightOf(amount))
         "605" -> FDCNutritionInfo(transFat = weightUnit!!.weightOf(amount))
         "606" -> FDCNutritionInfo(saturatedFat = weightUnit!!.weightOf(amount))
-        else -> null
+        "645" -> FDCNutritionInfo(monounsaturatedFat = weightUnit!!.weightOf(amount))
+        "646" -> FDCNutritionInfo(polyunsaturatedFat = weightUnit!!.weightOf(amount))
+        else -> throw (Throwable("Unsupported nutrient number: '$nutrientNumber'"))
     }
 }
 
-internal fun FoodNutrientSchema.toNutritionInfo(): FDCNutritionInfo? {
-    return parseNutrientNumber(
-        amount = amount ?: return null,
-        unitName = nutrient?.unitName ?: return null,
-        number = nutrient.number ?: return null,
-    )
+internal enum class NutrientDerivationType {
+    Per100Units,
+    LessThanPer100Units,
+    PerServing,
+    DailyValuePerServing,
+    ;
+
+    companion object {
+        internal fun fromRemoteId(id: Int): NutrientDerivationType? = when (id) {
+            71 -> PerServing
+            75 -> DailyValuePerServing
+            78 -> Per100Units
+            79 -> LessThanPer100Units
+            else -> null
+        }
+    }
 }
 
-internal fun List<FoodNutrientSchema>.toNutritionInfo(): FDCNutritionInfo =
-    mapNotNull { it.toNutritionInfo() }
-        .fold(FDCNutritionInfo()) { acc, nutrition -> acc + nutrition }
+internal enum class CombinedNutrientType {
+    Per100,
+    PerServing,
+    PerServingDailyValue,
+    ;
+}
+
+internal val CombinedNutrientType.isPerSering: Boolean
+    get() = when (this) {
+        CombinedNutrientType.Per100 -> false
+        CombinedNutrientType.PerServing -> true
+        CombinedNutrientType.PerServingDailyValue -> true
+    }
+
+internal fun List<FoodNutrientSchema>.toNutritionInfo(servingSize: Portion = Portion(100.grams)): Map<CombinedNutrientType, FDCNutritionInfo> =
+    mapNotNull { schema ->
+        val derivationType = schema.foodNutrientDerivation?.id?.let {
+            NutrientDerivationType.fromRemoteId(it)
+                ?: throw (Throwable("Unrecognized Nutrient Derivation Type: id: '${it}'"))
+        } ?: return@mapNotNull null
+
+        val nutrition = parseNutrientNumber(
+            amount = schema.amount ?: return@mapNotNull null,
+            unitName = schema.nutrient?.unitName ?: return@mapNotNull null,
+            nutrientNumber = schema.nutrient.number ?: return@mapNotNull null,
+            nutrientId = schema.nutrient.id ?: return@mapNotNull null
+        )
+
+        derivationType to nutrition
+    }.fold<Pair<NutrientDerivationType, FDCNutritionInfo>, MutableMap<NutrientDerivationType, FDCNutritionInfo>>(
+        mutableMapOf()
+    ) { acc, (type, nutrition) ->
+        acc[type] = acc[type]?.let { it + nutrition } ?: nutrition
+        acc
+    }.let { oldMap ->
+        buildMap<CombinedNutrientType, FDCNutritionInfo> {
+            for ((key, value) in oldMap) {
+                val newKey = when (key) {
+                    NutrientDerivationType.Per100Units, NutrientDerivationType.LessThanPer100Units -> CombinedNutrientType.Per100
+                    NutrientDerivationType.PerServing -> CombinedNutrientType.PerServing
+                    NutrientDerivationType.DailyValuePerServing -> CombinedNutrientType.PerServingDailyValue
+                }
+                set(newKey, get(newKey)?.plus(value) ?: value)
+            }
+        }.mapValues {  (key, value) ->
+            if (key.isPerSering)
+                value.copy(portion = servingSize)
+            else
+                value.copy(portion = if (servingSize.weight != null) Portion(100.grams) else Portion(100.milliliters))
+        }
+    }
+
+internal fun chooseBestFrom(nutritionMap: Map<CombinedNutrientType, FDCNutritionInfo>): FDCNutritionInfo? {
+    return nutritionMap[CombinedNutrientType.Per100] ?: nutritionMap[CombinedNutrientType.PerServing]
+    ?: nutritionMap[CombinedNutrientType.PerServingDailyValue]
+}
+internal fun Map<CombinedNutrientType, FDCNutritionInfo>.chooseBest(): FDCNutritionInfo? = chooseBestFrom(this)

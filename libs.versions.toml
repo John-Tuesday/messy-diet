@@ -20,6 +20,8 @@ moshiVersion = "1.14.0"
 
 coroutineVersion = "1.7.3"
 
+kodeinVersion = "7.19.0"
+
 # Plugins
 kotlinVersion = "1.9.10"
 kotlinSerialization = "1.5.1"
@@ -70,6 +72,9 @@ moshi-reflect = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mos
 # Datastore
 datastore-proto = { module = "androidx.datastore:datastore", version.ref = "androidDatastoreVersion" }
 
+# Kodein DI
+kotlin-kodein-di = { module = "org.kodein.di:kodein-di", version.ref = "kodeinVersion" }
+
 # Kotlin coroutine
 kotlin-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutineVersion" }
 kotlin-coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineVersion" }
@@ -93,6 +98,7 @@ androidx-navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", ver
 
 # General Test
 junit = { module = "junit:junit", version = "4.13.2" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinVersion"}
 
 # Plugins
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinVersion" }
@@ -131,4 +137,8 @@ compose-androidTest = [
     "androidx-test-espresso",
     "androidx-test-ext-junit",
     "androidx-test-ext-junit-ktx",
+]
+kotlin-test-junit = [
+    "junit",
+    "kotlin-test-junit",
 ]

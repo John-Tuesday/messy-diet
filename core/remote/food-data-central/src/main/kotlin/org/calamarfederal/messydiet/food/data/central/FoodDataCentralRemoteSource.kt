@@ -13,7 +13,7 @@ internal interface FoodDataCentralRemoteSource {
     suspend fun getFoodByFdcId(fdcId: FDCId): ResultResponse<FDCFoodItem, FDCError>
 }
 
-internal class FoodDataCentralRemoteSourceImplementation constructor(
+internal class FoodDataCentralRemoteSourceImplementation(
     private val networkDispatcher: CoroutineDispatcher,
     private val apiKey: String,
     private val fdcApi: FoodDataCentralApi,

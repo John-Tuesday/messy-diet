@@ -1,23 +1,21 @@
 package org.calamarfederal.messydiet.food.data.central
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.calamarfederal.messydiet.diet_data.model.Nutrition
-import org.calamarfederal.messydiet.food.data.central.di.FoodDataCentral
+import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.model.getValueOrNull
 import org.calamarfederal.messydiet.food.data.central.model.isSuccess
-import org.junit.Before
-import org.junit.Test
+import org.kodein.di.direct
+import org.kodein.di.instance
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 internal class FoodDataCentralRemoteSourceTest {
     private lateinit var remote: FoodDataCentralRemoteSource
 
-    @Before
+    @BeforeTest
     fun setUp() {
-        remote = FoodDataCentral.foodDataCentralRemoteSource(
-            apiKey = TestApiKey,
-            dispatcher = Dispatchers.Default,
-        )
+        remote = testDi.direct.instance()
     }
 
     @Test
@@ -48,5 +46,20 @@ internal class FoodDataCentralRemoteSourceTest {
 
         val nutrition = foodItem.nutritionalInfo!!
         assert(nutrition.totalCarbohydrates.inGrams() - 10.83 <= 0.01)
+    }
+
+    @Test
+    fun `Cheerios Food test`() {
+        val result = runBlocking {
+            remote.getFoodByFdcId(CheeriosTestA.cheeriosFdcId)
+        }
+
+        assert(result.isSuccess())
+
+        val foodItem = result.getValueOrNull()!!
+        prettyPrint(foodItem.nutritionalInfo as Nutrition)
+
+        val nutrition = foodItem.nutritionalInfo!!
+        prettyPrint(nutrition)
     }
 }

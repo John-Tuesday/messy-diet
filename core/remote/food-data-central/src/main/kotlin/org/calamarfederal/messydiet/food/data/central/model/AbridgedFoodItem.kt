@@ -54,7 +54,7 @@ internal fun SRLegacyFoodItemSchema.toModel(): FDCAbridgedFoodItem{
     return FDCAbridgedFoodItem(
         fdcId = LegacyFdcId(fdcId),
         description = description,
-        nutritionalInfo = foodNutrients?.toNutritionInfo(),
+        nutritionalInfo = foodNutrients?.toNutritionInfo()?.chooseBest(),
         publishedDate = publicationDate?.let { parseResponseDate(it) },
         brandOwner = null,
         gtinUPC = null,
