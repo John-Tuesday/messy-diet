@@ -9,11 +9,23 @@ import org.calamarfederal.messydiet.food.data.central.model.FDCFoodItem
 import org.calamarfederal.messydiet.food.data.central.model.fold
 import javax.inject.Inject
 
+/**
+ * Search (remote) food items
+ */
 interface FoodSearchRepository {
+    /**
+     * Search for food items using it's GTIN or UPC (barcode)
+     */
     fun searchWithUpcGtin(upcGtin: String): Flow<SearchStatus>
 }
 
+/**
+ * Fetch (remote) details on a known food item
+ */
 interface FoodDetailsRepository {
+    /**
+     * Fetch food details using [foodId]
+     */
     fun foodDetails(foodId: FoodId): Flow<FoodDetailsStatus>
 }
 
