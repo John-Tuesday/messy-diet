@@ -25,7 +25,6 @@ import org.gradle.accessors.dm.LibrariesForLibs
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("java-library")
-//    id("kotlin-library")
 }
 
 group = "org.calamarfederal.messydiet"
@@ -34,10 +33,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
     toolchain {
-//        sourceCompatibility = JavaVersion.VERSION_1_8
-//        targetCompatibility = JavaVersion.VERSION_1_8
         languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_1_8.majorVersion))
-//        vendor.set(JvmVendorSpec.ADOPTOPENJDK)
     }
 }
 
@@ -46,5 +42,5 @@ val libs = the<LibrariesForLibs>()
 dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.coroutine)
-    testImplementation(libs.junit)
+    testImplementation(libs.bundles.kotlin.test.junit)
 }
