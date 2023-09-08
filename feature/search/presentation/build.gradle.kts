@@ -17,6 +17,8 @@ dependencies {
     implementation(project(":feature:measure"))
     implementation(project(":core:diet-model"))
 
+    androidTestImplementation(project(":core:test:common"))
+
     implementation(libs.lifecycle.compose.utils)
     implementation(libs.bundles.compose.implementation)
     implementation(libs.androidx.activity.compose)

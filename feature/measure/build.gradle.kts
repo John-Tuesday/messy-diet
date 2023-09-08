@@ -10,6 +10,8 @@ dependencies {
     implementation(project(":core:diet-model"))
     implementation(project(":core:measure"))
 
+    androidTestImplementation(project(":core:test:common"))
+
     implementation(libs.bundles.compose.implementation)
     testImplementation(libs.junit)
     debugImplementation(libs.bundles.compose.debug)

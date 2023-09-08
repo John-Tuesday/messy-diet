@@ -24,6 +24,7 @@ includeBuild("platforms")
 
 rootProject.name = "messy-diet"
 include(":app-platform")
+include(":core:test:common")
 include(":core:android:hilt")
 include(":core:measure")
 include(":core:diet-model")

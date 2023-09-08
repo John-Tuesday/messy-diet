@@ -10,7 +10,6 @@ import org.calamarfederal.messydiet.feature.bmi.presentation.enter_stats.EnterSt
 import org.calamarfederal.messydiet.feature.meal.presentation.MealsGraph
 import org.calamarfederal.messydiet.feature.meal.presentation.mealsGraph
 import org.calamarfederal.messydiet.feature.meal.presentation.toMealsGraph
-import org.calamarfederal.messydiet.feature.search.presentation.SearchFoodGraph
 import org.calamarfederal.messydiet.feature.search.presentation.searchFoodGraph
 import org.calamarfederal.messydiet.feature.search.presentation.toSearchFoodGraph
 import org.calamarfederal.messydiet.ui.theme.MessyDietTheme

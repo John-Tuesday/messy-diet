@@ -1,11 +1,6 @@
 package org.calamarfederal.messydiet.feature.search.presentation
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
@@ -39,14 +34,15 @@ data object FoodDetailsScreen : RemoteFoodScreen() {
     internal fun navRoute(foodIdNumber: Int, foodIdType: Int) = "$BASE_ROUTE/$foodIdNumber/$foodIdType"
 }
 
-fun NavController.toSearchFood() {
+internal fun NavController.toSearchFood() {
     navigate(SearchFoodScreen.route)
 }
 
 private fun NavController.toFoodDetails(foodIdNumber: Int, foodIdType: Int) {
     navigate(FoodDetailsScreen.navRoute(foodIdNumber, foodIdType))
 }
-fun NavController.toFoodDetails(foodId: FoodId) {
+
+internal fun NavController.toFoodDetails(foodId: FoodId) {
     navigate(FoodDetailsScreen.navRoute(foodId.id, foodId.type))
 }
 

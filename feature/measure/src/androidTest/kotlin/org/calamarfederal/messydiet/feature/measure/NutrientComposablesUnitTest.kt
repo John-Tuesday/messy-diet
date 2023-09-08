@@ -5,34 +5,31 @@ import androidx.activity.ComponentActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.filterToOne
-import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onSiblings
-import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.calamarfederal.messydiet.diet_data.model.Nutrition
+import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.diet_data.model.kcal
 import org.calamarfederal.messydiet.measure.R
 import org.calamarfederal.messydiet.measure.Weight
 import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.messydiet.test.UnitTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 
+@Category(UnitTest::class)
 @RunWith(AndroidJUnit4::class)
 internal class NutrientComposablesUnitTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
-    private var testNutrition by mutableStateOf(Nutrition())
-
     private val allFilledNutrition = Nutrition(
         foodEnergy = 15.kcal,
-        portion = 16.grams,
+        portion = Portion(16.grams),
         totalFat = 1.grams,
         monounsaturatedFat = 2.grams,
         polyunsaturatedFat = 3.grams,
@@ -57,6 +54,7 @@ internal class NutrientComposablesUnitTest {
         sodium = 24.grams,
     )
 
+    private var testNutrition by mutableStateOf(allFilledNutrition)
     private lateinit var weightFormatter: LocalizedNumberFormatter
 
     private val monounsaturatedFatLabelString get() = composeRule.activity.getString(R.string.monounsaturated_fat)
@@ -76,7 +74,7 @@ internal class NutrientComposablesUnitTest {
 
     @Before
     fun setUp() {
-        testNutrition = Nutrition()
+        testNutrition = Nutrition(portion = Portion(0.grams))
 
         composeRule.setContent {
             NutritionInfoColumn(nutrition = testNutrition)
@@ -118,8 +116,6 @@ internal class NutrientComposablesUnitTest {
 
     @Test
     fun `Optional Fat nutrients do not exist when null`() {
-        testNutrition = Nutrition()
-
         composeRule
             .onNodeWithText(monounsaturatedFatLabelString)
             .assertDoesNotExist()
@@ -155,8 +151,6 @@ internal class NutrientComposablesUnitTest {
 
     @Test
     fun `Optional Carbohydrate nutrients are hidden when null`() {
-        testNutrition = Nutrition()
-
         composeRule
             .onNodeWithText(fiberLabelString)
             .assertDoesNotExist()
