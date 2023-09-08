@@ -8,9 +8,13 @@ androidActivityVersion = "1.7.2"
 androidLifecycleVersion = "2.6.1"
 androidDatastoreVersion = "1.0.0"
 
+androidCameraxVersion = "1.3.0-rc01"
+
+androidMlKitBarcodeVersion = "17.2.0"
+
 navVersion = "2.7.1"
 
-hiltVersion = "2.47"
+hiltVersion = "2.48"
 hiltNavComposeVersion = "1.0.0"
 
 roomVersion = "2.5.2"
@@ -47,6 +51,7 @@ compose-ui-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref
 # Lifecycle
 lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidLifecycleVersion"}
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidLifecycleVersion" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidLifecycleVersion" }
 lifecycle-compose-utils = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidLifecycleVersion" }
 
 # Hilt
@@ -68,6 +73,17 @@ retrofit-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.re
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshiVersion" }
 moshi-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiVersion"}
 moshi-reflect = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiVersion" }
+
+# MLKit
+mlkit-barcode = { module = "com.google.mlkit:barcode-scanning", version.ref = "androidMlKitBarcodeVersion" }
+
+# Camera
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "androidCameraxVersion" }
+androidx-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidCameraxVersion" }
+androidx-camerax-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "androidCameraxVersion" }
+androidx-camerax-view = { module = "androidx.camera:camera-view", version.ref = "androidCameraxVersion" }
+androidx-camerax-mlkit-integration = { module = "androidx.camera:camera-mlkit-vision", version.ref = "androidCameraxVersion" }
+androidx-camerax-extenstions = { module = "androidx.camera:camera-extensions", version.ref = "androidCameraxVersion" }
 
 # Datastore
 datastore-proto = { module = "androidx.datastore:datastore", version.ref = "androidDatastoreVersion" }
@@ -91,14 +107,15 @@ androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", vers
 # General Implementation
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidCoreVersion" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidActivityVersion" }
-androidx-activity = { module = "androidx.activity:activity-ktx", version.ref = "androidActivityVersion" }
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidActivityVersion" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidActivityVersion" }
 androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidLifecycleVersion" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navVersion" }
 androidx-navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navVersion" }
 
 # General Test
 junit = { module = "junit:junit", version = "4.13.2" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinVersion"}
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinVersion" }
 
 # Plugins
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinVersion" }

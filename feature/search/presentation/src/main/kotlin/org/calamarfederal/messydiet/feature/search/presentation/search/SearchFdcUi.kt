@@ -1,8 +1,5 @@
 package org.calamarfederal.messydiet.feature.search.presentation.search
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,12 +8,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,17 +30,10 @@ import org.calamarfederal.messydiet.feature.search.presentation.R
 import org.calamarfederal.messydiet.feature.search.presentation.detail.FoodItemDetailsLayoutFromStatus
 
 @Composable
-private fun checkInternetPermission(
-    context: Context = LocalContext.current,
-): Boolean {
-    return context.checkSelfPermission(Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED &&
-            context.checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
-}
-
-@Composable
 fun SearchFdcUi(
     toFoodDetails: (FoodId) -> Unit,
     toAllMeals: () -> Unit,
+    toBarcodeScanner: () -> Unit,
     viewModel: SearchFdcViewModel = hiltViewModel(),
 ) {
     val searchStatus by viewModel.searchStatusState.collectAsStateWithLifecycle()
@@ -53,6 +46,7 @@ fun SearchFdcUi(
         searchStatus = searchStatus,
         getFoodItemDetails = viewModel::getFoodDetails,
         foodItemDetailStatus = foodItemDetails,
+        useBarcodeScanner = toBarcodeScanner,
         saveFoodItemDetails = {
             viewModel.saveFoodDetails()
             toAllMeals()
@@ -67,46 +61,45 @@ fun SearchFdcScreen(
     onSubmitQuery: () -> Unit,
     getFoodItemDetails: (FoodId) -> Unit,
     saveFoodItemDetails: () -> Unit,
+    useBarcodeScanner: () -> Unit,
     foodItemDetailStatus: FoodDetailsStatus?,
     modifier: Modifier = Modifier,
     searchStatus: SearchStatus? = null,
 ) {
-    if (!checkInternetPermission()) {
-        Text(text = "PERMISSION FAILED")
-    } else {
-        Scaffold(
-            topBar = {
-                SearchFdcTopBar(
-                    queryInput = queryInput,
-                    onQueryChange = onQueryChange,
-                    onSubmitQuery = onSubmitQuery,
-                    searchStatus = searchStatus,
-                    onNavigateUp = {},
-                    onFoodItemClick = getFoodItemDetails,
-                )
-            },
-            floatingActionButton = {
-                SearchFoodFab(
-                    foodItemDetailStatus = foodItemDetailStatus,
-                    saveFoodItemDetails = saveFoodItemDetails,
-                )
-            },
-            floatingActionButtonPosition = FabPosition.End,
-            modifier = modifier,
-        ) { padding ->
-            Surface(
+    Scaffold(
+        topBar = {
+            SearchFdcTopBar(
+                queryInput = queryInput,
+                onQueryChange = onQueryChange,
+                onSubmitQuery = onSubmitQuery,
+                searchStatus = searchStatus,
+                onNavigateUp = {},
+                onFoodItemClick = getFoodItemDetails,
+                useBarcodeScanner = useBarcodeScanner,
+            )
+        },
+        floatingActionButton = {
+            SearchFoodFab(
+                foodItemDetailStatus = foodItemDetailStatus,
+                saveFoodItemDetails = saveFoodItemDetails,
+                useBarcodeScanner = useBarcodeScanner,
+            )
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        modifier = modifier,
+    ) { padding ->
+        Surface(
+            modifier = Modifier
+                .padding(padding)
+                .consumeWindowInsets(padding)
+        ) {
+            FoodItemDetailsLayoutFromStatus(
+                state = foodItemDetailStatus,
                 modifier = Modifier
-                    .padding(padding)
-                    .consumeWindowInsets(padding)
-            ) {
-                FoodItemDetailsLayoutFromStatus(
-                    state = foodItemDetailStatus,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 24.dp)
-                        .padding(top = 16.dp),
-                )
-            }
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 16.dp),
+            )
         }
     }
 }
@@ -115,6 +108,7 @@ fun SearchFdcScreen(
 private fun SearchFoodFab(
     foodItemDetailStatus: FoodDetailsStatus?,
     saveFoodItemDetails: () -> Unit,
+    useBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (foodItemDetailStatus) {
@@ -125,6 +119,12 @@ private fun SearchFoodFab(
                 icon = { Icon(Icons.Default.Add, null) },
                 modifier = modifier,
             )
+        }
+
+        null -> {
+            FloatingActionButton(onClick = useBarcodeScanner) {
+                Icon(Icons.Outlined.Info, null)
+            }
         }
 
         else -> {}
@@ -139,6 +139,7 @@ private fun SearchFdcTopBar(
     onSubmitQuery: () -> Unit,
     onNavigateUp: () -> Unit,
     onFoodItemClick: (FoodId) -> Unit,
+    useBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     searchStatus: SearchStatus? = null,
 ) {
@@ -160,6 +161,9 @@ private fun SearchFdcTopBar(
                 Text(text = "Enter UPC or GTIN")
             },
             trailingIcon = {
+                IconButton(onClick = useBarcodeScanner) {
+                    Icon(Icons.Outlined.Info, null)
+                }
             },
             leadingIcon = {
                 if (active) {
@@ -295,5 +299,6 @@ fun SearchFdcPreview() {
         searchStatus = null,
         saveFoodItemDetails = {},
         foodItemDetailStatus = null,
+        useBarcodeScanner = {},
     )
 }

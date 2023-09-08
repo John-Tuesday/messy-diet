@@ -10,8 +10,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import org.calamarfederal.messydiet.core.android.hilt.NetworkDispatcher
 import org.calamarfederal.messydiet.feature.search.data.*
-import org.calamarfederal.messydiet.feature.search.data.FoodDetailsRepositoryImplementation
-import org.calamarfederal.messydiet.feature.search.data.FoodSearchRepositoryImplementation
 import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
 import org.calamarfederal.messydiet.food.data.central.di.FoodDataCentral
 import javax.inject.Qualifier
@@ -27,7 +25,13 @@ internal object FoodSearchDiModule {
     @FoodDataCentralApiKey
     fun provideApiKey(): String = "DEMO_KEY"
 
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+internal object FoodSearchViewModelDiModule {
     @Provides
+    @ViewModelScoped
     fun provideFoodDataCentralRepository(
         @FoodDataCentralApiKey
         apiKey: String,
@@ -37,6 +41,7 @@ internal object FoodSearchDiModule {
         networkDispatcher = networkDispatcher,
         apiKey = apiKey,
     )
+
 }
 
 @Module

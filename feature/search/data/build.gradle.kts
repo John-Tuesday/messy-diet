@@ -18,4 +18,8 @@ dependencies {
     implementation(project(":core:diet-model"))
 
     implementation(project(":feature:meal:data"))
+
+    testImplementation(libs.junit)
+    debugImplementation(libs.bundles.compose.debug)
+    androidTestImplementation(libs.bundles.compose.androidTest)
 }

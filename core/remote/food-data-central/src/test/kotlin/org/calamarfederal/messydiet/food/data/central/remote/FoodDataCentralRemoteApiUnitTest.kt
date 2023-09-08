@@ -2,7 +2,7 @@ package org.calamarfederal.messydiet.food.data.central.remote
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
-import org.calamarfederal.messydiet.food.data.central.*
+import org.calamarfederal.messydiet.food.data.central.SpriteTest
 import org.calamarfederal.messydiet.food.data.central.di.API_KEY_TAG
 import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodItemSchema
@@ -114,7 +114,7 @@ internal class FoodDataCentralRemoteApiPrettyPrinter {
 
     @KTest
     fun `One off testing`() {
-        prettyPrintGetFoodBranded(CheeriosTestA.cheeriosFdcIdString)
+        prettyPrintGetFoodBranded(SpriteTest.spriteFdcIdString)
 
     }
 }

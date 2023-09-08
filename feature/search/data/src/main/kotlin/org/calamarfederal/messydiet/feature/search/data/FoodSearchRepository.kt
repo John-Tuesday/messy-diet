@@ -72,7 +72,7 @@ internal class FoodDetailsRepositoryImplementation @Inject constructor(
                     FoodDetailsStatus.Success(it.toFoodItemDetails())
                 },
                 onFailure = {
-                    FoodDetailsStatus.Failure(it.message ?: "Unknown external error")
+                    FoodDetailsStatus.Failure(it.message?.ifBlank { null } ?: "Unknown external error")
                 }
             ))
         } else {
