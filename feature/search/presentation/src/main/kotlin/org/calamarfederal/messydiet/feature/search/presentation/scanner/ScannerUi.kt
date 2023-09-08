@@ -20,12 +20,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.StateFlow
+import org.calamarfederal.messydiet.feature.search.presentation.R
 
 @Stable
 interface BarcodeScannerState {
@@ -93,16 +95,16 @@ private fun CameraPermissionDeniedScreen(
         ),
         title = {
             Text(
-                text = "Camera Permission Denied",
+                text = stringResource(id = R.string.camera_permission_denied_title),
             )
         },
         text = {
             Text(
-                text = "You can manually enable camera permission in the app settings",
+                text = stringResource(id = R.string.camera_permission_denied_body),
             )
         },
         confirmButton = {
-            TextButton(
+            Button(
                 onClick = {
                     context.startActivity(
                         Intent(
@@ -112,12 +114,12 @@ private fun CameraPermissionDeniedScreen(
                     )
                 },
             ) {
-                Text(text = "Settings")
+                Text(text = stringResource(id = R.string.app_settings))
             }
         },
         dismissButton = {
             TextButton(onClick = onBack) {
-                Text(text = "Back")
+                Text(text = stringResource(id = R.string.camera_permission_denied_back))
             }
         }
     )

@@ -5,4 +5,24 @@
 
     <!--  FAB prompting to convert remote food item into local Meal  -->
     <string name="add_meal">Add meal</string>
+
+    <!--  Search Screen, search bar placeholder hint  -->
+    <string name="search_searchbar_hint">Enter UPC or GTIN</string>
+
+    <!--  Search Screen, search bar content when nothing is found or nothing is searched  -->
+    <string name="search_nonexistent">Nothing to show…</string>
+    <string name="search_no_results">No results</string>
+    <!--  Search Screen, loading hint  -->
+    <string name="search_loading">Loading…</string>
+    <string name="search_failed">Search failed :(</string>
+
+    <!--  Food Detail, failed status  -->
+    <string name="fetch_food_detail_failed_title">Failed to fetch details</string>
+
+    <!--  Denied Camera Permission in Scanner  -->
+    <string name="camera_permission_denied_title">Permission denied</string>
+    <string name="camera_permission_denied_body">Permission to use the device camera was denied. You can manually enable camera permission in the app settings.</string>
+    <!--  Button text for denied permission, prompting to go to app settings to manually change permissions  -->
+    <string name="app_settings">Enable in settings</string>
+    <string name="camera_permission_denied_back">Back</string>
 </resources>

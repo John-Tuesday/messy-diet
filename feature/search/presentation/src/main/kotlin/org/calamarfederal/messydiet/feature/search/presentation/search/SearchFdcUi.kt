@@ -158,7 +158,7 @@ private fun SearchFdcTopBar(
             active = active,
             onActiveChange = { active = it },
             placeholder = {
-                Text(text = "Enter UPC or GTIN")
+                Text(text = stringResource(id = R.string.search_searchbar_hint))
             },
             trailingIcon = {
                 IconButton(onClick = useBarcodeScanner) {
@@ -216,7 +216,7 @@ private fun SearchNotExistent(
                 .fillMaxSize()
                 .padding(top = 16.dp)
         ) {
-            Text(text = "Nothing to show...")
+            Text(text = stringResource(id = R.string.search_nonexistent))
         }
     }
 
@@ -230,7 +230,7 @@ private fun SearchSuccess(
 ) {
     Surface(modifier = modifier) {
         if (status.results.isEmpty()) {
-            Text(text = "No results")
+            Text(text = stringResource(id = R.string.search_no_results))
         }
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -264,7 +264,7 @@ private fun SearchLoading(
         ) {
             CircularProgressIndicator()
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Loading ...")
+            Text(text = stringResource(id = R.string.search_loading))
         }
     }
 }
@@ -282,7 +282,7 @@ private fun SearchFailure(
                 .fillMaxWidth()
                 .padding(top = 16.dp),
         ) {
-            Text(text = "Search Failed :(")
+            Text(text = stringResource(id = R.string.search_failed))
             Text(text = status.message)
         }
     }

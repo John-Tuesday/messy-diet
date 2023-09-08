@@ -12,10 +12,12 @@ import org.calamarfederal.messydiet.feature.search.presentation.scanner.BarcodeS
 import org.calamarfederal.messydiet.feature.search.presentation.search.SearchFdcUi
 import org.calamarfederal.messydiet.feature.search.presentation.search.SearchFdcViewModel
 
-private const val SEARCH_FOOD_GRAPH_ROUTE = "search-food-graph"
-
 data object SearchFoodGraph {
-    const val route: String = SEARCH_FOOD_GRAPH_ROUTE
+    const val route: String = "search-food-graph"
+}
+
+fun NavController.toSearchFoodGraph() {
+    navigate(SearchFoodGraph.route)
 }
 
 sealed class RemoteFoodScreen(staticRoute: String = "") {
@@ -76,11 +78,6 @@ internal fun NavController.toBarcodeScanner() = navigate(
     },
 )
 
-
-fun NavController.toSearchFoodGraph() {
-    navigate(SearchFoodGraph.route)
-}
-
 fun NavGraphBuilder.searchFoodGraph(
     navController: NavController,
     navigateToViewAllMeals: () -> Unit,
@@ -100,7 +97,10 @@ fun NavGraphBuilder.searchFoodGraph(
             }
 
             LaunchedEffect(inBarcode) {
-                if (inBarcode.isNotBlank()) viewModel.query = inBarcode
+                if (inBarcode.isNotBlank()) {
+                    viewModel.query = inBarcode
+                    viewModel.submitSearchQuery()
+                }
             }
 
             SearchFdcUi(

@@ -8,16 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.calamarfederal.messydiet.diet_data.model.Nutrition
+import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.feature.measure.NutritionInfoColumn
-import org.calamarfederal.messydiet.feature.search.data.model.*
+import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
+import org.calamarfederal.messydiet.feature.search.data.model.FoodId
+import org.calamarfederal.messydiet.feature.search.data.model.FoodIdDummy
+import org.calamarfederal.messydiet.feature.search.data.model.FoodItemDetails
+import org.calamarfederal.messydiet.feature.search.presentation.R
+import org.calamarfederal.messydiet.measure.grams
 
 @Composable
 fun FdcFoodItemDetailsUi(
@@ -106,7 +112,10 @@ internal fun FoodItemDetailsLayoutFromStatus(
             }
 
             is FoodDetailsStatus.Failure -> {
-                Text(text = "FAILURE: ${state.message}")
+                Column {
+                    Text(text = stringResource(id = R.string.fetch_food_detail_failed_title))
+                    Text(text = state.message)
+                }
             }
 
             null -> {
@@ -150,7 +159,7 @@ private fun FoodDetailsPreview() {
     val foodItem = FoodItemDetails(
         foodId = FoodIdDummy,
         name = "Sprite Bottle, 1.75 Liters",
-        nutritionInfo = Nutrition(),
+        nutritionInfo = Nutrition(portion = Portion(1.grams)),
     )
     Surface {
         FoodItemDetailsScreen(
