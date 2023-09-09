@@ -55,15 +55,15 @@ fun SearchFdcUi(
 }
 
 @Composable
-fun SearchFdcScreen(
+internal fun SearchFdcScreen(
     queryInput: String,
     onQueryChange: (String) -> Unit,
     onSubmitQuery: () -> Unit,
     getFoodItemDetails: (FoodId) -> Unit,
     saveFoodItemDetails: () -> Unit,
     useBarcodeScanner: () -> Unit,
-    foodItemDetailStatus: FoodDetailsStatus?,
     modifier: Modifier = Modifier,
+    foodItemDetailStatus: FoodDetailsStatus? = null,
     searchStatus: SearchStatus? = null,
 ) {
     Scaffold(
@@ -291,14 +291,17 @@ private fun SearchFailure(
 @Preview
 @Composable
 fun SearchFdcPreview() {
+    val searchStatus = null//SearchStatus.Loading
+    val detailStatus = null
+//    val detailStatus = FoodDetailsStatus.Loading
     SearchFdcScreen(
         queryInput = "Sample Input",
         onQueryChange = {},
         onSubmitQuery = {},
         getFoodItemDetails = {},
-        searchStatus = null,
         saveFoodItemDetails = {},
-        foodItemDetailStatus = null,
+        searchStatus = searchStatus,
+        foodItemDetailStatus = detailStatus,
         useBarcodeScanner = {},
     )
 }

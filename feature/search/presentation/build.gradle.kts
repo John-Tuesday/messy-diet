@@ -35,7 +35,10 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.navigation.compose)
     implementation(libs.androidx.navigation.ui)
+
     testImplementation(libs.junit)
+    testImplementation(libs.kotlin.test.junit)
+    androidTestImplementation(libs.kotlin.test.junit)
     debugImplementation(libs.bundles.compose.debug)
     androidTestImplementation(libs.bundles.compose.androidTest)
 }
