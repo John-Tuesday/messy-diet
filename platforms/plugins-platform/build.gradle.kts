@@ -27,21 +27,12 @@ group = "org.calamarfederal.platform"
 
 dependencies {
     constraints {
-//        api("com.android.tools.build:gradle:8.1.0")
         api(libs.android.tools)
-//        api("com.android.build.gradle:com.android.application:8.1.0")
         api(libs.android.build)
-//        api("org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin:1.9.0")
         api(libs.kotlin.android)
-//        api("org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:1.9.0")
         api(libs.kotlin.jvm)
-//        api("org.jetbrains.kotlin.kapt:org.jetbrains.kotlin.kapt.gradle.plugin:1.9.0")
-        api(libs.kotlin.kapt)
-//        api("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
         api(libs.kotlin.stdlib)
-//        api("com.google.dagger:hilt-android-gradle-plugin:2.47")
         api(libs.hilt.plugin)
-//        api("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.0-1.0.13")
         api(libs.kotlin.ksp)
         api(libs.kotlin.serialization.plugin)
     }

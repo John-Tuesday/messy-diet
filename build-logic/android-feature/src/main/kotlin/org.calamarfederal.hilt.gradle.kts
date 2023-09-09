@@ -1,5 +1,6 @@
+import gradle.kotlin.dsl.accessors._b189631835e2689e7137bbe70f5dfa27.ksp
+import gradle.kotlin.dsl.accessors._b189631835e2689e7137bbe70f5dfa27.kspAndroidTest
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.kotlin.dsl.the
 
 /******************************************************************************
  * Copyright (c) 2023 John Tuesday Picot                                      *
@@ -25,22 +26,23 @@ import org.gradle.kotlin.dsl.the
 
 plugins {
     id("org.calamarfederal.android-common")
-    id("org.jetbrains.kotlin.kapt")
+//    id("org.jetbrains.kotlin.kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
 
 group = "org.calamarfederal.messydiet"
 
 val libs = the<LibrariesForLibs>()
-
-kapt {
-    correctErrorTypes = true
-}
+//
+//kapt {
+//    correctErrorTypes = true
+//}
 
 dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compsoe)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.compiler)
+    kspAndroidTest(libs.hilt.compiler)
 }
