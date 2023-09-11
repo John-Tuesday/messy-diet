@@ -18,6 +18,8 @@
 
     <!--  Food Detail, failed status  -->
     <string name="fetch_food_detail_failed_title">Failed to fetch details</string>
+    <!--  Food Detail, loading hint  -->
+    <string name="fetch_food_detail_loading">Failed to fetch details</string>
 
     <!--  Denied Camera Permission in Scanner  -->
     <string name="camera_permission_denied_title">Permission denied</string>

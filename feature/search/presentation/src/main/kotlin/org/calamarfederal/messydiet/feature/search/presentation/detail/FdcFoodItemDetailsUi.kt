@@ -106,9 +106,14 @@ internal fun FoodItemDetailsLayoutFromStatus(
             }
 
             is FoodDetailsStatus.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.padding(top = 16.dp)
-                )
+                Column {
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.fetch_food_detail_loading),
+                    )
+                }
             }
 
             is FoodDetailsStatus.Failure -> {

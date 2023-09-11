@@ -91,7 +91,20 @@ class FdcFoodItemDetailsUiUnitTest {
 
     @Test
     fun `Loading status shows progress indicator`() {
+        composeRule
+            .onNodeWithText(
+                composeRule.activity.getString(R.string.fetch_food_detail_loading)
+            )
+            .assertDoesNotExist()
+
         detailStatusState = FoodDetailsStatus.Loading
+
+        composeRule
+            .onNodeWithText(
+                composeRule.activity.getString(R.string.fetch_food_detail_loading)
+            )
+            .assertExists()
+            .assertIsDisplayed()
     }
 
     @Test
