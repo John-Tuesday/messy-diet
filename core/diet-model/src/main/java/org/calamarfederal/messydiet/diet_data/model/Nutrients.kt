@@ -70,6 +70,34 @@ class Portion private constructor(
 
 sealed interface Nutrient
 
+enum class Nutrients {
+    Protein,
+
+    Fiber,
+    Sugar,
+    SugarAlcohol,
+    Starch,
+
+    MonounsaturatedFat,
+    PolyunsaturatedFat,
+    Omega3,
+    Omega6,
+    SaturatedFat,
+    TransFat,
+    Cholesterol,
+
+    Calcium,
+    Chloride,
+    Iron,
+    Magnesium,
+    Phosphorous,
+    Potassium,
+    Sodium,
+
+    VitaminA,
+    VitaminC,
+}
+
 interface Protein : Nutrient {
     val totalProtein: Weight
 }
@@ -106,12 +134,53 @@ interface Mineral : Nutrient {
 }
 
 interface Vitamin : Nutrient {
+    val vitaminA: Weight? get() = null
     val vitaminC: Weight? get() = null
 }
 
 interface NutritionInfo : MacroNutrients, Mineral, Vitamin {
     val portion: Portion
     val foodEnergy: FoodEnergy
+
+    /**
+     * Get the nutrient specified by [nutrient]. If nutrient is unset, it returns `null`
+     */
+    operator fun get(nutrient: Nutrients): Weight? {
+        return when (nutrient) {
+            Nutrients.Protein -> totalProtein
+
+            Nutrients.Fiber -> fiber
+            Nutrients.Sugar -> sugar
+            Nutrients.SugarAlcohol -> sugarAlcohol
+            Nutrients.Starch -> starch
+
+            Nutrients.MonounsaturatedFat -> monounsaturatedFat
+            Nutrients.PolyunsaturatedFat -> polyunsaturatedFat
+            Nutrients.Omega3 -> omega3
+            Nutrients.Omega6 -> omega6
+            Nutrients.SaturatedFat -> saturatedFat
+            Nutrients.TransFat -> transFat
+            Nutrients.Cholesterol -> cholesterol
+
+            Nutrients.Calcium -> calcium
+            Nutrients.Chloride -> chloride
+            Nutrients.Iron -> iron
+            Nutrients.Magnesium -> magnesium
+            Nutrients.Phosphorous -> phosphorous
+            Nutrients.Potassium -> potassium
+            Nutrients.Sodium -> sodium
+
+            Nutrients.VitaminA -> vitaminA
+            Nutrients.VitaminC -> vitaminC
+        }
+    }
+}
+
+fun NutritionInfo.isZeroOrUnset(): Boolean {
+    return foodEnergy == 0.kcal
+            && portion.weight in listOf(null, 0.grams)
+            && portion.volume in listOf(null, 0.liters)
+            && Nutrients.entries.all { nutrient -> (this[nutrient] ?: 0.grams) == 0.grams }
 }
 
 data class Nutrition(
@@ -138,103 +207,99 @@ data class Nutrition(
     override val phosphorous: Weight? = null,
     override val potassium: Weight? = null,
     override val sodium: Weight? = null,
+    override val vitaminA: Weight? = null,
     override val vitaminC: Weight? = null,
 ) : NutritionInfo {
-    operator fun Weight?.plus(other: Weight?): Weight? = when {
-        this == null -> other
-        other == null -> this
-        else -> (this.inGrams() + other.inGrams()).grams
-    }
+//    private operator fun Weight?.plus(other: Weight?): Weight? = when {
+//        this == null -> other
+//        other == null -> this
+//        else -> (this.inGrams() + other.inGrams()).grams
+//    }
 
     operator fun plus(other: NutritionInfo): Nutrition {
-        return copy(
+        var result = Nutrition(
             portion = (portion + other.portion)!!,
-            totalProtein = (totalProtein + other.totalProtein)!!,
-            fiber = fiber + other.fiber,
-            sugar = sugar + other.sugar,
-            sugarAlcohol = sugarAlcohol + other.sugarAlcohol,
-            starch = starch + other.starch,
-            totalCarbohydrates = (totalCarbohydrates + other.totalCarbohydrates)!!,
-            monounsaturatedFat = monounsaturatedFat + other.monounsaturatedFat,
-            polyunsaturatedFat = polyunsaturatedFat + other.polyunsaturatedFat,
-            omega3 = omega3 + other.omega3,
-            omega6 = omega6 + other.omega6,
-            saturatedFat = saturatedFat + other.saturatedFat,
-            transFat = transFat + other.transFat,
-            cholesterol = cholesterol + other.cholesterol,
-            totalFat = (totalFat + other.totalFat)!!,
             foodEnergy = foodEnergy + other.foodEnergy,
-            calcium = calcium + other.calcium,
-            chloride = chloride + other.chloride,
-            iron = iron + other.iron,
-            magnesium = magnesium + other.magnesium,
-            phosphorous = phosphorous + other.phosphorous,
-            potassium = potassium + other.potassium,
-            sodium = sodium + other.sodium,
-            vitaminC = vitaminC + other.vitaminC,
+            totalCarbohydrates = totalCarbohydrates + other.totalCarbohydrates,
+            totalFat = totalFat + other.totalFat,
         )
+        for (nutrient in Nutrients.entries) {
+            val weight = when (val thisWeight = this[nutrient]) {
+                null -> other[nutrient]
+                else -> other[nutrient]?.let { it + thisWeight } ?: thisWeight
+            }
+            result = result.copy(nutrient = nutrient, weight = weight)
+        }
+        return result
     }
 
     fun scaleToPortion(newPortion: Portion): Nutrition {
         val ratio = (newPortion / portion)!!
-
-        return copy(
+        var result = Nutrition(
             portion = newPortion,
-            totalProtein = totalProtein * ratio,
-            fiber = fiber?.times(ratio),
-            sugar = sugar?.times(ratio),
-            sugarAlcohol = sugarAlcohol?.times(ratio),
-            starch = starch?.times(ratio),
-            totalCarbohydrates = totalCarbohydrates * ratio,
-            monounsaturatedFat = monounsaturatedFat?.times(ratio),
-            polyunsaturatedFat = polyunsaturatedFat?.times(ratio),
-            omega3 = omega3?.times(ratio),
-            omega6 = omega6?.times(ratio),
-            saturatedFat = saturatedFat?.times(ratio),
-            transFat = transFat?.times(ratio),
-            cholesterol = cholesterol?.times(ratio),
-            totalFat = totalFat * ratio,
             foodEnergy = foodEnergy * ratio,
-            calcium = calcium?.times(ratio),
-            chloride = chloride?.times(ratio),
-            iron = iron?.times(ratio),
-            magnesium = magnesium?.times(ratio),
-            phosphorous = phosphorous?.times(ratio),
-            potassium = potassium?.times(ratio),
-            sodium = sodium?.times(ratio),
-            vitaminC = vitaminC?.times(ratio),
+            totalCarbohydrates = totalCarbohydrates * ratio,
+            totalFat = totalFat * ratio,
         )
+        for (nutrient in Nutrients.entries) {
+            result = result.copy(nutrient = nutrient, weight = this[nutrient]?.let { it * ratio })
+        }
+        return result
     }
 }
 
-fun NutritionInfo.asSequence(): Sequence<Weight?> = sequenceOf(
-    totalProtein,
-    fiber,
-    sugar,
-    sugarAlcohol,
-    starch,
-    totalCarbohydrates,
-    monounsaturatedFat,
-    polyunsaturatedFat,
-    omega3,
-    omega6,
-    saturatedFat,
-    transFat,
-    cholesterol,
-    totalFat,
-    calcium,
-    chloride,
-    iron,
-    magnesium,
-    phosphorous,
-    potassium,
-    sodium,
-    vitaminC,
-)
+fun Nutrition.copy(nutrient: Nutrients, weight: Weight?): Nutrition {
+    return when (nutrient) {
+        Nutrients.Protein -> copy(totalProtein = weight ?: throw (Throwable("protein mut not be null")))
+
+        Nutrients.Fiber -> copy(fiber = weight)
+        Nutrients.Sugar -> copy(sugar = weight)
+        Nutrients.SugarAlcohol -> copy(sugarAlcohol = weight)
+        Nutrients.Starch -> copy(starch = weight)
+
+        Nutrients.MonounsaturatedFat -> copy(monounsaturatedFat = weight)
+        Nutrients.PolyunsaturatedFat -> copy(polyunsaturatedFat = weight)
+        Nutrients.Omega3 -> copy(omega3 = weight)
+        Nutrients.Omega6 -> copy(omega6 = weight)
+        Nutrients.SaturatedFat -> copy(saturatedFat = weight)
+        Nutrients.TransFat -> copy(transFat = weight)
+        Nutrients.Cholesterol -> copy(cholesterol = weight)
+
+        Nutrients.Calcium -> copy(calcium = weight)
+        Nutrients.Chloride -> copy(chloride = weight)
+        Nutrients.Iron -> copy(iron = weight)
+        Nutrients.Magnesium -> copy(magnesium = weight)
+        Nutrients.Phosphorous -> copy(phosphorous = weight)
+        Nutrients.Potassium -> copy(potassium = weight)
+        Nutrients.Sodium -> copy(sodium = weight)
+
+        Nutrients.VitaminA -> copy(vitaminA = weight)
+        Nutrients.VitaminC -> copy(vitaminC = weight)
+    }
+}
+
+/**
+ *
+ * fill empty or zero fields of [other] with `this`
+ */
+fun Nutrition.merge(other: NutritionInfo): Nutrition {
+    val ratio = if (other.portion == Portion() || portion == Portion()) 1 else (other.portion / portion)!!
+    var result = Nutrition(
+        portion = if (other.portion == Portion()) portion else other.portion,
+        foodEnergy = if (other.foodEnergy == 0.kcal) foodEnergy * ratio else other.foodEnergy,
+        totalCarbohydrates = if (other.totalCarbohydrates == 0.grams) totalCarbohydrates * ratio else other.totalCarbohydrates,
+        totalFat = if (other.totalFat == 0.grams) totalFat * ratio else other.totalFat,
+    )
+    for (n in Nutrients.entries) {
+        val weight = if (other[n] == null || other[n] == 0.grams) this[n]?.times(ratio) else other[n]
+        result = result.copy(nutrient = n, weight = weight)
+    }
+    return result
+}
 
 fun NutritionInfo.compareWith(
     other: NutritionInfo,
-    compareWeight: (Weight?, Weight?) -> Boolean,
+    compareWeight: (Nutrients, Weight?, Weight?) -> Boolean,
     comparePortion: (Portion, Portion) -> Boolean,
     compareEnergy: (FoodEnergy, FoodEnergy) -> Boolean,
     breakOnFalse: Boolean = true,
@@ -242,8 +307,10 @@ fun NutritionInfo.compareWith(
     val checks = sequence<Boolean> {
         yield(comparePortion(portion, other.portion))
         yield(compareEnergy(foodEnergy, other.foodEnergy))
-        val nutrientSeq = asSequence().zip(other.asSequence())
-        yieldAll(nutrientSeq.map { compareWeight(it.first, it.second) })
+        val nutrientSeq = Nutrients.entries.asSequence().map {
+            compareWeight(it, this@compareWith[it], other[it])
+        }
+        yieldAll(nutrientSeq)
     }
     return if (breakOnFalse)
         checks.none { !it }

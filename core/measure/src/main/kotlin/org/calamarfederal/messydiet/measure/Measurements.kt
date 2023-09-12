@@ -30,7 +30,7 @@ import kotlin.math.absoluteValue
  * internally stored in grams as a [Double]
  */
 data class Weight internal constructor(
-    internal val grams: Double = 0.00
+    internal val grams: Double = 0.00,
 ) : Comparable<Weight> {
 
     override operator fun compareTo(other: Weight): Int = grams.compareTo(other.grams)
@@ -43,6 +43,8 @@ data class Weight internal constructor(
 
 }
 
+fun Weight.inMicrograms(): Double = grams * 1_000_000.00
+
 val Weight.absoluteValue get() = Weight(grams.absoluteValue)
 
 operator fun Weight.plus(other: Weight): Weight = Weight(grams + other.grams)
@@ -52,6 +54,7 @@ operator fun Weight.div(factor: Number): Weight = Weight(grams / factor.toDouble
 operator fun Weight.div(other: Weight): Double = grams / other.grams
 
 enum class WeightUnit {
+    Micrograms,
     Milligram,
     Gram,
     Kilogram,
@@ -60,6 +63,7 @@ enum class WeightUnit {
 }
 
 internal fun toWeightWithUnit(num: Number, weightUnit: WeightUnit): Weight = when (weightUnit) {
+    WeightUnit.Micrograms -> num.milligrams
     WeightUnit.Milligram -> num.milligrams
     WeightUnit.Gram -> num.grams
     WeightUnit.Kilogram -> num.kilograms
@@ -67,7 +71,8 @@ internal fun toWeightWithUnit(num: Number, weightUnit: WeightUnit): Weight = whe
     WeightUnit.Pound -> num.lbs
 }
 
-internal fun toNumberAsWeightUnit(weight: Weight, weightUnit: WeightUnit): Double = when(weightUnit) {
+internal fun toNumberAsWeightUnit(weight: Weight, weightUnit: WeightUnit): Double = when (weightUnit) {
+    WeightUnit.Micrograms -> weight.inMilligrams()
     WeightUnit.Milligram -> weight.inMilligrams()
     WeightUnit.Gram -> weight.inGrams()
     WeightUnit.Kilogram -> weight.inKilograms()
@@ -91,6 +96,7 @@ private fun ozToGrams(oz: Double) = oz * OZ_X_GRAMS
 private fun gramsToOz(grams: Double) = grams / OZ_X_GRAMS
 
 val Number.grams: Weight get() = Weight(toDouble())
+val Number.micrograms: Weight get() = Weight(toDouble() / 1_000_000.00)
 val Number.milligrams: Weight get() = Weight(toDouble() / 1_000.00)
 val Number.kilograms: Weight get() = Weight(toDouble() * 1_000.00)
 val Number.lbs: Weight get() = Weight(lbsToGrams(toDouble()))
@@ -102,8 +108,8 @@ val Number.oz: Weight get() = Weight(ozToGrams(toDouble()))
  * internally stored as liters as a [Double]
  */
 data class Volume internal constructor(
-    internal val liters: Double = 0.00
-): Comparable<Volume> {
+    internal val liters: Double = 0.00,
+) : Comparable<Volume> {
 
     override fun compareTo(other: Volume): Int = liters.compareTo(other.liters)
     fun inLiters() = liters
@@ -114,6 +120,11 @@ data class Volume internal constructor(
     fun inUsTablespoons() = litersToUsTablespoons(liters)
     fun inUsTeaspoons() = litersToUsTeaspoons(liters)
 }
+
+/**
+ * Create new [Volume] with the absolute value of `this`
+ */
+val Volume.absoluteValue: Volume get() = Volume(liters.absoluteValue)
 
 operator fun Volume.plus(other: Volume): Volume = Volume(liters + other.liters)
 operator fun Volume.minus(other: Volume): Volume = Volume(liters - other.liters)
@@ -149,7 +160,7 @@ val Number.usTeaspoons: Volume get() = Volume(usTeaspoonsToLiters(toDouble()))
  */
 data class Length internal constructor(
     internal val meter: Double = 0.00,
-): Comparable<Length> {
+) : Comparable<Length> {
     override fun compareTo(other: Length): Int = meter.compareTo(other.meter)
 
     fun inMeters() = meter
@@ -162,6 +173,11 @@ data class Length internal constructor(
     fun inInches() = metersToInches(meter)
 }
 
+
+/**
+ * Create new [Length] with the absolute value of `this`
+ */
+val Length.absoluteValue: Length get() = Length(meter.absoluteValue)
 operator fun Length.plus(other: Length): Length = Length(meter + other.meter)
 operator fun Length.minus(other: Length): Length = Length(meter - other.meter)
 
@@ -176,7 +192,7 @@ enum class LengthUnit {
     ;
 }
 
-private fun toLengthWithUnit(num: Number, lengthUnit: LengthUnit) = when(lengthUnit) {
+private fun toLengthWithUnit(num: Number, lengthUnit: LengthUnit) = when (lengthUnit) {
     LengthUnit.Millimeter -> num.millimeters
     LengthUnit.Centimeter -> num.centimeters
     LengthUnit.Meter -> num.meters
@@ -186,7 +202,7 @@ private fun toLengthWithUnit(num: Number, lengthUnit: LengthUnit) = when(lengthU
     LengthUnit.Inch -> num.inches
 }
 
-private fun toNumberAsLengthUnit(length: Length, lengthUnit: LengthUnit): Double = when(lengthUnit) {
+private fun toNumberAsLengthUnit(length: Length, lengthUnit: LengthUnit): Double = when (lengthUnit) {
     LengthUnit.Millimeter -> length.inMillimeters()
     LengthUnit.Centimeter -> length.inCentimeters()
     LengthUnit.Meter -> length.inMeters()
