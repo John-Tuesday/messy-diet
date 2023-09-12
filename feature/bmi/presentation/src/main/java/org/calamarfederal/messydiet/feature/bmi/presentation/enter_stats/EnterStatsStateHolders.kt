@@ -14,9 +14,10 @@ private fun formatWeight(unit: WeightUnit, weight: Weight, locale: java.util.Loc
     .precision(
         Precision.maxFraction(
             when (unit) {
+                WeightUnit.Micrograms -> 0
                 WeightUnit.Milligram -> 0
-                WeightUnit.Kilogram -> 2
                 WeightUnit.Gram -> 0
+                WeightUnit.Kilogram -> 2
                 WeightUnit.Pound -> 0
                 WeightUnit.Ounce -> 0
             }

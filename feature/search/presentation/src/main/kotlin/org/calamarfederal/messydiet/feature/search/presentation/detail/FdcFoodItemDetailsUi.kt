@@ -106,14 +106,7 @@ internal fun FoodItemDetailsLayoutFromStatus(
             }
 
             is FoodDetailsStatus.Loading -> {
-                Column {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                    Text(
-                        text = stringResource(id = R.string.fetch_food_detail_loading),
-                    )
-                }
+                FoodDetailsLoading()
             }
 
             is FoodDetailsStatus.Failure -> {
@@ -127,6 +120,23 @@ internal fun FoodItemDetailsLayoutFromStatus(
 //                Text(text = "...")
             }
         }
+    }
+}
+
+@Composable
+private fun FoodDetailsLoading(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        Text(
+            text = stringResource(id = R.string.fetch_food_detail_loading),
+        )
     }
 }
 

@@ -51,6 +51,7 @@ internal fun weightUnitToFullRId(
     WeightUnit.Kilogram -> R.string.kilogram
     WeightUnit.Gram -> R.string.gram
     WeightUnit.Milligram -> R.string.milligram
+    WeightUnit.Micrograms -> R.string.microgram
     WeightUnit.Pound -> R.string.pound_weight
     WeightUnit.Ounce -> R.string.ounce_weight
 }
@@ -62,6 +63,7 @@ internal fun weightUnitToShortRId(
     WeightUnit.Kilogram -> R.string.kilogram_label
     WeightUnit.Gram -> R.string.gram_label
     WeightUnit.Milligram -> R.string.milligram_label
+    WeightUnit.Micrograms -> R.string.microgram_label
     WeightUnit.Pound -> R.string.pound_weight_label
     WeightUnit.Ounce -> R.string.ounce_weight_label
 }

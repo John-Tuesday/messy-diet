@@ -15,15 +15,14 @@ data object MeasureSamples {
         totalCarbohydrates = 74.4.grams,
         fiber = 10.3.grams,
         starch = 8.11.grams,
-        sugar = 5.13.grams, // 5.1 added
+        sugar = 5.13.grams,
         sugarAlcohol = 7.4.grams,
         calcium = 333.milligrams,
         iron = 32.3.milligrams,
-        magnesium = 154.milligrams, // 700 from DV
-        phosphorous = 123.milligrams, // 256 from DV ?? 750
+        magnesium = 154.milligrams,
+        phosphorous = 123.milligrams,
         potassium = 641.milligrams,
         sodium = 487.milligrams,
-        vitaminC = 90.milligrams, // ?? 15.4 3.7
         saturatedFat = 1.28.grams,
         monounsaturatedFat = 2.56.grams,
         polyunsaturatedFat = 2.56.grams,
@@ -32,6 +31,8 @@ data object MeasureSamples {
         omega3 = 1.33.grams,
         omega6 = 1.24.grams,
         chloride = 13.grams,
+        vitaminA = 10.milligrams,
+        vitaminC = 90.milligrams,
     )
 
     val filledNonZeroNutritionA = Nutrition(
@@ -42,15 +43,14 @@ data object MeasureSamples {
         totalCarbohydrates = 74.4.grams,
         fiber = 10.3.grams,
         starch = 8.11.grams,
-        sugar = 5.13.grams, // 5.1 added
+        sugar = 5.13.grams,
         sugarAlcohol = 7.4.grams,
         calcium = 333.milligrams,
         iron = 32.3.milligrams,
-        magnesium = 154.milligrams, // 700 from DV
-        phosphorous = 123.milligrams, // 256 from DV ?? 750
+        magnesium = 154.milligrams,
+        phosphorous = 123.milligrams,
         potassium = 641.milligrams,
         sodium = 487.milligrams,
-        vitaminC = 90.milligrams, // ?? 15.4 3.7
         saturatedFat = 1.28.grams,
         monounsaturatedFat = 2.56.grams,
         polyunsaturatedFat = 2.56.grams,
@@ -59,5 +59,7 @@ data object MeasureSamples {
         omega3 = 1.33.grams,
         omega6 = 1.24.grams,
         chloride = 13.grams,
+        vitaminA = 10.milligrams,
+        vitaminC = 90.milligrams,
     )
 }

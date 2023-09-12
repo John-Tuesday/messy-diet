@@ -16,9 +16,9 @@ import org.calamarfederal.messydiet.feature.search.data.FoodSearchRepository
 import org.calamarfederal.messydiet.feature.search.data.SaveFoodDetailsRepository
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
-import org.calamarfederal.messydiet.feature.search.data.model.FoodItemDetails
 import org.calamarfederal.messydiet.feature.search.data.model.SearchStatus
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class SearchFdcViewModel @Inject constructor(
@@ -50,12 +50,18 @@ class SearchFdcViewModel @Inject constructor(
         foodDetailsRepository
             .foodDetails(foodId)
             .onEach { status -> _detailsStatusState.update { status } }
-            .launchIn(viewModelScope + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
-                throwable.printStackTrace()
-                _detailsStatusState.update {
-                    FoodDetailsStatus.Failure("Unknown network error\nfoodId: id=${foodId.id} type=${foodId.type}")
+            .launchIn(
+                scope = viewModelScope + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
+                    throwable.printStackTrace()
+                    if (throwable is CancellationException) {
+                        println("********** get food details cancelled")
+                    } else {
+                        _detailsStatusState.update {
+                            FoodDetailsStatus.Failure("Unknown network error\nfoodId: id=${foodId.id} type=${foodId.type}")
+                        }
+                    }
                 }
-            })
+            )
     }
 
     fun submitSearchQuery() {

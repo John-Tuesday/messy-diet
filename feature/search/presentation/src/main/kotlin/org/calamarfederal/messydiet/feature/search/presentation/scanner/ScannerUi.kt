@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
@@ -65,9 +67,14 @@ internal fun BarcodeScannerScreen(
         val cameraController = barcodeScannerState.cameraController
         val barcodeResultState by barcodeScannerState.resultState.collectAsStateWithLifecycle()
 
+        val hapticFeedback = LocalHapticFeedback.current
+
         LaunchedEffect(barcodeResultState) {
             barcodeResultState?.onSuccess { barcode ->
-                if (barcode.isNotBlank()) onBarcodeFound(barcode)
+                if (barcode.isNotBlank()) {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onBarcodeFound(barcode)
+                }
             }
         }
 

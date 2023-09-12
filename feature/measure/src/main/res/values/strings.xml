@@ -7,6 +7,8 @@
     <string name="gram_label">g</string>
     <string name="milligram">Milligrams</string>
     <string name="milligram_label">mg</string>
+    <string name="microgram">Micrograms</string>
+    <string name="microgram_label">µg</string>
     <string name="pound_weight">Pounds</string>
     <string name="pound_weight_label">lbs</string>
     <string name="ounce_weight">Ounces</string>
