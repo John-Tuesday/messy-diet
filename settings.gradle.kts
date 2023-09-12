@@ -37,3 +37,6 @@ include(":feature:meal:presentation")
 include(":feature:meal:data")
 include(":feature:search:presentation")
 include(":feature:search:data")
+
+include(":core:test:measure")
+include(":core:test:remote:food-data-central")

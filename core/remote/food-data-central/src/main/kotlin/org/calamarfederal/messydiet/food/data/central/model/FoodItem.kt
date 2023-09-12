@@ -8,9 +8,13 @@ import org.calamarfederal.messydiet.measure.grams
 import org.calamarfederal.messydiet.measure.milliliters
 import org.calamarfederal.messydiet.measure.weightOf
 
-internal fun stringToWeightUnit(
+class UnrecognizedWeightUnitFormat(override val cause: Throwable? = null, override val message: String? = null) :
+    Throwable()
+
+internal fun stringToWeightUnitOrNull(
     text: String,
 ): WeightUnit? = when (val str = text.lowercase().trim()) {
+    "µg" -> WeightUnit.Micrograms
     "g" -> WeightUnit.Gram
     "mg" -> WeightUnit.Milligram
     "kg" -> WeightUnit.Kilogram
@@ -18,6 +22,15 @@ internal fun stringToWeightUnit(
     "lbs" -> WeightUnit.Pound
     else -> null
 }
+
+/**
+ * Tries to convert Remote formatted weight unit to [WeightUnit].
+ *
+ * throws [UnrecognizedWeightUnitFormat]
+ */
+internal fun stringToWeightUnit(
+    text: String,
+): WeightUnit = stringToWeightUnitOrNull(text = text) ?: throw (UnrecognizedWeightUnitFormat(message = text))
 
 internal fun stringToFoodEnergyUnit(
     text: String,
@@ -97,7 +110,7 @@ private fun parseNutrientNumber(
     nutrientNumber: String,
     nutrientId: Int,
 ): FDCNutritionInfo {
-    val weightUnit = stringToWeightUnit(unitName)
+    val weightUnit = stringToWeightUnitOrNull(unitName)
     val energyUnit = stringToFoodEnergyUnit(unitName)
     return when (nutrientNumber) {
         "203" -> FDCNutritionInfo(totalProtein = weightUnit!!.weightOf(amount))
@@ -129,6 +142,7 @@ private fun parseNutrientNumber(
         "606" -> FDCNutritionInfo(saturatedFat = weightUnit!!.weightOf(amount))
         "645" -> FDCNutritionInfo(monounsaturatedFat = weightUnit!!.weightOf(amount))
         "646" -> FDCNutritionInfo(polyunsaturatedFat = weightUnit!!.weightOf(amount))
+        "960" -> FDCNutritionInfo(vitaminA = weightUnit!!.weightOf(amount))
         else -> throw (Throwable("Unsupported nutrient number: '$nutrientNumber'"))
     }
 }
@@ -195,7 +209,7 @@ internal fun List<FoodNutrientSchema>.toNutritionInfo(servingSize: Portion = Por
                 }
                 set(newKey, get(newKey)?.plus(value) ?: value)
             }
-        }.mapValues {  (key, value) ->
+        }.mapValues { (key, value) ->
             if (key.isPerSering)
                 value.copy(portion = servingSize)
             else
@@ -203,8 +217,17 @@ internal fun List<FoodNutrientSchema>.toNutritionInfo(servingSize: Portion = Por
         }
     }
 
+internal fun foldToOne(nutritionMap: Map<CombinedNutrientType, FDCNutritionInfo>): FDCNutritionInfo? {
+    return nutritionMap.values.reduceOrNull { acc, nutrition ->
+        acc.merge(nutrition)
+    }
+}
+
 internal fun chooseBestFrom(nutritionMap: Map<CombinedNutrientType, FDCNutritionInfo>): FDCNutritionInfo? {
     return nutritionMap[CombinedNutrientType.Per100] ?: nutritionMap[CombinedNutrientType.PerServing]
     ?: nutritionMap[CombinedNutrientType.PerServingDailyValue]
 }
-internal fun Map<CombinedNutrientType, FDCNutritionInfo>.chooseBest(): FDCNutritionInfo? = chooseBestFrom(this)
+
+internal fun Map<CombinedNutrientType, FDCNutritionInfo>.chooseBest(): FDCNutritionInfo? =
+//    foldToOne(this)
+    chooseBestFrom(this)

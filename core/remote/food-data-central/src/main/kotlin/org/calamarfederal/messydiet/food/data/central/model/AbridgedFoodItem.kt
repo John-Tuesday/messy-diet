@@ -1,11 +1,8 @@
 package org.calamarfederal.messydiet.food.data.central.model
 
-import org.calamarfederal.messydiet.diet_data.model.*
+import org.calamarfederal.messydiet.diet_data.model.FoodEnergyUnit
+import org.calamarfederal.messydiet.diet_data.model.energyIn
 import org.calamarfederal.messydiet.food.data.central.remote.schema.*
-import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodItemSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodNutrientSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultFoodSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.parseResponseDate
 import org.calamarfederal.messydiet.measure.weightIn
 
 data class LegacyFdcId internal constructor(override val fdcId: Int): FDCId
@@ -82,7 +79,7 @@ internal fun FDCNutritionInfo.parseNutrient(nutrientSchema: AbridgedFoodNutrient
         return copy(foodEnergy = calories)
     }
 
-    val weightUnit = nutrientSchema.unitName?.let { stringToWeightUnit(it) } ?: return null
+    val weightUnit = nutrientSchema.unitName?.let { stringToWeightUnitOrNull(it) } ?: return null
     val weight = nutrientSchema.amount?.weightIn(weightUnit) ?: return null
 
     return when(nutrientSchema.number) {

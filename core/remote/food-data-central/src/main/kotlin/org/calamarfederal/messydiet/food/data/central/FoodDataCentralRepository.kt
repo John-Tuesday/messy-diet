@@ -5,6 +5,11 @@ import kotlinx.coroutines.withContext
 import org.calamarfederal.messydiet.food.data.central.model.*
 
 interface FoodDataCentralRepository {
+    /**
+     * Search for a food item by its UPC or GTIN
+     *
+     * implicitly searches Branded only
+     */
     suspend fun searchFoodWithUpcGtin(upcGtin: String): ResultResponse<List<FDCFoodItem>, FDCError>
     suspend fun searchFood(criteria: SearchCriteriaBuilder): ResultResponse<List<FDCFoodItem>, FDCError>
 

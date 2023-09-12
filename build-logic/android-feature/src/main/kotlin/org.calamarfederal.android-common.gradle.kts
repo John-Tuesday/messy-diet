@@ -1,3 +1,5 @@
+import org.gradle.accessors.dm.LibrariesForLibs
+
 /******************************************************************************
  * Copyright (c) 2023 John Tuesday Picot                                      *
  *                                                                            *
@@ -64,6 +66,9 @@ android {
     }
 }
 
-dependencies {
+val libs = the<LibrariesForLibs>()
 
+dependencies {
+    testImplementation(libs.kotlin.test.junit)
+    androidTestImplementation(libs.kotlin.test.junit)
 }
