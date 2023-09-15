@@ -121,6 +121,42 @@ data class Volume internal constructor(
     fun inUsTeaspoons() = litersToUsTeaspoons(liters)
 }
 
+enum class VolumeUnit {
+    Milliliter,
+    Liter,
+    UsGallon,
+    UsTablespoon,
+    UsTeaspoon,
+}
+
+/**
+ * Get the volume in units of [volumeUnit]
+ *
+ * Convert as necessary
+ */
+fun Volume.inUnits(volumeUnit: VolumeUnit): Double = toNumberInVolumeUnits(volume = this, volumeUnit = volumeUnit)
+
+/**
+ * Create a [Volume] with volume equal to [number] in units of `this`
+ */
+fun VolumeUnit.volumeOf(number: Number): Volume = toVolumeWithUnit(number = number, volumeUnit = this)
+
+internal fun toVolumeWithUnit(number: Number, volumeUnit: VolumeUnit): Volume = when (volumeUnit) {
+    VolumeUnit.Milliliter -> number.milliliters
+    VolumeUnit.Liter -> number.liters
+    VolumeUnit.UsGallon -> number.usGallons
+    VolumeUnit.UsTablespoon -> number.usTablespoons
+    VolumeUnit.UsTeaspoon -> number.usTeaspoons
+}
+
+internal fun toNumberInVolumeUnits(volume: Volume, volumeUnit: VolumeUnit): Double = when (volumeUnit) {
+    VolumeUnit.Milliliter -> volume.inMilliliters()
+    VolumeUnit.Liter -> volume.inLiters()
+    VolumeUnit.UsGallon -> volume.inUsGallons()
+    VolumeUnit.UsTablespoon -> volume.inUsTablespoons()
+    VolumeUnit.UsTeaspoon -> volume.inUsTeaspoons()
+}
+
 /**
  * Create new [Volume] with the absolute value of `this`
  */

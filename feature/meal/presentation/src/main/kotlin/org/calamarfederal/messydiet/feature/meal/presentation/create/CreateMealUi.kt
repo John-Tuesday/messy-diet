@@ -1,12 +1,7 @@
 package org.calamarfederal.messydiet.feature.meal.presentation.create
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.layout.LazyLayoutPinnableItem
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -18,9 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.layout.LocalPinnableContainer
-import androidx.compose.ui.layout.PinnableContainer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -78,17 +70,23 @@ internal fun CreateMealLayout(
                 enableSave = enableSave,
             )
         },
-        contentWindowInsets = WindowInsets.safeContent
+        contentWindowInsets = WindowInsets.safeContent,
     ) { padding ->
         Surface(
             modifier = Modifier
                 .padding(padding)
                 .consumeWindowInsets(padding)
                 .fillMaxSize()
+                .padding(horizontal = 16.dp)
         ) {
-            CreateMealInputColumn(
-                state = state,
-            )
+            Box(
+                contentAlignment = Alignment.TopCenter,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CreateMealInputColumn(
+                    state = state,
+                )
+            }
         }
     }
 }
@@ -110,9 +108,9 @@ private fun CreateMealInputColumn(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        NutrientWeightField(
-            state = state.servingSizeInput,
-            label = stringResource(id = R.string.serving_size)
+        PortionField(
+            state = state.portionInput,
+            label = stringResource(id = R.string.serving_size),
         )
 
         NutrientWeightField(
@@ -191,7 +189,6 @@ private fun CreateMealInputColumn(
             hiddenOnEmpty = !fatExpanded,
         )
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -275,6 +272,41 @@ private fun NutrientGroupHeaderField(
             )
         }
     }
+}
+
+@Composable
+private fun PortionField(
+    state: PortionInputState,
+    modifier: Modifier = Modifier,
+    label: String = "",
+    placeholderString: String = "",
+) {
+    val resources = LocalContext.current.resources
+    val combinedUnitChoices = remember(state.volumeUnitChoices, state.weightUnitChoices, resources) {
+        state.weightUnitChoices.map {
+            weightUnitFullString(
+                it,
+                resources
+            )
+        } + state.volumeUnitChoices.map { volumeUnitFullString(it, resources) }
+    }
+
+    MeasuredUnitField(
+        modifier = modifier,
+        value = state.input,
+        onValueChange = { state.input = it },
+        unitLabel = state.weightUnit?.labelString ?: state.volumeUnit?.labelString!!,
+        unitChoices = combinedUnitChoices,
+        onUnitChange = {
+            if (it < state.weightUnitChoices.size)
+                state.changeToWeightUnit(it)
+            else
+                state.changeToVolumeUnit(it)
+        },
+        placeholder = { Text(text = placeholderString) },
+        label = { Text(text = label) },
+        imeAction = ImeAction.Next,
+    )
 }
 
 @Composable

@@ -36,6 +36,13 @@
     <string name="milliliter">Milliliter</string>
     <string name="milliliter_label">mL</string>
 
+    <string name="us_gallon">US Gallon</string>
+    <string name="us_gallon_label">gal</string>
+    <string name="us_teaspoon">US Teaspoon</string>
+    <string name="us_teaspoon_label">tsp</string>
+    <string name="us_tablespoon">US Tablespoon</string>
+    <string name="us_tablespoon_label">tbsp</string>
+
     <string name="serving_size">Serving size</string>
 
     <string name="calories">Calories</string>
