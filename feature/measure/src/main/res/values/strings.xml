@@ -14,6 +14,23 @@
     <string name="ounce_weight">Ounces</string>
     <string name="ounce_weight_label">oz</string>
 
+    <string-array name="weight_full_names">
+        <item>@string/kilogram</item>
+        <item>@string/gram</item>
+        <item>@string/milligram</item>
+        <item>@string/microgram</item>
+        <item>@string/pound_weight</item>
+        <item>@string/ounce_weight</item>
+    </string-array>
+    <string-array name="weight_short_names">
+        <item>@string/kilogram_label</item>
+        <item>@string/gram_label</item>
+        <item>@string/milligram_label</item>
+        <item>@string/microgram_label</item>
+        <item>@string/pound_weight_label</item>
+        <item>@string/ounce_weight_label</item>
+    </string-array>
+
     <string name="kilometer">Kilometers</string>
     <string name="kilometer_label">km</string>
     <string name="meter">Meters</string>
@@ -29,6 +46,25 @@
     <string name="inch">Inches</string>
     <string name="inch_label">in</string>
 
+    <string-array name="length_full_names">
+        <item>@string/kilometer</item>
+        <item>@string/meter</item>
+        <item>@string/centimeter</item>
+        <item>@string/millimeter</item>
+        <item>@string/mile</item>
+        <item>@string/feet</item>
+        <item>@string/inch</item>
+    </string-array>
+    <string-array name="length_short_names">
+        <item>@string/kilometer_label</item>
+        <item>@string/meter_label</item>
+        <item>@string/centimeter_label</item>
+        <item>@string/millimeter_label</item>
+        <item>@string/mile_label</item>
+        <item>@string/feet_label</item>
+        <item>@string/inch_label</item>
+    </string-array>
+
     <string name="kiloliter">Kiloliter</string>
     <string name="kiloliter_label">kL</string>
     <string name="liter">Liter</string>
@@ -42,6 +78,24 @@
     <string name="us_teaspoon_label">tsp</string>
     <string name="us_tablespoon">US Tablespoon</string>
     <string name="us_tablespoon_label">tbsp</string>
+
+    <string-array name="volume_full_names">
+        <item>@string/kiloliter</item>
+        <item>@string/liter</item>
+        <item>@string/milliliter</item>
+        <item>@string/us_gallon</item>
+        <item>@string/us_teaspoon</item>
+        <item>@string/us_tablespoon</item>
+    </string-array>
+
+    <string-array name="volume_short_names">
+        <item>@string/kiloliter_label</item>
+        <item>@string/liter_label</item>
+        <item>@string/milliliter_label</item>
+        <item>@string/us_gallon_label</item>
+        <item>@string/us_teaspoon_label</item>
+        <item>@string/us_tablespoon_label</item>
+    </string-array>
 
     <string name="serving_size">Serving size</string>
 
