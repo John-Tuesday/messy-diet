@@ -1,45 +1,51 @@
 package org.calamarfederal.messydiet.test.food.data.central
 
 import org.calamarfederal.messydiet.diet_data.model.Nutrition
+import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
 import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.diet_data.model.kcal
 import org.calamarfederal.messydiet.food.data.central.model.FDCDataType
+import org.calamarfederal.messydiet.food.data.central.model.FDCId
 import org.calamarfederal.messydiet.food.data.central.model.foodDataCentralId
 import org.calamarfederal.messydiet.measure.grams
 import org.calamarfederal.messydiet.measure.micrograms
 import org.calamarfederal.messydiet.measure.milligrams
 import org.calamarfederal.messydiet.measure.milliliters
 
-data object FoodItemExpect {
-    data object SpriteTest {
-        const val spriteUpc = "00049000057980"
-        const val spriteFdcIdString = "2613419"//"2556784"
-        const val spriteFdcIdInt = 2613419
-        val spriteFdcId = foodDataCentralId(id = spriteFdcIdInt, dataType = FDCDataType.Branded)
-        const val spriteName = "Sprite Bottle, 1.75 Liters"
-        const val spriteSearchDescription = spriteName
-        const val publicationDateYear = 2023
-        const val publicationDateMonthOfYear = 8
-        const val publicationDateDayOfMonth = 31
-//        val oldSpriteNutritionPerServing = Nutrition(
-//            portion = Portion(360.milliliters),
-//            foodEnergy = 39.kcal,
-//            totalProtein = 0.grams,
-//            totalFat = 0.grams,
-//            saturatedFat = 0.grams,
-//            transFat = 0.grams,
-//            cholesterol = 0.grams,
-//            totalCarbohydrates = 10.83.grams,
-//            //caffeine = 0.grams,
-//            sugar = 10.56.grams, // 10.6 added
-//            fiber = 0.grams,
-//            calcium = 0.grams,
-//            iron = 0.grams,
-//            sodium = 19.0.milligrams,
-//            vitaminC = 0.milligrams,
-//        )
+sealed class FoodItemExpectCase(
+    val gtinUpc: String,
+    val fdcIdString: String,
+    val fdcIdInt: Int,
+    open val fdcId: FDCId,
 
-        val spriteNutritionPerServing = Nutrition(
+    val searchDescription: String,
+
+    val publicationDateYear: Int,
+    val publicationDateMonthOfYear: Int,
+    val publicationDateDayOfMonth: Int,
+
+    ) {
+    abstract val nutritionPerServing: NutritionInfo
+    abstract val nutritionPer100: NutritionInfo
+
+    open val name: String get() = searchDescription
+}
+
+data object FoodItemExpect {
+    data object SpriteTest : FoodItemExpectCase(
+        gtinUpc = "00049000057980",
+        fdcIdString = "2613419",
+        fdcIdInt = 2613419,
+        fdcId = foodDataCentralId(id = 2613419, dataType = FDCDataType.Branded),
+        searchDescription = "Sprite Bottle, 1.75 Liters",
+        publicationDateMonthOfYear = 2023,
+        publicationDateDayOfMonth = 31,
+        publicationDateYear = 8,
+    ) {
+        override val nutritionPer100: NutritionInfo
+            get() = TODO("Not yet implemented")
+
+        override val nutritionPerServing: Nutrition = Nutrition(
             portion = Portion(360.milliliters),
             foodEnergy = 39.kcal,
             totalProtein = 0.grams,
@@ -59,33 +65,17 @@ data object FoodItemExpect {
         )
     }
 
-    data object BadSpriteTest {
-        const val spriteUpc = "00049000052091"
-        const val spriteFdcIdString = "2556776"
-        const val spriteFdcIdInt = 2556776
-        val spriteFdcId = foodDataCentralId(id = spriteFdcIdInt, dataType = FDCDataType.Branded)
-        const val spriteName = "Sprite Bottle, 2 Liters"
-        val spriteNutrition = Nutrition(
-            totalProtein = 0.grams,
-            totalFat = 0.grams,
-            totalCarbohydrates = 0.grams,
-            foodEnergy = 0.kcal,
-            //caffeine = 0.grams,
-            sugar = 0.grams,
-            fiber = 0.grams,
-            calcium = 0.grams,
-            iron = 0.grams,
-            sodium = 0.milligrams,
-        )
-    }
-
-    data object CheeriosTestA {
-        const val cheeriosUpcGtin = "00016000275287"
-        const val cheeriosFdcIdString = "2517161"
-        const val cheeriosFdcIdInt = 2517161
-        val cheeriosFdcId = foodDataCentralId(id = cheeriosFdcIdInt, dataType = FDCDataType.Branded)
-        const val cheeriosName = "Cheerios Cereal"
-        val cheeriosNutritionPer100 = Nutrition(
+    data object CheeriosTestA : FoodItemExpectCase(
+        gtinUpc = "00016000275287",
+        fdcIdString = "2517161",
+        fdcIdInt = 2517161,
+        fdcId = foodDataCentralId(id = 2517161, dataType = FDCDataType.Branded),
+        searchDescription = "Cheerios Cereal",
+        publicationDateMonthOfYear = 2023,
+        publicationDateDayOfMonth = 31,
+        publicationDateYear = 8,
+    ) {
+        override val nutritionPer100: Nutrition = Nutrition(
             portion = Portion(100.grams),
             foodEnergy = 359.kcal,
             totalProtein = 12.8.grams,
@@ -107,7 +97,7 @@ data object FoodItemExpect {
             transFat = 0.grams,
             cholesterol = 0.milligrams,
         )
-        val cheeriosNutritionPerServing = Nutrition(
+        override val nutritionPerServing: Nutrition = Nutrition(
             portion = Portion(20.grams),
             foodEnergy = 117.kcal,
             totalProtein = 5.56.grams,
@@ -128,6 +118,33 @@ data object FoodItemExpect {
             polyunsaturatedFat = 0.62.grams,
             transFat = 0.grams,
             cholesterol = 0.milligrams,
+        )
+    }
+
+    data object TridentGumTest : FoodItemExpectCase(
+        gtinUpc = "012546011099",
+        fdcIdString = "2494589",
+        fdcIdInt = 2494589,
+        fdcId = foodDataCentralId(
+            id = 2494589,
+            dataType = FDCDataType.Branded,
+        ),
+        searchDescription = "ORIGINAL SUGAR FREE GUM WITH XYLITOL, ORIGINAL",
+        publicationDateYear = 2023,
+        publicationDateMonthOfYear = 3,
+        publicationDateDayOfMonth = 16,
+    ) {
+        override val nutritionPerServing: NutritionInfo
+            get() = TODO("Not yet implemented")
+        override val nutritionPer100: Nutrition = Nutrition(
+            portion = Portion(100.grams),
+            foodEnergy = 263.kcal,
+            totalProtein = 0.grams,
+            totalFat = 0.grams,
+            totalCarbohydrates = 52.6.grams,
+            sugar = 0.grams,
+            sugarAlcohol = 53.grams,
+            sodium = 0.grams,
         )
     }
 }
