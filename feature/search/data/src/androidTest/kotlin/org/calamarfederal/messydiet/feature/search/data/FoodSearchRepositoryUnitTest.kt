@@ -32,7 +32,7 @@ class FoodSearchRepositoryUnitTest {
 
     @Test
     fun `Search with valid Sprite GTIN`() {
-        val gtinString = FoodItemExpect.SpriteTest.spriteUpc
+        val gtinString = FoodItemExpect.SpriteTest.gtinUpc
         val searchFlow = searchRepository.searchWithUpcGtin(gtinString)
 
 
@@ -55,7 +55,7 @@ class FoodSearchRepositoryUnitTest {
                             }
 
                             val foodItem = value.results.single()
-                            assertEquals(FoodItemExpect.SpriteTest.spriteName, foodItem.name)
+                            assertEquals(FoodItemExpect.SpriteTest.name, foodItem.name)
                         }
 
                         else -> fail("There should only be 2 emissions")

@@ -63,8 +63,40 @@ data class FoodItemDetails(
     val nutritionInfo: NutritionInfo,
 )
 
+sealed interface SearchRemoteError {
+    data class UnknownNetworkError(
+        override val message: String?,
+        val code: Int,
+    ) : SearchRemoteError
+
+    data class NetworkTimeoutError(
+        override val message: String?,
+    ) : SearchRemoteError
+
+    data class NotFoundError(
+        override val message: String?,
+    ) : SearchRemoteError
+
+    data class OverRateLimitError(
+        override val message: String?,
+    ) : SearchRemoteError
+
+    data class InvalidFoodIdError(
+        override val message: String?,
+        val id: Int,
+        val type: Int,
+    ) : SearchRemoteError
+
+    data class InternalApiError(
+        override val message: String?,
+        val cause: Throwable? = null,
+    ) : SearchRemoteError
+
+    val message: String?
+}
+
 sealed class SearchStatus {
-    data class Failure(val message: String) : SearchStatus()
+    data class Failure(val remoteError: SearchRemoteError) : SearchStatus()
     data object Loading : SearchStatus() {
         operator fun invoke() = this
     }
@@ -73,7 +105,7 @@ sealed class SearchStatus {
 }
 
 sealed class FoodDetailsStatus {
-    data class Failure(val message: String) : FoodDetailsStatus()
+    data class Failure(val remoteError: SearchRemoteError) : FoodDetailsStatus()
     data object Loading : FoodDetailsStatus() {
         operator fun invoke() = this
     }

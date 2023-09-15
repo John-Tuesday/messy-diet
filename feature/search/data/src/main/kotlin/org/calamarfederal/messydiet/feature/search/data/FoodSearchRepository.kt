@@ -6,6 +6,7 @@ import org.calamarfederal.messydiet.diet_data.model.Nutrition
 import org.calamarfederal.messydiet.feature.search.data.model.*
 import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
 import org.calamarfederal.messydiet.food.data.central.model.FDCFoodItem
+import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError
 import org.calamarfederal.messydiet.food.data.central.model.fold
 import javax.inject.Inject
 
@@ -29,6 +30,13 @@ interface FoodDetailsRepository {
     fun foodDetails(foodId: FoodId): Flow<FoodDetailsStatus>
 }
 
+internal fun FoodDataCentralError.toSearchRemoteError(): SearchRemoteError = when (this) {
+    is FoodDataCentralError.NotFoundError -> SearchRemoteError.NotFoundError(message)
+    is FoodDataCentralError.OverRateLimitError -> SearchRemoteError.OverRateLimitError(message)
+    is FoodDataCentralError.NetworkError -> SearchRemoteError.UnknownNetworkError(message, code)
+    is FoodDataCentralError.ParseErrorType -> SearchRemoteError.InternalApiError(message = message, cause = this)
+}
+
 internal fun FDCFoodItem.toSearchResultFoodItem(): SearchResultFoodItem = SearchResultFoodItem(
     name = description,
     foodId = FdcFoodId(fdcId),
@@ -47,7 +55,7 @@ internal class FoodSearchRepositoryImplementation @Inject constructor(
                     SearchStatus.Success(it.map { it.toSearchResultFoodItem() })
                 },
                 onFailure = {
-                    SearchStatus.Failure(it.message ?: "Unknown external error")
+                    SearchStatus.Failure(it.toSearchRemoteError())
                 }
             )
         )
@@ -72,11 +80,19 @@ internal class FoodDetailsRepositoryImplementation @Inject constructor(
                     FoodDetailsStatus.Success(it.toFoodItemDetails())
                 },
                 onFailure = {
-                    FoodDetailsStatus.Failure(it.message?.ifBlank { null } ?: "Unknown external error")
+                    FoodDetailsStatus.Failure(it.toSearchRemoteError())
                 }
             ))
         } else {
-            emit(FoodDetailsStatus.Failure("Food Id not recognized"))
+            emit(
+                FoodDetailsStatus.Failure(
+                    SearchRemoteError.InvalidFoodIdError(
+                        message = "Invalid food id given as input: id=${foodId.id}, type=${foodId.type}",
+                        id = foodId.id,
+                        type = foodId.type,
+                    )
+                )
+            )
         }
     }
 }

@@ -35,7 +35,7 @@ class FoodDetailsRepositoryUnitTest {
     fun `Valid sprite test`() {
         val resultFlow = detailsRepository.foodDetails(
             foodId(
-                id = FoodItemExpect.SpriteTest.spriteFdcIdInt,
+                id = FoodItemExpect.SpriteTest.fdcIdInt,
                 type = 2,
             )
         )
@@ -52,15 +52,15 @@ class FoodDetailsRepositoryUnitTest {
                         assertIs<FoodDetailsStatus.Success>(value)
 
                         assertEquals(
-                            FoodItemExpect.SpriteTest.spriteName,
+                            FoodItemExpect.SpriteTest.name,
                             value.results.name,
                         )
                         assertEquals(
-                            FoodItemExpect.SpriteTest.spriteFdcIdInt,
+                            FoodItemExpect.SpriteTest.fdcIdInt,
                             value.results.foodId.id,
                         )
                         assertMeasureEquals(
-                            FoodItemExpect.SpriteTest.spriteNutritionPerServing,
+                            FoodItemExpect.SpriteTest.nutritionPerServing,
                             value.results.nutritionInfo,
                         )
                     }
@@ -92,8 +92,6 @@ class FoodDetailsRepositoryUnitTest {
                     0 -> assertIs<FoodDetailsStatus.Loading>(value)
                     1 -> {
                         assertIs<FoodDetailsStatus.Failure>(value)
-
-                        println(value.message)
                     }
 
                     else -> fail("Only expected 2 emissions")
