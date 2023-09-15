@@ -1,3 +1,5 @@
+import org.gradle.accessors.dm.LibrariesForLibs
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -52,10 +54,9 @@ android {
     }
 }
 
-//kapt {
-//    correctErrorTypes = true
-//}
+val libs = the<LibrariesForLibs>()
 
 dependencies {
-
+    testImplementation(libs.kotlin.test.junit)
+    androidTestImplementation(libs.kotlin.test.junit)
 }

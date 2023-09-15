@@ -28,13 +28,10 @@ plugins {
 dependencies {
     implementation(platform("org.calamarfederal.platform:plugins-platform"))
     implementation(platform(project(":build-platform")))
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 
-//    implementation("org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin")
     implementation(libs.kotlin.android)
-//    implementation("com.android.tools.build:gradle")
     implementation(libs.android.tools)
-//    implementation("com.google.dagger:hilt-android-gradle-plugin")
     implementation(libs.hilt.plugin)
-//    implementation("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin")
     implementation(libs.kotlin.ksp)
 }

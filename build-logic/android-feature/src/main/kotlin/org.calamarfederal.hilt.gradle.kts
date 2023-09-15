@@ -26,7 +26,6 @@ import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
     id("org.calamarfederal.android-common")
-//    id("org.jetbrains.kotlin.kapt")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
@@ -34,10 +33,6 @@ plugins {
 group = "org.calamarfederal.messydiet"
 
 val libs = the<LibrariesForLibs>()
-//
-//kapt {
-//    correctErrorTypes = true
-//}
 
 dependencies {
     implementation(libs.hilt.android)

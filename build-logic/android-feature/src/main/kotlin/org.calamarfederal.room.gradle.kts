@@ -32,7 +32,6 @@ group = "org.calamarfederal.messydiet"
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-    // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)

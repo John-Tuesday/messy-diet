@@ -30,7 +30,6 @@ dependencies {
     implementation(platform(project(":build-platform")))
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 
-//    implementation("org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin")
     implementation(libs.kotlin.jvm)
     implementation(libs.kotlin.stdlib)
 }
