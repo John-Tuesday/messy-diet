@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -123,7 +123,7 @@ private fun SearchFoodFab(
 
         null -> {
             FloatingActionButton(onClick = useBarcodeScanner) {
-                Icon(Icons.Outlined.Info, null)
+                Icon(painterResource(id = R.drawable.barcode), null)
             }
         }
 
@@ -162,13 +162,13 @@ private fun SearchFdcTopBar(
             },
             trailingIcon = {
                 IconButton(onClick = useBarcodeScanner) {
-                    Icon(Icons.Outlined.Info, null)
+                    Icon(painterResource(id = R.drawable.barcode), null)
                 }
             },
             leadingIcon = {
                 if (active) {
                     IconButton(onClick = { active = false }) {
-                        Icon(Icons.Default.ArrowBack, null)
+                        Icon(Icons.AutoMirrored.Default.ArrowBack, null)
                     }
                 } else
                     Icon(Icons.Default.Search, null)
@@ -283,7 +283,6 @@ private fun SearchFailure(
                 .padding(top = 16.dp),
         ) {
             Text(text = stringResource(id = R.string.search_failed))
-//            Text(text = status.message)
         }
     }
 }

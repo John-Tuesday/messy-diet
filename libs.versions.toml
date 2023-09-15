@@ -1,5 +1,6 @@
 [versions]
-composeMaterial3Version = "1.2.0-alpha07" # "1.1.1"
+composeMaterialVersion = "1.6.0-alpha05"
+composeMaterial3Version = "1.2.0-alpha07"
 composeUiVersion = "1.6.0-alpha05"
 androidJUnitVersion = "1.1.5"
 androidCoreVersion = "1.12.0"
@@ -38,6 +39,7 @@ androidBuildVersion = "8.1.1"
 compose-ui-ui = { module = "androidx.compose.ui:ui", version.ref = "composeUiVersion" }
 compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "composeUiVersion" }
 compose-ui-toolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeUiVersion" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "composeMaterialVersion" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3Version" }
 compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "composeMaterial3Version" }
 
