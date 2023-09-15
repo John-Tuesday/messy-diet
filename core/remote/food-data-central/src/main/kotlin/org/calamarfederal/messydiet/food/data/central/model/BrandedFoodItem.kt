@@ -4,6 +4,7 @@ import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultFoodSchema
 import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.messydiet.measure.milligrams
 import org.calamarfederal.messydiet.measure.milliliters
 
 
@@ -25,8 +26,9 @@ data class BrandedFDCFoodItem internal constructor(
 
 internal fun BrandedFoodItemSchema.toModel(): BrandedFDCFoodItem {
     val servingSize = when (servingSizeUnit?.lowercase()) {
-        "mlt" -> Portion(servingSize!!.milliliters)
-        "grm" -> Portion(servingSize!!.grams)
+        "mlt", "ml" -> Portion(servingSize!!.milliliters)
+        "grm", "g" -> Portion(servingSize!!.grams)
+        "mg" -> Portion(servingSize!!.milligrams)
         null -> null
         else -> throw (Throwable("Unsupported serving size schema", IllegalStateException()))
     }
@@ -42,7 +44,7 @@ internal fun BrandedFoodItemSchema.toModel(): BrandedFDCFoodItem {
 }
 
 internal fun SearchResultFoodSchema.toFDCBrandedOrNull(): BrandedFDCFoodItem? {
-    if (dataType?.let { stringToDataType(it) } != FDCDataType.Branded)
+    if (dataType?.let { FDCDataType.fromString(it) } != FDCDataType.Branded)
         return null
 
     return BrandedFDCFoodItem(

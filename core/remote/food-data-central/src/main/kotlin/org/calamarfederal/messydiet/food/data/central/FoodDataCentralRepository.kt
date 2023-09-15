@@ -10,17 +10,24 @@ interface FoodDataCentralRepository {
      *
      * implicitly searches Branded only
      */
-    suspend fun searchFoodWithUpcGtin(upcGtin: String): ResultResponse<List<FDCFoodItem>, FDCError>
-    suspend fun searchFood(criteria: SearchCriteriaBuilder): ResultResponse<List<FDCFoodItem>, FDCError>
+    suspend fun searchFoodWithUpcGtin(upcGtin: String): ResultResponse<List<FDCFoodItem>, FoodDataCentralError>
 
-    suspend fun getFoodDetails(fdcId: FDCId): ResultResponse<FDCFoodItem, FDCError>
+    /**
+     * General search
+     */
+    suspend fun searchFood(criteria: SearchCriteriaBuilder): ResultResponse<List<FDCFoodItem>, FoodDataCentralError>
+
+    /**
+     * uses [fdcId] to deduce data type and returns the full details
+     */
+    suspend fun getFoodDetails(fdcId: FDCId): ResultResponse<FDCFoodItem, FoodDataCentralError>
 }
 
 internal class FoodDataCentralRepositoryImplementation(
     private val dispatcher: CoroutineDispatcher,
     private val fdcSource: FoodDataCentralRemoteSource,
 ) : FoodDataCentralRepository {
-    override suspend fun searchFoodWithUpcGtin(upcGtin: String): ResultResponse<List<FDCFoodItem>, FDCError> =
+    override suspend fun searchFoodWithUpcGtin(upcGtin: String): ResultResponse<List<FDCFoodItem>, FoodDataCentralError> =
         withContext(dispatcher) {
             val result = fdcSource.searchFood {
                 query = searchQuery { withUpc(upcGtin) }
@@ -37,7 +44,7 @@ internal class FoodDataCentralRepositoryImplementation(
             )
         }
 
-    override suspend fun searchFood(criteria: SearchCriteriaBuilder): ResultResponse<List<FDCFoodItem>, FDCError> =
+    override suspend fun searchFood(criteria: SearchCriteriaBuilder): ResultResponse<List<FDCFoodItem>, FoodDataCentralError> =
         withContext(dispatcher) {
             fdcSource.searchFoodNormal(criteria).fold(
                 onSuccess = {
@@ -49,7 +56,13 @@ internal class FoodDataCentralRepositoryImplementation(
             )
         }
 
-    override suspend fun getFoodDetails(fdcId: FDCId): ResultResponse<FDCFoodItem, FDCError> = withContext(dispatcher) {
-        fdcSource.getFoodByFdcId(fdcId)
-    }
+    override suspend fun getFoodDetails(fdcId: FDCId): ResultResponse<FDCFoodItem, FoodDataCentralError> =
+        withContext(dispatcher) {
+            val result = fdcSource.getFoodByFdcId(fdcId)
+
+            if (result.getResponseOrNull() is FoodDataCentralError.NotFoundError)
+                fdcSource.getFoodByFdcId(fdcId, abridged = true)
+            else
+                result
+        }
 }

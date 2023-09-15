@@ -5,14 +5,14 @@ import org.calamarfederal.messydiet.diet_data.model.energyIn
 import org.calamarfederal.messydiet.food.data.central.remote.schema.*
 import org.calamarfederal.messydiet.measure.weightIn
 
-data class LegacyFdcId internal constructor(override val fdcId: Int): FDCId
+data class LegacyFdcId internal constructor(override val fdcId: Int) : FDCId
 data class SurveyFdcId internal constructor(override val fdcId: Int) : FDCId
 
 internal fun SearchResultFoodSchema.toFdcAbridgedFoodItemOrNull(): FDCAbridgedFoodItem? {
     return FDCAbridgedFoodItem(
-        fdcId = when(dataType?.let { stringToDataType(it) }) {
+        fdcId = when (dataType?.let { FDCDataType.fromString(it) }) {
             FDCDataType.Branded -> BrandedFDCId(fdcId)
-            FDCDataType.Foundation-> FoundationFdcId(fdcId)
+            FDCDataType.Foundation -> FoundationFdcId(fdcId)
             FDCDataType.Legacy -> LegacyFdcId(fdcId)
             FDCDataType.Survey -> SurveyFdcId(fdcId)
             null -> return null
@@ -38,16 +38,18 @@ data class FDCAbridgedFoodItem internal constructor(
     val foodCode: String? = null,
 ) : FDCFoodItem
 
-internal fun brandedFoodItemFrom(abridgedFoodItem: AbridgedFoodItemSchema): BrandedFDCFoodItem {
-    return BrandedFDCFoodItem(
-        fdcId = BrandedFDCId(abridgedFoodItem.fdcId),
-        description = abridgedFoodItem.description,
-        brandOwner = abridgedFoodItem.brandOwner,
-        upcGTIN = abridgedFoodItem.gtinUpc,
-    )
-}
+internal fun AbridgedFoodItemSchema.toModel(): FDCAbridgedFoodItem = FDCAbridgedFoodItem(
+    fdcId = foodDataCentralId(id = fdcId, dataType = FDCDataType.fromString(dataType)!!),
+    description = description,
+    nutritionalInfo = foodNutrients?.toNutritionInfo()?.chooseBest(),
+    publishedDate = parseDate(),
+    brandOwner = brandOwner,
+    gtinUPC = gtinUpc,
+    ndbNumber = ndbNumber,
+    foodCode = foodCode,
+)
 
-internal fun SRLegacyFoodItemSchema.toModel(): FDCAbridgedFoodItem{
+internal fun SRLegacyFoodItemSchema.toModel(): FDCAbridgedFoodItem {
     return FDCAbridgedFoodItem(
         fdcId = LegacyFdcId(fdcId),
         description = description,
@@ -59,6 +61,7 @@ internal fun SRLegacyFoodItemSchema.toModel(): FDCAbridgedFoodItem{
         foodCode = null,
     )
 }
+
 internal fun SurveyFoodItemSchema.toModel(): FDCAbridgedFoodItem {
     return FDCAbridgedFoodItem(
         fdcId = LegacyFdcId(fdcId),
@@ -82,7 +85,7 @@ internal fun FDCNutritionInfo.parseNutrient(nutrientSchema: AbridgedFoodNutrient
     val weightUnit = nutrientSchema.unitName?.let { stringToWeightUnitOrNull(it) } ?: return null
     val weight = nutrientSchema.amount?.weightIn(weightUnit) ?: return null
 
-    return when(nutrientSchema.number) {
+    return when (nutrientSchema.number) {
         "203" -> copy(totalProtein = weight)
         "205" -> copy(totalCarbohydrates = weight)
         "605" -> copy(transFat = weight)

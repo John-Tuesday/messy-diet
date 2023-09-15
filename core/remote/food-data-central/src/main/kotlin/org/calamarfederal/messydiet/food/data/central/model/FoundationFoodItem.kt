@@ -25,7 +25,7 @@ internal fun FoundationFoodItemSchema.toModel(): FDCFoundationFoodItem = FDCFoun
 )
 
 internal fun SearchResultFoodSchema.toFDCFoundationFoodOrNull(): FDCFoundationFoodItem? {
-    if (dataType?.let { stringToDataType(it) } != FDCDataType.Foundation)
+    if (dataType?.let { FDCDataType.fromString(it) } != FDCDataType.Foundation)
         return null
 
     return FDCFoundationFoodItem(

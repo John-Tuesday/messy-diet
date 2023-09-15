@@ -30,7 +30,15 @@ internal data class AbridgedFoodItemSchema(
     val ndbNumber: Int? = null,
     // only applies to Survey Foods
     val foodCode: String? = null,
-)
+) {
+    fun parseDate(): FDCDate? {
+        if (publicationDate == null)
+            return null
+
+        val (y, m, d) = publicationDate.split('-')
+        return FDCDate(year = y.toInt(), month = m.toInt(), day = d.toInt())
+    }
+}
 
 @JsonClass(generateAdapter = true)
 internal data class AbridgedFoodNutrientSchema(
@@ -81,7 +89,7 @@ internal data class BrandedFoodItemSchema(
     val ingredients: String? = null,
     val modifiedDate: String? = null,
     val publicationDate: String? = null,
-    val servingSize: Int? = null,
+    val servingSize: Double? = null,
     val servingSizeUnit: String? = null,
     val preparationStateCode: String? = null,
     val brandedFoodCategory: String? = null,
@@ -184,11 +192,11 @@ internal data class FoodUpdateLogSchema(
     val ingredients: String? = null,
     val modifiedDate: String? = null,
     val publicationDate: String? = null,
-    val servingSize: Int? = null,
+    val servingSize: Double? = null,
     val servingSizeUnit: String? = null,
     val brandedFoodCategory: String? = null,
     val changes: String? = null,
-    val foodAttributes: List<FoodAttributeSchema>? = null
+    val foodAttributes: List<FoodAttributeSchema>? = null,
 )
 
 @JsonClass(generateAdapter = true)

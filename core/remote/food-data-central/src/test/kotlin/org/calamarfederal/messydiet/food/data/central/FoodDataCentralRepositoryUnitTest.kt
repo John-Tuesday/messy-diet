@@ -1,11 +1,13 @@
 package org.calamarfederal.messydiet.food.data.central
 
 import kotlinx.coroutines.runBlocking
+import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
 import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.model.getResponseOrNull
 import org.calamarfederal.messydiet.food.data.central.model.getValueOrNull
 import org.calamarfederal.messydiet.food.data.central.model.isSuccess
 import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
+import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpectCase
 import org.calamarfederal.messydiet.test.measure.prettyPrint
 import org.kodein.di.direct
 import org.kodein.di.instance
@@ -23,10 +25,9 @@ internal class FoodDataCentralRepositoryUnitTest {
         repo = testDi.direct.instance()
     }
 
-    @Test
-    fun `Sprite Upc test`() {
+    fun testSearchByUpcGtin(expectCase: FoodItemExpectCase) {
         val result = runBlocking {
-            repo.searchFoodWithUpcGtin(FoodItemExpect.SpriteTest.spriteUpc)
+            repo.searchFoodWithUpcGtin(expectCase.gtinUpc)
         }
         assert(result.isSuccess()) {
             println("${result.getResponseOrNull()?.message}")
@@ -36,76 +37,43 @@ internal class FoodDataCentralRepositoryUnitTest {
         assertEquals(1, searchResultFoods.size)
         val searchFood = searchResultFoods.single()
 
-        assertEquals(FoodItemExpect.SpriteTest.spriteFdcId, searchFood.fdcId)
-        assertEquals(FoodItemExpect.SpriteTest.spriteSearchDescription, searchFood.description)
+        assertEquals(expectCase.fdcId, searchFood.fdcId)
+        assertEquals(expectCase.searchDescription, searchFood.description)
     }
 
-    @Test
-    fun `Sprite Food detail test`() {
+    fun testGetDetails(
+        expectCase: FoodItemExpectCase,
+        expectNutrition: NutritionInfo = expectCase.nutritionPerServing,
+    ) {
         val result = runBlocking {
-            repo.getFoodDetails(FoodItemExpect.SpriteTest.spriteFdcId)
+            repo.getFoodDetails(expectCase.fdcId)
         }
         assert(result.isSuccess())
 
         val foodItem = result.getValueOrNull()!!
 
-        assertEquals(FoodItemExpect.SpriteTest.spriteFdcId, foodItem.fdcId)
+        assertEquals(expectCase.fdcId, foodItem.fdcId)
         assertNotNull(foodItem.nutritionalInfo)
         val nutritionInfo = foodItem.nutritionalInfo!!
         prettyPrint(nutritionInfo)
-        assertAboutEqual(FoodItemExpect.SpriteTest.spriteNutritionPerServing, nutritionInfo)
+        assertAboutEqual(expectNutrition, nutritionInfo)
     }
 
     @Test
-    fun `Sprite Food search then detail test`() {
-        val searchResult = runBlocking {
-            repo.searchFoodWithUpcGtin(FoodItemExpect.SpriteTest.spriteUpc)
-        }
-
-        assert(searchResult.isSuccess()) {
-            println("${searchResult.getResponseOrNull()?.message}")
-        }
-
-        val searchItems = searchResult.getValueOrNull()!!
-        assertEquals(1, searchItems.size)
-        val searchFoodItem = searchItems.single()
-
-        val detailResult = runBlocking {
-            repo.getFoodDetails(
-                fdcId = searchFoodItem.fdcId
-            )
-        }
-        assert(detailResult.isSuccess())
-
-        val foodItem = detailResult.getValueOrNull()!!
-
-        assertEquals(FoodItemExpect.SpriteTest.spriteFdcId, foodItem.fdcId)
-        assertNotNull(foodItem.nutritionalInfo)
-
-        val nutritionInfo = foodItem.nutritionalInfo!!
-
-        prettyPrint(nutritionInfo)
-        assertAboutEqual(FoodItemExpect.SpriteTest.spriteNutritionPerServing, nutritionInfo)
+    fun `Search by UPC GTIN SpriteTest`() {
+        testSearchByUpcGtin(FoodItemExpect.SpriteTest)
     }
 
     @Test
-    fun `Cheerios Food detail test`() {
-        val result = runBlocking {
-            repo.getFoodDetails(FoodItemExpect.CheeriosTestA.cheeriosFdcId)
-        }
-        assert(result.isSuccess())
+    fun `Get food details for SpriteTest`() {
+        testGetDetails(FoodItemExpect.SpriteTest)
+    }
 
-        val foodItem = result.getValueOrNull()!!
-
-        assertEquals(foodItem.fdcId, FoodItemExpect.CheeriosTestA.cheeriosFdcId)
-        assertNotNull(foodItem.nutritionalInfo)
-
-        val nutritionInfo = foodItem.nutritionalInfo!!
-        prettyPrint(nutritionInfo)
-
-        val expectedNutrition =
-            FoodItemExpect.CheeriosTestA.cheeriosNutritionPer100.scaleToPortion(FoodItemExpect.CheeriosTestA.cheeriosNutritionPerServing.portion)
-        prettyPrint(expectedNutrition)
-        assertAboutEqual(expectedNutrition, nutritionInfo, 10.0)
+    @Test
+    fun `Get food details for CheeriosTestA`() {
+        testGetDetails(
+            FoodItemExpect.CheeriosTestA,
+            FoodItemExpect.CheeriosTestA.nutritionPer100.scaleToPortion(FoodItemExpect.CheeriosTestA.nutritionPerServing.portion),
+        )
     }
 }

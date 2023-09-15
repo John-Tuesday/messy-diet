@@ -11,9 +11,9 @@ import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSche
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodSearchCriteriaSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodSearchCriteriaSchema.TradeChannel.ChildNutritionFoodPrograms
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodSearchCriteriaSchema.TradeChannel.Grocery
+import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SortBySchema.DataTypeKeyword
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SortOrderSchema.Ascending
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
 import org.kodein.di.direct
 import org.kodein.di.instance
 import retrofit2.Response
@@ -99,10 +99,11 @@ internal class FoodDataCentralRemoteApiPrettyPrinter {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun prettyPrintGetFoodBranded(fdcId: String, nutrients: List<Int>? = null) {
+    private fun prettyPrintGetFoodBranded(fdcId: String, nutrients: List<Int>? = null, formatFull: Boolean = false) {
         val result = fdcApi.getFoodWithFdcIdBranded(
             apiKey = testApiKey,
             fdcId = fdcId,
+            format = if (formatFull) "full" else null,
             nutrients = nutrients,
         ).execute().assertSuccessful().body()!!
 
@@ -112,8 +113,56 @@ internal class FoodDataCentralRemoteApiPrettyPrinter {
 //        println(prettyFormatDataClassString(result.toString()))
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun prettyPrintSearchFood(criteriaSchema: FoodSearchCriteriaSchema) {
+        val result = fdcApi.postFoodsSearch(
+            apiKey = testApiKey,
+            requestBody = criteriaSchema,
+        ).execute().assertSuccessful().body()!!
+
+        println(Moshi.Builder().build().adapter<SearchResultSchema>().indent("    ").toJson(result))
+    }
+
     @KTest
     fun `One off testing`() {
-        prettyPrintGetFoodBranded(FoodItemExpect.SpriteTest.spriteFdcIdString)
+//        prettyPrintGetFoodBranded(
+//            fdcId = FoodItemExpect.TridentGumTest.fdcIdString,
+//            formatFull = true,
+//        )
+//        prettyPrintGetFoodAbridged(
+//            fdcId = FoodItemExpect.TridentGumTest.fdcIdString,
+//        )
+//        prettyPrintSearchFood(
+//            FoodSearchCriteriaSchema(
+//                query = searchQuery { withUpc(FoodItemExpect.TridentGumTest.gtinUpc) },
+//            )
+//        )
+
+//        prettyPrintSearchFood(
+//            FoodSearchCriteriaSchema(
+//                query = searchQuery { withUpc("044000072490") },
+//            )
+//        )
+//        prettyPrintGetFoodBranded(
+//            fdcId = "2577315",
+//        )
+
+//        prettyPrintSearchFood(
+//            FoodSearchCriteriaSchema(
+//                query = searchQuery { withUpc("078742229423") },
+//            )
+//        )
+//        prettyPrintGetFoodBranded(
+//            fdcId = "1926907",
+//        )
+
+//        prettyPrintSearchFood(
+//            FoodSearchCriteriaSchema(
+//                query = searchQuery { withUpc("071068160241") },
+//            )
+//        )
+        prettyPrintGetFoodBranded(
+            fdcId = "2502945",
+        )
     }
 }

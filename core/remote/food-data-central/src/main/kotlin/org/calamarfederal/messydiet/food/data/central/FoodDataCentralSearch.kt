@@ -2,15 +2,9 @@ package org.calamarfederal.messydiet.food.data.central
 
 import org.calamarfederal.messydiet.food.data.central.SearchCriteriaBuilder.SearchSortType
 import org.calamarfederal.messydiet.food.data.central.model.*
-import org.calamarfederal.messydiet.food.data.central.model.schema
-import org.calamarfederal.messydiet.food.data.central.model.toFDCBrandedOrNull
-import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodSearchCriteriaSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultFoodSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultSchema
-import org.calamarfederal.messydiet.food.data.central.remote.schema.SortBySchema
+import org.calamarfederal.messydiet.food.data.central.remote.schema.*
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SortOrderSchema.Ascending
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SortOrderSchema.Descending
-import org.calamarfederal.messydiet.food.data.central.remote.schema.dateOf
 
 internal fun SearchResultSchema.toFDCSearchResult(): FDCSearchResult = FDCSearchResult(
     totalHits = totalHits ?: 0,
@@ -20,7 +14,7 @@ internal fun SearchResultSchema.toFDCSearchResult(): FDCSearchResult = FDCSearch
 )
 
 internal fun SearchResultFoodSchema.toFdcFoodItemOrNull(): FDCFoodItem? {
-    return when(dataType?.let {stringToDataType(it)}) {
+    return when (dataType?.let { FDCDataType.fromString(it) }) {
         FDCDataType.Branded -> toFDCBrandedOrNull()
         FDCDataType.Foundation -> toFDCFoundationFoodOrNull()
         FDCDataType.Legacy -> toFdcAbridgedFoodItemOrNull()
