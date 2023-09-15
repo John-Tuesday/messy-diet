@@ -73,11 +73,13 @@ sealed interface Nutrient
 enum class Nutrients {
     Protein,
 
+    TotalCarbohydrate,
     Fiber,
     Sugar,
     SugarAlcohol,
     Starch,
 
+    TotalFat,
     MonounsaturatedFat,
     PolyunsaturatedFat,
     Omega3,
@@ -149,11 +151,13 @@ interface NutritionInfo : MacroNutrients, Mineral, Vitamin {
         return when (nutrient) {
             Nutrients.Protein -> totalProtein
 
+            Nutrients.TotalCarbohydrate -> totalCarbohydrates
             Nutrients.Fiber -> fiber
             Nutrients.Sugar -> sugar
             Nutrients.SugarAlcohol -> sugarAlcohol
             Nutrients.Starch -> starch
 
+            Nutrients.TotalFat -> totalFat
             Nutrients.MonounsaturatedFat -> monounsaturatedFat
             Nutrients.PolyunsaturatedFat -> polyunsaturatedFat
             Nutrients.Omega3 -> omega3
@@ -174,13 +178,6 @@ interface NutritionInfo : MacroNutrients, Mineral, Vitamin {
             Nutrients.VitaminC -> vitaminC
         }
     }
-}
-
-fun NutritionInfo.isZeroOrUnset(): Boolean {
-    return foodEnergy == 0.kcal
-            && portion.weight in listOf(null, 0.grams)
-            && portion.volume in listOf(null, 0.liters)
-            && Nutrients.entries.all { nutrient -> (this[nutrient] ?: 0.grams) == 0.grams }
 }
 
 data class Nutrition(
@@ -210,11 +207,6 @@ data class Nutrition(
     override val vitaminA: Weight? = null,
     override val vitaminC: Weight? = null,
 ) : NutritionInfo {
-//    private operator fun Weight?.plus(other: Weight?): Weight? = when {
-//        this == null -> other
-//        other == null -> this
-//        else -> (this.inGrams() + other.inGrams()).grams
-//    }
 
     operator fun plus(other: NutritionInfo): Nutrition {
         var result = Nutrition(
@@ -252,11 +244,13 @@ fun Nutrition.copy(nutrient: Nutrients, weight: Weight?): Nutrition {
     return when (nutrient) {
         Nutrients.Protein -> copy(totalProtein = weight ?: throw (Throwable("protein mut not be null")))
 
+        Nutrients.TotalCarbohydrate -> copy(totalCarbohydrates = weight!!)
         Nutrients.Fiber -> copy(fiber = weight)
         Nutrients.Sugar -> copy(sugar = weight)
         Nutrients.SugarAlcohol -> copy(sugarAlcohol = weight)
         Nutrients.Starch -> copy(starch = weight)
 
+        Nutrients.TotalFat -> copy(totalFat = weight!!)
         Nutrients.MonounsaturatedFat -> copy(monounsaturatedFat = weight)
         Nutrients.PolyunsaturatedFat -> copy(polyunsaturatedFat = weight)
         Nutrients.Omega3 -> copy(omega3 = weight)
