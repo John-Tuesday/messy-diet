@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.SharingStarted.Companion
 import kotlinx.coroutines.plus
 import org.calamarfederal.messydiet.feature.search.data.FoodDetailsRepository
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
@@ -33,9 +31,10 @@ class FdcFoodItemDetailsViewModel @Inject constructor(
             .onEach { status -> _detailsStatusState.update{ status } }
             .launchIn(viewModelScope + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
                 throwable.printStackTrace()
-                _detailsStatusState.update {
-                    FoodDetailsStatus.Failure("Unknown network error\nfoodId: id=${foodId.id} type=${foodId.type}")
-                }
+                throw (throwable)
+//                _detailsStatusState.update {
+//                    FoodDetailsStatus.Failure("Unknown network error\nfoodId: id=${foodId.id} type=${foodId.type}")
+//                }
             })
     }
 }

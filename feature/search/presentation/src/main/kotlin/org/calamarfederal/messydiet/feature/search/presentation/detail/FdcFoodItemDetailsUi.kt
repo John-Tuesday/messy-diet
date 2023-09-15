@@ -112,7 +112,7 @@ internal fun FoodItemDetailsLayoutFromStatus(
             is FoodDetailsStatus.Failure -> {
                 Column {
                     Text(text = stringResource(id = R.string.fetch_food_detail_failed_title))
-                    Text(text = state.message)
+//                    Text(text = state.message)
                 }
             }
 

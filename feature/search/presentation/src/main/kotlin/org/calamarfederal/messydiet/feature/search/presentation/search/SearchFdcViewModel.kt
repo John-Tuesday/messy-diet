@@ -56,9 +56,10 @@ class SearchFdcViewModel @Inject constructor(
                     if (throwable is CancellationException) {
                         println("********** get food details cancelled")
                     } else {
-                        _detailsStatusState.update {
-                            FoodDetailsStatus.Failure("Unknown network error\nfoodId: id=${foodId.id} type=${foodId.type}")
-                        }
+                        throw (throwable)
+//                        _detailsStatusState.update {
+//                            FoodDetailsStatus.Failure()
+//                        }
                     }
                 }
             )
@@ -70,7 +71,8 @@ class SearchFdcViewModel @Inject constructor(
             .onEach { status -> _searchStatusState.update { status } }
             .launchIn(viewModelScope + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
                 throwable.printStackTrace()
-                _searchStatusState.update { SearchStatus.Failure("Unknown external error") }
+                throw (throwable)
+//                _searchStatusState.update { SearchStatus.Failure("Unknown external error") }
             })
     }
 }
