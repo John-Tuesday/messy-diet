@@ -71,7 +71,6 @@
     <string name="liter_label">l</string>
     <string name="milliliter">Milliliter</string>
     <string name="milliliter_label">mL</string>
-
     <string name="us_gallon">US Gallon</string>
     <string name="us_gallon_label">gal</string>
     <string name="us_teaspoon">US Teaspoon</string>
@@ -97,32 +96,72 @@
         <item>@string/us_tablespoon_label</item>
     </string-array>
 
-    <string name="serving_size">Serving size</string>
-
     <string name="calories">Calories</string>
     <string name="kilocalories_label">kcal</string>
+
+    <string name="serving_size">Serving size</string>
+
     <string name="protein">Protein</string>
+
     <string name="fat">Fat</string>
-    <string name="trans_fat">Trans fat</string>
-    <string name="saturated_fat">Saturated fat</string>
-    <string name="unsaturated_fat">Unsaturated fat</string>
-    <string name="polyunsaturated_fat">Polyunsaturated fat</string>
     <string name="monounsaturated_fat">Monounsaturated fat</string>
+    <string name="polyunsaturated_fat">Polyunsaturated fat</string>
     <string name="omega3_fat">Omega 3</string>
     <string name="omega6_fat">Omega 6</string>
+    <string name="saturated_fat">Saturated fat</string>
+    <string name="trans_fat">Trans fat</string>
+    <string name="cholesterol">Cholesterol</string>
+    <!--    <string name="unsaturated_fat">Unsaturated fat</string>-->
+
+    <string-array name="fat_names">
+        <item>@string/fat</item>
+        <item>@string/trans_fat</item>
+        <item>@string/saturated_fat</item>
+        <item>@string/polyunsaturated_fat</item>
+        <item>@string/monounsaturated_fat</item>
+        <item>@string/omega3_fat</item>
+        <item>@string/omega6_fat</item>
+        <item>@string/cholesterol</item>
+        <!--        <item>@string/unsaturated_fat</item>-->
+    </string-array>
+
     <string name="carbohydrates">Carbohydrates</string>
-    <string name="sugar">Sugar</string>
     <string name="starch">Starch</string>
+    <string name="sugar">Sugar</string>
     <string name="sugar_alcohol">Sugar alcohol</string>
     <string name="fiber">Fiber</string>
-    <string name="cholesterol">Cholesterol</string>
-    <string name="sodium">Sodium</string>
+
+    <string-array name="carbohydrate_names">
+        <item>@string/carbohydrates</item>
+        <item>@string/starch</item>
+        <item>@string/sugar</item>
+        <item>@string/sugar_alcohol</item>
+        <item>@string/fiber</item>
+    </string-array>
 
     <string name="calcium">Calcium</string>
+    <string name="chloride">Chloride</string>
     <string name="iron">Iron</string>
     <string name="magnesium">Magnesium</string>
+    <string name="phosphorous">Phosphorous</string>
     <string name="potassium">Potassium</string>
-    <string name="phosphorus">Phosphorus</string>
+    <string name="sodium">Sodium</string>
 
+    <string-array name="mineral_names">
+        <item>@string/sodium</item>
+        <item>@string/calcium</item>
+        <item>@string/chloride</item>
+        <item>@string/iron</item>
+        <item>@string/magnesium</item>
+        <item>@string/potassium</item>
+        <item>@string/phosphorous</item>
+    </string-array>
+
+    <string name="vitamin_a">Vitamin A</string>
     <string name="vitamin_c">Vitamin C</string>
+
+    <string-array name="vitamin_names">
+        <item>@string/vitamin_a</item>
+        <item>@string/vitamin_c</item>
+    </string-array>
 </resources>

@@ -98,6 +98,46 @@ enum class Nutrients {
 
     VitaminA,
     VitaminC,
+    ;
+
+    companion object {
+        val fats: List<Nutrients>
+            get() = listOf(
+                TotalFat,
+                MonounsaturatedFat,
+                PolyunsaturatedFat,
+                Omega3,
+                Omega6,
+                SaturatedFat,
+                TransFat,
+                Cholesterol,
+            )
+
+        val carbohydrates: List<Nutrients>
+            get() = listOf(
+                TotalCarbohydrate,
+                Fiber,
+                Sugar,
+                SugarAlcohol,
+                Starch,
+            )
+
+        val minerals: List<Nutrients>
+            get() = listOf(
+                Calcium,
+                Chloride,
+                Iron,
+                Magnesium,
+                Phosphorous,
+                Potassium,
+                Sodium,
+            )
+        val vitamins: List<Nutrients>
+            get() = listOf(
+                VitaminA,
+                VitaminC,
+            )
+    }
 }
 
 interface Protein : Nutrient {

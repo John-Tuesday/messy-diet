@@ -3,13 +3,7 @@ package org.calamarfederal.messydiet.feature.measure
 import android.icu.number.LocalizedNumberFormatter
 import android.icu.number.NumberFormatter
 import android.icu.number.Precision
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.LocalTextStyle
@@ -21,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,19 +44,6 @@ data class NutrientInfoTextStyle(
 }
 
 class NoServingSizeSpecified : Throwable("Expected portion.weight or portion.volume to not be null")
-
-private val NutritionInfo.hasMinerals: Boolean
-    get() = sequenceOf(
-        calcium,
-        iron,
-        magnesium,
-        potassium,
-        phosphorous,
-    ).any { it != null }
-private val NutritionInfo.hasVitamins: Boolean
-    get() = sequenceOf(
-        vitaminC,
-    ).any { it != null }
 
 @Composable
 fun NutrientInfoTextStyle.Companion.default(
@@ -215,19 +197,6 @@ fun NutritionInfoColumn(
             )
         }
 
-        nutrition.sodium?.let {
-            item(key = R.string.sodium) {
-                NutritionRow(
-                    label = stringResource(id = R.string.sodium),
-                    amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
-                    labelStyle = textStyles.macroNutrientLabelStyle,
-                    amountStyle = textStyles.macroNutrientValueStyle,
-                    unitStyle = textStyles.macroNutrientValueStyle,
-                )
-            }
-        }
-
         nutrition.cholesterol?.let {
             item(key = R.string.cholesterol) {
                 NutritionRow(
@@ -324,10 +293,35 @@ fun NutritionInfoColumn(
         }
 
 
+        nutrition.sodium?.let {
+            item(key = R.string.sodium) {
+                NutritionRow(
+                    label = stringResource(id = R.string.sodium),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.macroNutrientLabelStyle,
+                    amountStyle = textStyles.macroNutrientValueStyle,
+                    unitStyle = textStyles.macroNutrientValueStyle,
+                )
+            }
+        }
+
         nutrition.calcium?.let {
             item(R.string.calcium) {
                 NutritionRow(
                     label = stringResource(id = R.string.calcium),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.mineralLabelStyle,
+                    amountStyle = textStyles.mineralValueStyle,
+                    unitStyle = textStyles.mineralValueStyle,
+                )
+            }
+        }
+        nutrition.chloride?.let {
+            item(R.string.chloride) {
+                NutritionRow(
+                    label = stringResource(id = R.string.chloride),
                     amount = it.inMilligrams(),
                     unitLabel = stringResource(id = R.string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
@@ -360,7 +354,18 @@ fun NutritionInfoColumn(
                 )
             }
         }
-
+        nutrition.phosphorous?.let {
+            item(key = R.string.phosphorous) {
+                NutritionRow(
+                    label = stringResource(id = R.string.phosphorous),
+                    amount = it.inMilligrams(),
+                    unitLabel = stringResource(id = R.string.milligram_label),
+                    labelStyle = textStyles.mineralLabelStyle,
+                    amountStyle = textStyles.mineralValueStyle,
+                    unitStyle = textStyles.mineralValueStyle,
+                )
+            }
+        }
         nutrition.potassium?.let {
             item(key = R.string.potassium) {
                 NutritionRow(
@@ -373,10 +378,10 @@ fun NutritionInfoColumn(
                 )
             }
         }
-        nutrition.phosphorous?.let {
-            item(key = R.string.phosphorus) {
+        nutrition.vitaminA?.let {
+            item(key = R.string.vitamin_a) {
                 NutritionRow(
-                    label = stringResource(id = R.string.phosphorus),
+                    label = stringResource(id = R.string.vitamin_a),
                     amount = it.inMilligrams(),
                     unitLabel = stringResource(id = R.string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
@@ -432,7 +437,7 @@ private fun NutritionRow(
     unitStyle: TextStyle = LocalTextStyle.current + MaterialTheme.typography.bodyMedium,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.semantics(true) {},
         verticalAlignment = Alignment.Bottom,
     ) {
         Text(

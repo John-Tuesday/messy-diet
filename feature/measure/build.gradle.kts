@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":core:measure"))
 
     androidTestImplementation(project(":core:test:common"))
+    androidTestImplementation(project(":core:test:measure"))
 
     implementation(libs.bundles.compose.implementation)
     testImplementation(libs.junit)
