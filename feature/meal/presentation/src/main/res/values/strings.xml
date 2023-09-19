@@ -12,8 +12,12 @@
     <!--  Edit meal button text on view all meals screen  -->
     <string name="edit">Edit</string>
 
+    <!--  Edit / Create meal, show all vitamins & minerals button text  -->
+    <string name="show_more">Show more</string>
+
     <!--  Meal name placeholder  -->
     <string name="serving_size">Serving size</string>
+    <string name="food_energy_label">Calories</string>
     <string name="meal_name_placeholder">Name</string>
     <string name="meal_protein_label">Protein</string>
     <string name="meal_total_fats_label">Fat total</string>

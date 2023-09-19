@@ -1,6 +1,7 @@
 package org.calamarfederal.messydiet.feature.meal.presentation.create
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -99,6 +100,7 @@ private fun CreateMealInputColumn(
 ) {
     var carbohydrateExpanded by remember { mutableStateOf(false) }
     var fatExpanded by remember { mutableStateOf(false) }
+    var showMoreExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = modifier.verticalScroll(state = scrollState),
     ) {
@@ -111,6 +113,10 @@ private fun CreateMealInputColumn(
         PortionField(
             state = state.portionInput,
             label = stringResource(id = R.string.serving_size),
+        )
+        FoodEnergyField(
+            input = state.foodEnergyInput,
+            onInputChange = { state.foodEnergyInput = it },
         )
 
         NutrientWeightField(
@@ -188,7 +194,98 @@ private fun CreateMealInputColumn(
             label = stringResource(id = M.string.cholesterol),
             hiddenOnEmpty = !fatExpanded,
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ShowMoreDivider(
+            expanded = showMoreExpanded,
+            onExpandChange = { showMoreExpanded = it },
+        )
+
+        NutrientWeightField(
+            state = state.calciumInput,
+            label = stringResource(id = M.string.calcium),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
+
+        NutrientWeightField(
+            state = state.chlorideInput,
+            label = stringResource(id = M.string.chloride),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
+
+        NutrientWeightField(
+            state = state.ironInput,
+            label = stringResource(id = M.string.iron),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
+
+        NutrientWeightField(
+            state = state.magnesiumInput,
+            label = stringResource(id = M.string.magnesium),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
+
+        NutrientWeightField(
+            state = state.phosphorousInput,
+            label = stringResource(id = M.string.phosphorous),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
+
+        NutrientWeightField(
+            state = state.potassiumInput,
+            label = stringResource(id = M.string.potassium),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
+
+        NutrientWeightField(
+            state = state.sodiumInput,
+            label = stringResource(id = M.string.sodium),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
+
+        NutrientWeightField(
+            state = state.vitaminA,
+            label = stringResource(id = M.string.vitamin_a),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
+
+        NutrientWeightField(
+            state = state.vitaminC,
+            label = stringResource(id = M.string.vitamin_c),
+            hiddenOnEmpty = !showMoreExpanded,
+        )
     }
+}
+
+@Composable
+private fun ShowMoreDivider(
+    expanded: Boolean,
+    onExpandChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clickable { onExpandChange(!expanded) },
+    ) {
+        HorizontalDivider(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.width(4.dp))
+
+        Text(
+            text = stringResource(id = R.string.show_more),
+        )
+
+        Icon(
+            Icons.Default.ArrowDropDown,
+            null,
+            modifier = Modifier
+                .rotate(if (expanded) 180f else 0f)
+        )
+
+        HorizontalDivider(modifier = Modifier.weight(1f))
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -307,6 +404,27 @@ private fun PortionField(
         label = { Text(text = label) },
         imeAction = ImeAction.Next,
     )
+}
+
+@Composable
+private fun FoodEnergyField(
+    input: String,
+    onInputChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: String = stringResource(id = R.string.food_energy_label),
+) {
+    MeasuredUnitField(
+        modifier = modifier,
+        value = input,
+        onValueChange = onInputChange,
+        unitLabel = stringResource(id = M.string.kilocalories_label),
+        unitChoices = listOf(),
+        onUnitChange = {},
+        unitPickerEnabled = false,
+        label = { Text(text = label) },
+        imeAction = ImeAction.Next,
+    )
+
 }
 
 @Composable

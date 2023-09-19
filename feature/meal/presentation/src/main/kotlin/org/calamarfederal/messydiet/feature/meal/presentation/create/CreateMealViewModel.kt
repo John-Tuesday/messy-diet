@@ -45,13 +45,16 @@ class CreateMealUiState(
     val cholesterolFatInput: WeightInputState = WeightInputState(),
     val fatTotalInput: WeightInputState = WeightInputState(),
 
-//    val calciumInput: WeightInputState = WeightInputState(),
-//    val chlorideInput: WeightInputState = WeightInputState(),
-//    val ironInput: WeightInputState = WeightInputState(),
-//    val magnesiumInput: WeightInputState = WeightInputState(),
-//    val phosphorousInput: WeightInputState = WeightInputState(),
-//    val potassiumInput: WeightInputState = WeightInputState(),
-//    val sodiumInput: WeightInputState = WeightInputState(),
+    val calciumInput: WeightInputState = WeightInputState(),
+    val chlorideInput: WeightInputState = WeightInputState(),
+    val ironInput: WeightInputState = WeightInputState(),
+    val magnesiumInput: WeightInputState = WeightInputState(),
+    val phosphorousInput: WeightInputState = WeightInputState(),
+    val potassiumInput: WeightInputState = WeightInputState(),
+    val sodiumInput: WeightInputState = WeightInputState(),
+
+    val vitaminA: WeightInputState = WeightInputState(),
+    val vitaminC: WeightInputState = WeightInputState(),
 
     initialName: String = "",
     initialFoodEnergy: String = "",
@@ -98,17 +101,58 @@ class CreateMealUiState(
         )
     }
 
+    private val mineralFlow = combine(
+        calciumInput.weightFlow,
+        chlorideInput.weightFlow,
+        ironInput.weightFlow,
+        magnesiumInput.weightFlow,
+        phosphorousInput.weightFlow,
+        potassiumInput.weightFlow,
+        sodiumInput.weightFlow,
+    ) {
+        Nutrition(
+            calcium = it[0],
+            chloride = it[1],
+            iron = it[2],
+            magnesium = it[3],
+            phosphorous = it[4],
+            potassium = it[5],
+            sodium = it[6],
+        )
+    }
+
+    private val vitaminFlow = combine(
+        vitaminA.weightFlow,
+        vitaminC.weightFlow,
+    ) { vitA, vitC ->
+        Nutrition(
+            vitaminA = vitA,
+            vitaminC = vitC,
+        )
+    }
+
+    private val nutrientFlow = combine(
+        carbohydrateFlow,
+        fatFlow,
+        mineralFlow,
+        vitaminFlow,
+    ) { carb, fat, min, vit ->
+        carb + fat + min + vit
+    }.combine(proteinInput.weightFlow) { baseNutrition, protein ->
+        baseNutrition.copy(totalProtein = protein ?: 0.grams)
+    }
+
     val mealFlow: Flow<Meal> = combine(
         snapshotFlow { nameInput },
         snapshotFlow { foodEnergyInput },
-        proteinInput.weightFlow,
-        carbohydrateFlow,
-        fatFlow,
-    ) { name, foodEnergy, protein, carbohydrateNutrition, fatNutrition ->
+        nutrientFlow,
+//        proteinInput.weightFlow,
+//        carbohydrateFlow,
+//        fatFlow,
+    ) { name, foodEnergy, baseNutrition ->
 
-        val mealNutrition = carbohydrateNutrition + fatNutrition + Nutrition(
+        val mealNutrition = baseNutrition + Nutrition(
             foodEnergy = (foodEnergy.toDoubleOrNull() ?: 0.00).kcal,
-            totalProtein = protein ?: 0.grams,
         )
         Meal(
             name = name,
