@@ -283,6 +283,7 @@ private fun SearchFailure(
                 .padding(top = 16.dp),
         ) {
             Text(text = stringResource(id = R.string.search_failed))
+            /* TODO show more details about the error to the user */
         }
     }
 }
