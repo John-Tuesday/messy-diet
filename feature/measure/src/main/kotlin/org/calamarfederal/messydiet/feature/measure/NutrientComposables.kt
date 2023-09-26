@@ -82,7 +82,8 @@ fun NutrientInfoTextStyle.Companion.default(
 /**
  * Read only column of all nutritional info in [nutrition].
  *
- * [nutrition] should have a [Portion] with either [Portion.weight] or [Portion.volume] (exclusive).
+ * when [hidePortion] is `true`, [nutrition] should have a [Portion] with either
+ * [Portion.weight] or [Portion.volume] (exclusive).
  *
  * @throws NoServingSizeSpecified when [nutrition] does not provide a [Portion] with either a valid weight or volume
  */
@@ -91,24 +92,26 @@ fun NutritionInfoColumn(
     nutrition: NutritionInfo,
     modifier: Modifier = Modifier,
     textStyles: NutrientInfoTextStyle = NutrientInfoTextStyle.default(),
+    hidePortion: Boolean = false,
 ) {
     LazyColumn(
         modifier = modifier,
     ) {
-        item(key = R.string.serving_size) {
-            NutritionRow(
-                label = stringResource(id = R.string.serving_size),
-                amount = nutrition.portion.weight?.inGrams() ?: nutrition.portion.volume?.inMilliliters()
-                ?: throw (NoServingSizeSpecified()),
-                unitLabel = if (nutrition.portion.volume != null)
-                    stringResource(id = R.string.milliliter_label)
-                else
-                    stringResource(id = R.string.gram_label),
-                labelStyle = textStyles.servingSizeLabelStyle,
-                amountStyle = textStyles.servingSizeValueStyle,
-                unitStyle = textStyles.servingSizeValueStyle,
-            )
-        }
+        if (!hidePortion)
+            item(key = R.string.serving_size) {
+                NutritionRow(
+                    label = stringResource(id = R.string.serving_size),
+                    amount = nutrition.portion.weight?.inGrams() ?: nutrition.portion.volume?.inMilliliters()
+                    ?: throw (NoServingSizeSpecified()),
+                    unitLabel = if (nutrition.portion.volume != null)
+                        stringResource(id = R.string.milliliter_label)
+                    else
+                        stringResource(id = R.string.gram_label),
+                    labelStyle = textStyles.servingSizeLabelStyle,
+                    amountStyle = textStyles.servingSizeValueStyle,
+                    unitStyle = textStyles.servingSizeValueStyle,
+                )
+            }
 
 
         item(key = R.string.calories) {
