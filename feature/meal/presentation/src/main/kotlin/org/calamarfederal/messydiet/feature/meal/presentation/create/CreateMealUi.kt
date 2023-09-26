@@ -381,10 +381,7 @@ private fun PortionField(
     val resources = LocalContext.current.resources
     val combinedUnitChoices = remember(state.volumeUnitChoices, state.weightUnitChoices, resources) {
         state.weightUnitChoices.map {
-            weightUnitFullString(
-                it,
-                resources
-            )
+            weightUnitFullString(it, resources)
         } + state.volumeUnitChoices.map { volumeUnitFullString(it, resources) }
     }
 
@@ -394,11 +391,14 @@ private fun PortionField(
         onValueChange = { state.input = it },
         unitLabel = state.weightUnit?.labelString ?: state.volumeUnit?.labelString!!,
         unitChoices = combinedUnitChoices,
-        onUnitChange = {
-            if (it < state.weightUnitChoices.size)
-                state.changeToWeightUnit(it)
-            else
-                state.changeToVolumeUnit(it)
+        onUnitChange = { unadjustedIndex ->
+            val weightIndices = state.weightUnitChoices.indices
+            val volumeIndices = state.volumeUnitChoices.indices
+            val adjustedIndex = unadjustedIndex - weightIndices.last - 1
+            if (unadjustedIndex in weightIndices)
+                state.changeToWeightUnit(unadjustedIndex)
+            else if (adjustedIndex in volumeIndices)
+                state.changeToVolumeUnit(adjustedIndex)
         },
         placeholder = { Text(text = placeholderString) },
         label = { Text(text = label) },

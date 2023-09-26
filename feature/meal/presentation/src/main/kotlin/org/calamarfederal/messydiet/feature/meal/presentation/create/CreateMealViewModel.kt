@@ -140,16 +140,19 @@ class CreateMealUiState(
         carb + fat + min + vit
     }.combine(proteinInput.weightFlow) { baseNutrition, protein ->
         baseNutrition.copy(totalProtein = protein ?: 0.grams)
+    }.combine(portionInput.portionFlow) { baseNutrition, portion ->
+        if (portion != null && (portion.weight != null || portion.volume != null))
+            baseNutrition.copy(portion = portion)
+        else
+            null
     }
 
-    val mealFlow: Flow<Meal> = combine(
+    val mealFlow: Flow<Meal?> = combine(
         snapshotFlow { nameInput },
         snapshotFlow { foodEnergyInput },
         nutrientFlow,
-//        proteinInput.weightFlow,
-//        carbohydrateFlow,
-//        fatFlow,
     ) { name, foodEnergy, baseNutrition ->
+        if (baseNutrition == null) return@combine null
 
         val mealNutrition = baseNutrition + Nutrition(
             foodEnergy = (foodEnergy.toDoubleOrNull() ?: 0.00).kcal,
