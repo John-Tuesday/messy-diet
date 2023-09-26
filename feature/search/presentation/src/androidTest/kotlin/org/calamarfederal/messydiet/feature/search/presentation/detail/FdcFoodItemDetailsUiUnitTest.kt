@@ -12,6 +12,7 @@ import org.calamarfederal.messydiet.diet_data.model.Nutrition
 import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodItemDetails
+import org.calamarfederal.messydiet.feature.search.data.model.SearchRemoteError
 import org.calamarfederal.messydiet.feature.search.data.model.foodId
 import org.calamarfederal.messydiet.feature.search.presentation.R
 import org.calamarfederal.messydiet.measure.grams
@@ -48,21 +49,12 @@ class FdcFoodItemDetailsUiUnitTest {
             )
             .assertDoesNotExist()
 
-        composeRule
-            .onNodeWithText(failMessage)
-            .assertDoesNotExist()
-
-        detailStatusState = FoodDetailsStatus.Failure(failMessage)
+        detailStatusState = FoodDetailsStatus.Failure(SearchRemoteError.InternalApiError(failMessage))
 
         composeRule
             .onNodeWithText(
                 composeRule.activity.getString(R.string.fetch_food_detail_failed_title)
             )
-            .assertExists()
-            .assertIsDisplayed()
-
-        composeRule
-            .onNodeWithText(failMessage)
             .assertExists()
             .assertIsDisplayed()
     }

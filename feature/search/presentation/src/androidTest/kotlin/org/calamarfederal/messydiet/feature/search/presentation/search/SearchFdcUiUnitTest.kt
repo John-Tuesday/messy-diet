@@ -108,10 +108,10 @@ class SearchFdcUiUnitTest {
             .assertIsDisplayed()
 
         val failMessage = "Fail message"
-        searchStatusState = SearchStatus.Failure(failMessage)
+        searchStatusState = SearchStatus.Failure(SearchRemoteError.InternalApiError(failMessage))
 
         composeRule
-            .onNodeWithText(failMessage)
+            .onNodeWithText(composeRule.activity.getString(R.string.search_failed))
             .assertExists()
             .assertIsDisplayed()
 
