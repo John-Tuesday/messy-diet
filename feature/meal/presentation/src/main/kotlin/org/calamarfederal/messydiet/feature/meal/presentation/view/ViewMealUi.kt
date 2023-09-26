@@ -1,8 +1,11 @@
 package org.calamarfederal.messydiet.feature.meal.presentation.view
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -77,7 +80,7 @@ private fun ViewMealTopBar(
         title = { /*TODO*/ },
         navigationIcon = {
             IconButton(onClick = onNavigateUp) {
-                Icon(Icons.Default.ArrowBack, null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
             }
         }
     )

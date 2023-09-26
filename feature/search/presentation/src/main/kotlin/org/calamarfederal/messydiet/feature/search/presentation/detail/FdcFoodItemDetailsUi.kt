@@ -2,7 +2,7 @@ package org.calamarfederal.messydiet.feature.search.presentation.detail
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -80,7 +80,7 @@ private fun FoodItemDetailsTopBar(
         title = {},
         navigationIcon = {
             IconButton(onClick = onNavigateUp) {
-                Icon(Icons.Default.ArrowBack, null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
             }
         }
     )

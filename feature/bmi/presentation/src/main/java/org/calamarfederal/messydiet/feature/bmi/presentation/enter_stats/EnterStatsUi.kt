@@ -24,7 +24,7 @@ package org.calamarfederal.messydiet.feature.bmi.presentation.enter_stats
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -84,7 +84,6 @@ fun EnterStatsScreen(
 }
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun EnterStatsLayout(
     inputState: HeightAndWeightInputState,
@@ -129,7 +128,7 @@ private fun EnterStatsTopBar(
     navigationIcon = {
         if (showNavigationIcon) {
             IconButton(onClick = onNavigateUp) {
-                Icon(Icons.Default.ArrowBack, null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
             }
         }
     }
