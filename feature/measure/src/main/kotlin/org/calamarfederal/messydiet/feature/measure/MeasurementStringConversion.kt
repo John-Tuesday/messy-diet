@@ -27,46 +27,46 @@ val LengthUnit.fullString: String
 
 val VolumeUnit.labelString: String
     @Composable
-    get() = stringResource(id = volumeUnitToFullRId(this))
+    get() = stringResource(id = volumeUnitToShortRId(this))
 
 val VolumeUnit.fullString: String
     @Composable
-    get() = stringResource(id = volumeUnitToShortRId(this))
+    get() = stringResource(id = volumeUnitToFullRId(this))
 
 fun weightUnitFullString(
     unitType: WeightUnit,
     resources: Resources,
-) = resources.getString(weightUnitToFullRId(unitType))
+): String = resources.getString(weightUnitToFullRId(unitType))
 
 fun weightUnitShortString(
     unitType: WeightUnit,
     resources: Resources,
-) = resources.getString(weightUnitToShortRId(unitType))
+): String = resources.getString(weightUnitToShortRId(unitType))
 
 fun lengthUnitFullString(
     unitType: LengthUnit,
     resources: Resources,
-) = resources.getString(lengthUnitToFullRId(unitType))
+): String = resources.getString(lengthUnitToFullRId(unitType))
 
 fun lengthUnitShortString(
     unitType: LengthUnit,
     resources: Resources,
-) = resources.getString(lengthUnitToShortRId(unitType))
+): String = resources.getString(lengthUnitToShortRId(unitType))
 
 fun volumeUnitFullString(
     unitType: VolumeUnit,
     resources: Resources,
-) = resources.getString(volumeUnitToFullRId(unitType))
+): String = resources.getString(volumeUnitToFullRId(unitType))
 
 fun volumeUnitShortString(
     unitType: VolumeUnit,
     resources: Resources,
-) = resources.getString(volumeUnitToShortRId(unitType))
+): String = resources.getString(volumeUnitToShortRId(unitType))
 
 @StringRes
 internal fun weightUnitToFullRId(
     unitType: WeightUnit,
-) = when (unitType) {
+): Int = when (unitType) {
     WeightUnit.Kilogram -> R.string.kilogram
     WeightUnit.Gram -> R.string.gram
     WeightUnit.Milligram -> R.string.milligram
@@ -78,7 +78,7 @@ internal fun weightUnitToFullRId(
 @StringRes
 internal fun weightUnitToShortRId(
     unitType: WeightUnit,
-) = when (unitType) {
+): Int = when (unitType) {
     WeightUnit.Kilogram -> R.string.kilogram_label
     WeightUnit.Gram -> R.string.gram_label
     WeightUnit.Milligram -> R.string.milligram_label
@@ -105,7 +105,7 @@ internal fun lengthUnitToFullRId(
 @StringRes
 internal fun lengthUnitToShortRId(
     unitType: LengthUnit,
-) = when (unitType) {
+): Int = when (unitType) {
     LengthUnit.Kilometer -> R.string.kilometer_label
     LengthUnit.Meter -> R.string.meter_label
     LengthUnit.Centimeter -> R.string.centimeter_label
@@ -118,7 +118,7 @@ internal fun lengthUnitToShortRId(
 @StringRes
 internal fun volumeUnitToFullRId(
     unitType: VolumeUnit,
-) = when (unitType) {
+): Int = when (unitType) {
     VolumeUnit.Milliliter -> R.string.milliliter
     VolumeUnit.Liter -> R.string.liter
     VolumeUnit.UsGallon -> R.string.us_gallon
@@ -129,7 +129,7 @@ internal fun volumeUnitToFullRId(
 @StringRes
 internal fun volumeUnitToShortRId(
     unitType: VolumeUnit,
-) = when (unitType) {
+): Int = when (unitType) {
     VolumeUnit.Milliliter -> R.string.milliliter_label
     VolumeUnit.Liter -> R.string.liter_label
     VolumeUnit.UsGallon -> R.string.us_gallon_label
