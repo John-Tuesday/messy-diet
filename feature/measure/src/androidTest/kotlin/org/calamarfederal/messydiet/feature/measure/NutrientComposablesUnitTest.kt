@@ -28,7 +28,7 @@ internal class NutrientComposablesUnitTest {
 
     private val allFilledNutrition = MeasureSamples.filledNutritionA
 
-    private var testNutrition by mutableStateOf(allFilledNutrition)
+    private var testNutrition by mutableStateOf(Nutrition())
     private lateinit var weightFormatter: LocalizedNumberFormatter
 
     private val scrollContainer

@@ -1,5 +1,6 @@
 package org.calamarfederal.messydiet.feature.meal.presentation.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -21,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.meal.presentation.R
 
@@ -56,29 +58,71 @@ fun ViewAllMealsLayout(
     onDeleteMeals: (List<Long>) -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
-        ViewAllMealTopBar(
-            scrollBehavior = scrollBehavior,
-        )
-    }, floatingActionButton = {
-        ViewAllFab(onCreateMeal = onCreateMeal, onSearchRemoteMeal = onSearchRemoteMeal)
-    }) { padding ->
-        Surface(
-            modifier = Modifier
-                .padding(padding)
-                .consumeWindowInsets(padding)
-                .fillMaxSize()
-        ) {
-            MealsLazyColumn(
-                meals = meals,
-                onViewMeal = { onViewMeal(it.id) },
-                onDeleteMeal = onDeleteMeals,
-                onEditMeal = onEditMeal,
-                modifier = Modifier.fillMaxSize(),
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerScope = rememberCoroutineScope()
+    BackHandler(enabled = drawerState.isOpen) {
+        drawerScope.launch { drawerState.close() }
+    }
+    ViewAllDrawerSheet(
+        onCreateMeal = onCreateMeal,
+        onSearchRemoteMeal = onSearchRemoteMeal,
+        drawerState = drawerState,
+    ) {
+        Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
+            ViewAllMealTopBar(
+                scrollBehavior = scrollBehavior,
+                onMenuClick = { drawerScope.launch { drawerState.open() } }
             )
+        }, floatingActionButton = {
+            ViewAllFab(onCreateMeal = onCreateMeal, onSearchRemoteMeal = onSearchRemoteMeal)
+        }) { padding ->
+            Surface(
+                modifier = Modifier
+                    .padding(padding)
+                    .consumeWindowInsets(padding)
+                    .fillMaxSize()
+            ) {
+                MealsLazyColumn(
+                    meals = meals,
+                    onViewMeal = { onViewMeal(it.id) },
+                    onDeleteMeal = onDeleteMeals,
+                    onEditMeal = onEditMeal,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
+}
 
+@Composable
+private fun ViewAllDrawerSheet(
+    onCreateMeal: () -> Unit,
+    onSearchRemoteMeal: () -> Unit,
+    modifier: Modifier = Modifier,
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    content: @Composable () -> Unit,
+) {
+    ModalNavigationDrawer(
+        modifier = modifier,
+        drawerState = drawerState,
+        drawerContent = {
+            DismissibleDrawerSheet {
+                NavigationDrawerItem(
+                    label = { Text(text = "Create custom meal") },
+                    icon = { Icon(Icons.Default.Create, null) },
+                    selected = false,
+                    onClick = onCreateMeal,
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Search for food product") },
+                    icon = { Icon(Icons.Default.Search, null) },
+                    selected = false,
+                    onClick = onSearchRemoteMeal,
+                )
+            }
+        },
+        content = content,
+    )
 }
 
 @Composable
@@ -105,12 +149,18 @@ private fun ViewAllFab(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ViewAllMealTopBar(
+    onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     TopAppBar(
         modifier = modifier,
         scrollBehavior = scrollBehavior,
+        navigationIcon = {
+            IconButton(onClick = onMenuClick) {
+                Icon(Icons.Default.Menu, null)
+            }
+        },
         title = { Text(text = stringResource(id = R.string.all_meals_title)) },
     )
 }
@@ -127,7 +177,7 @@ private fun MealsLazyColumn(
     val selectedMeals = remember { mutableStateListOf<Long>() }
     val sheetState = rememberModalBottomSheetState()
     val showOptions by remember(selectedMeals) {
-        derivedStateOf { selectedMeals.isNotEmpty()}
+        derivedStateOf { selectedMeals.isNotEmpty() }
     }
 
     LazyColumn(

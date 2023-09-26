@@ -28,6 +28,14 @@ import org.calamarfederal.messydiet.measure.grams
 val simpleFormatter: LocalizedNumberFormatter
     @Composable get() = NumberFormatter.withLocale(LocalConfiguration.current.locales[0]).precision(Precision.integer())
 
+/**
+ * Exception when [Portion.weight] and [Portion.volume] are both null
+ */
+class NoServingSizeSpecified : Throwable("Expected portion.weight or portion.volume to not be null")
+
+/**
+ * Specifies all [TextStyle] in [NutritionInfoColumn]
+ */
 data class NutrientInfoTextStyle(
     val servingSizeLabelStyle: TextStyle,
     val servingSizeValueStyle: TextStyle,
@@ -43,8 +51,9 @@ data class NutrientInfoTextStyle(
     companion object
 }
 
-class NoServingSizeSpecified : Throwable("Expected portion.weight or portion.volume to not be null")
-
+/**
+ * Combine the current [LocalTextStyle] with [MaterialTheme] to form the default [NutrientInfoTextStyle]
+ */
 @Composable
 fun NutrientInfoTextStyle.Companion.default(
     servingSizeLabelStyle: TextStyle = LocalTextStyle.current + MaterialTheme.typography.titleLarge,
@@ -70,6 +79,13 @@ fun NutrientInfoTextStyle.Companion.default(
     mineralValueStyle = mineralValueStyle,
 )
 
+/**
+ * Read only column of all nutritional info in [nutrition].
+ *
+ * [nutrition] should have a [Portion] with either [Portion.weight] or [Portion.volume] (exclusive).
+ *
+ * @throws NoServingSizeSpecified when [nutrition] does not provide a [Portion] with either a valid weight or volume
+ */
 @Composable
 fun NutritionInfoColumn(
     nutrition: NutritionInfo,
@@ -283,13 +299,6 @@ fun NutritionInfoColumn(
                 amountStyle = textStyles.macroNutrientValueStyle,
                 unitStyle = textStyles.macroNutrientValueStyle,
             )
-
-//            if (nutrition.hasMinerals || nutrition.hasVitamins) {
-//                HorizontalDivider(
-//                    thickness = 2.dp,
-//                    modifier = Modifier.padding(bottom = 2.dp)
-//                )
-//            }
         }
 
 

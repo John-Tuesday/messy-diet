@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +30,7 @@ import org.calamarfederal.messydiet.feature.search.presentation.detail.FoodItemD
 
 @Composable
 fun SearchFdcUi(
-    toFoodDetails: (FoodId) -> Unit,
+    onNavigateUp: () -> Unit,
     toAllMeals: () -> Unit,
     toBarcodeScanner: () -> Unit,
     viewModel: SearchFdcViewModel = hiltViewModel(),
@@ -40,6 +39,7 @@ fun SearchFdcUi(
     val foodItemDetails by viewModel.detailsStatusState.collectAsStateWithLifecycle()
 
     SearchFdcScreen(
+        onNavigateUp = onNavigateUp,
         queryInput = viewModel.query,
         onQueryChange = { viewModel.query = it },
         onSubmitQuery = viewModel::submitSearchQuery,
@@ -62,6 +62,7 @@ internal fun SearchFdcScreen(
     getFoodItemDetails: (FoodId) -> Unit,
     saveFoodItemDetails: () -> Unit,
     useBarcodeScanner: () -> Unit,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     foodItemDetailStatus: FoodDetailsStatus? = null,
     searchStatus: SearchStatus? = null,
@@ -73,7 +74,7 @@ internal fun SearchFdcScreen(
                 onQueryChange = onQueryChange,
                 onSubmitQuery = onSubmitQuery,
                 searchStatus = searchStatus,
-                onNavigateUp = {},
+                onNavigateUp = onNavigateUp,
                 onFoodItemClick = getFoodItemDetails,
                 useBarcodeScanner = useBarcodeScanner,
             )
@@ -171,7 +172,9 @@ private fun SearchFdcTopBar(
                         Icon(Icons.AutoMirrored.Default.ArrowBack, null)
                     }
                 } else
-                    Icon(Icons.Default.Search, null)
+                    IconButton(onClick = onNavigateUp) {
+                        Icon(Icons.AutoMirrored.Default.ArrowBack, null)
+                    }
             },
         ) {
             SearchContent(
@@ -303,5 +306,6 @@ fun SearchFdcPreview() {
         searchStatus = searchStatus,
         foodItemDetailStatus = detailStatus,
         useBarcodeScanner = {},
+        onNavigateUp = {},
     )
 }

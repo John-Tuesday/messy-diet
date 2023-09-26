@@ -1,11 +1,25 @@
 package org.calamarfederal.messydiet.feature.measure
 
+import android.content.res.Resources
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import org.calamarfederal.messydiet.diet_data.model.Nutrients
 import org.calamarfederal.messydiet.diet_data.model.Nutrients.*
+import org.calamarfederal.messydiet.measure.R
 import org.calamarfederal.messydiet.measure.R.string
 
-val Nutrients.stringResId: Int
+/**
+ * use [LocalContext] to get the current [Resources] and get the name of `this`
+ */
+val Nutrients.fullName: String
+    @Composable
+    get() = nutrientFullName(this, LocalContext.current.resources)
+
+/**
+ * get the [R.string] resource id full name of `this` [Nutrients]
+ */
+internal val Nutrients.stringResId: Int
     @StringRes
     get() = when (this) {
         Protein -> string.protein
@@ -35,3 +49,6 @@ val Nutrients.stringResId: Int
         VitaminA -> string.vitamin_a
         VitaminC -> string.vitamin_c
     }
+
+private fun nutrientFullName(nutrient: Nutrients, resources: Resources): String =
+    resources.getString(nutrient.stringResId)

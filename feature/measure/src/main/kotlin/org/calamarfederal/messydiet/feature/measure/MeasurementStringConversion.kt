@@ -9,60 +9,99 @@ import org.calamarfederal.messydiet.measure.R
 import org.calamarfederal.messydiet.measure.VolumeUnit
 import org.calamarfederal.messydiet.measure.WeightUnit
 
+/**
+ * Unit symbol / abbreviation
+ */
 val WeightUnit.labelString: String
     @Composable
     get() = stringResource(id = weightUnitToShortRId(this))
 
+/**
+ * Unit full name
+ */
 val WeightUnit.fullString: String
     @Composable
     get() = stringResource(id = weightUnitToFullRId(this))
 
+/**
+ * Unit symbol / abbreviation
+ */
 val LengthUnit.labelString: String
     @Composable
     get() = stringResource(id = lengthUnitToShortRId(this))
 
+/**
+ * Unit full name
+ */
 val LengthUnit.fullString: String
     @Composable
     get() = stringResource(id = lengthUnitToFullRId(this))
 
+/**
+ * Unit symbol / abbreviation
+ */
 val VolumeUnit.labelString: String
     @Composable
     get() = stringResource(id = volumeUnitToShortRId(this))
 
+/**
+ * Unit full name
+ */
 val VolumeUnit.fullString: String
     @Composable
     get() = stringResource(id = volumeUnitToFullRId(this))
 
+/**
+ * Unit full name
+ */
 fun weightUnitFullString(
     unitType: WeightUnit,
     resources: Resources,
 ): String = resources.getString(weightUnitToFullRId(unitType))
 
+/**
+ * Unit symbol / abbreviation
+ */
 fun weightUnitShortString(
     unitType: WeightUnit,
     resources: Resources,
 ): String = resources.getString(weightUnitToShortRId(unitType))
 
+/**
+ * Unit full name
+ */
 fun lengthUnitFullString(
     unitType: LengthUnit,
     resources: Resources,
 ): String = resources.getString(lengthUnitToFullRId(unitType))
 
+/**
+ * Unit symbol / abbreviation
+ */
 fun lengthUnitShortString(
     unitType: LengthUnit,
     resources: Resources,
 ): String = resources.getString(lengthUnitToShortRId(unitType))
 
+/**
+ * Unit full name
+ */
 fun volumeUnitFullString(
     unitType: VolumeUnit,
     resources: Resources,
 ): String = resources.getString(volumeUnitToFullRId(unitType))
 
+/**
+ * Unit symbol / abbreviation
+ */
 fun volumeUnitShortString(
     unitType: VolumeUnit,
     resources: Resources,
 ): String = resources.getString(volumeUnitToShortRId(unitType))
 
+/**
+ * Unit full name
+ */
 @StringRes
 internal fun weightUnitToFullRId(
     unitType: WeightUnit,
@@ -75,6 +114,9 @@ internal fun weightUnitToFullRId(
     WeightUnit.Ounce -> R.string.ounce_weight
 }
 
+/**
+ * Unit symbol / abbreviation
+ */
 @StringRes
 internal fun weightUnitToShortRId(
     unitType: WeightUnit,
@@ -87,6 +129,9 @@ internal fun weightUnitToShortRId(
     WeightUnit.Ounce -> R.string.ounce_weight_label
 }
 
+/**
+ * Unit full name
+ */
 @StringRes
 internal fun lengthUnitToFullRId(
     unitType: LengthUnit,
@@ -102,6 +147,9 @@ internal fun lengthUnitToFullRId(
     }
 }
 
+/**
+ * Unit symbol / abbreviation
+ */
 @StringRes
 internal fun lengthUnitToShortRId(
     unitType: LengthUnit,
@@ -115,6 +163,9 @@ internal fun lengthUnitToShortRId(
     LengthUnit.Inch -> R.string.inch_label
 }
 
+/**
+ * Unit full name
+ */
 @StringRes
 internal fun volumeUnitToFullRId(
     unitType: VolumeUnit,
@@ -126,6 +177,9 @@ internal fun volumeUnitToFullRId(
     VolumeUnit.UsTeaspoon -> R.string.us_teaspoon
 }
 
+/**
+ * Unit symbol / abbreviation
+ */
 @StringRes
 internal fun volumeUnitToShortRId(
     unitType: VolumeUnit,

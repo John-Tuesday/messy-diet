@@ -104,8 +104,8 @@ fun NavGraphBuilder.searchFoodGraph(
             }
 
             SearchFdcUi(
-                toFoodDetails = {
-                    navController.toFoodDetails(it)
+                onNavigateUp = {
+                    navController.navigateUp()
                 },
                 toAllMeals = {
                     navigateToViewAllMeals()
