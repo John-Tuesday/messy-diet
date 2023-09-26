@@ -3,7 +3,10 @@ package org.calamarfederal.messydiet.food.data.central.di
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
-import org.calamarfederal.messydiet.food.data.central.*
+import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRemoteSource
+import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRemoteSourceImplementation
+import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
+import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepositoryImplementation
 import org.calamarfederal.messydiet.food.data.central.remote.FoodDataCentralApi
 import org.kodein.di.*
 import retrofit2.Converter
@@ -75,4 +78,6 @@ data object FoodDataCentral {
         networkDispatcher: CoroutineDispatcher,
         apiKey: String,
     ): FoodDataCentralRepository = internalDi.direct.instance()
+
+    const val DemoKey: String = "DEMO_KEY"
 }

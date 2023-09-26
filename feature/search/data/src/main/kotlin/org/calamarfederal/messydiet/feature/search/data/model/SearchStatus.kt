@@ -7,23 +7,37 @@ import org.calamarfederal.messydiet.food.data.central.model.FDCId
 import org.calamarfederal.messydiet.food.data.central.model.dataType
 import org.calamarfederal.messydiet.food.data.central.model.foodDataCentralId
 
+/**
+ * Food ID for fetching remote food items
+ *
+ * save [id] and [type] to restore it later using [foodId]
+ */
 @Stable
 sealed interface FoodId {
     val id: Int
     val type: Int
 }
 
+/**
+ * Construct a new [FoodId] using the saved [id] and [type]
+ */
 fun foodId(id: Int, type: Int): FoodId {
     require(type in FDCDataType.entries.indices)
 
     return FdcFoodId(id = id, dataType = FDCDataType.entries[type])
 }
 
+/**
+ * Implementation of [FoodId] strictly for compose preview
+ */
 data object FoodIdDummy : FoodId {
     override val id: Int = 0
     override val type: Int = -1
 }
 
+/**
+ * Food IDs from Food Data Central
+ */
 internal class FdcFoodId(
     override val id: Int,
     val dataType: FDCDataType,
@@ -49,20 +63,32 @@ internal class FdcFoodId(
     override val type: Int = dataType.ordinal
 }
 
+/**
+ * Result from a successful remote search
+ */
 data class SearchResultFoodItem(
     val foodId: FoodId,
     val name: String,
     val nutritionInfo: NutritionInfo,
 ) {
+    /**
+     * Convenience for `foodId.id`
+     */
     val id: Int = foodId.id
 }
 
+/**
+ * Result from a successful remote getDetails
+ */
 data class FoodItemDetails(
     val foodId: FoodId,
     val name: String,
     val nutritionInfo: NutritionInfo,
 )
 
+/**
+ * All known non-fatal errors for this module
+ */
 sealed interface SearchRemoteError {
     data class UnknownNetworkError(
         override val message: String?,

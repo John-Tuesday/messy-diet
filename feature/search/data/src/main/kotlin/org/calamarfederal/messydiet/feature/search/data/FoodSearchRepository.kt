@@ -73,26 +73,31 @@ internal class FoodDetailsRepositoryImplementation @Inject constructor(
 ) : FoodDetailsRepository {
     override fun foodDetails(foodId: FoodId): Flow<FoodDetailsStatus> = flow {
         emit(FoodDetailsStatus.Loading())
-        if (foodId is FdcFoodId) {
-            val result = fdcRepo.getFoodDetails(foodId.fdcId)
-            emit(result.fold(
-                onSuccess = {
-                    FoodDetailsStatus.Success(it.toFoodItemDetails())
-                },
-                onFailure = {
-                    FoodDetailsStatus.Failure(it.toSearchRemoteError())
-                }
-            ))
-        } else {
-            emit(
-                FoodDetailsStatus.Failure(
-                    SearchRemoteError.InvalidFoodIdError(
-                        message = "Invalid food id given as input: id=${foodId.id}, type=${foodId.type}",
-                        id = foodId.id,
-                        type = foodId.type,
+        when (foodId) {
+            is FdcFoodId -> {
+                val result = fdcRepo.getFoodDetails(foodId.fdcId)
+                emit(result.fold(
+                    onSuccess = {
+                        FoodDetailsStatus.Success(it.toFoodItemDetails())
+                    },
+                    onFailure = {
+                        FoodDetailsStatus.Failure(it.toSearchRemoteError())
+                    }
+                ))
+            }
+
+            is FoodIdDummy -> {
+                emit(
+                    FoodDetailsStatus.Failure(
+                        SearchRemoteError.InvalidFoodIdError(
+                            message = "Invalid food id given as input: id=${foodId.id}, type=${foodId.type}",
+                            id = foodId.id,
+                            type = foodId.type,
+                        )
                     )
                 )
-            )
+
+            }
         }
     }
 }

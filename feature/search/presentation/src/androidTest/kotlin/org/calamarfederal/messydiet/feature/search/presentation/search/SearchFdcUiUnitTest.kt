@@ -41,6 +41,7 @@ class SearchFdcUiUnitTest {
                 useBarcodeScanner = {},
                 foodItemDetailStatus = foodDetailStatusState,
                 searchStatus = searchStatusState,
+                onNavigateUp = {},
             )
         }
 

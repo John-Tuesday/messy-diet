@@ -1,7 +1,7 @@
 [versions]
-composeMaterialVersion = "1.6.0-alpha05"
-composeMaterial3Version = "1.2.0-alpha07"
-composeUiVersion = "1.6.0-alpha05"
+composeMaterialVersion = "1.6.0-alpha06"
+composeMaterial3Version = "1.2.0-alpha08"
+composeUiVersion = "1.6.0-alpha06"
 androidJUnitVersion = "1.1.5"
 androidCoreVersion = "1.12.0"
 androidEspressoVersion = "3.5.1"
@@ -9,11 +9,11 @@ androidActivityVersion = "1.7.2"
 androidLifecycleVersion = "2.6.2"
 androidDatastoreVersion = "1.0.0"
 
-androidCameraxVersion = "1.3.0-rc01"
+androidCameraxVersion = "1.3.0-rc02"
 
 androidMlKitBarcodeVersion = "17.2.0"
 
-navVersion = "2.7.2"
+navVersion = "2.7.3"
 
 hiltVersion = "2.48"
 hiltNavComposeVersion = "1.0.0"
@@ -26,6 +26,7 @@ moshiVersion = "1.14.0"
 coroutineVersion = "1.7.3"
 
 kodeinVersion = "7.20.2"
+mockkVersion = "1.13.7"
 
 # Plugins
 kotlinVersion = "1.9.10"
@@ -93,12 +94,17 @@ datastore-proto = { module = "androidx.datastore:datastore", version.ref = "andr
 # Kodein DI
 kotlin-kodein-di = { module = "org.kodein.di:kodein-di", version.ref = "kodeinVersion" }
 
+# Mockk (Kotlin Mocking Library)
+mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion" }
+mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockkVersion" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkVersion" }
+
 # Kotlin coroutine
 kotlin-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutineVersion" }
 kotlin-coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineVersion" }
 
 # Kotlin serialization
-kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinSerialization"}
+kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 kotlin-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinSerialization" }
 
 # General Android Test
@@ -160,4 +166,9 @@ compose-androidTest = [
 kotlin-test-junit = [
     "junit",
     "kotlin-test-junit",
+]
+
+mockk-android = [
+    "mockk-agent",
+    "mockk-android",
 ]
