@@ -1,6 +1,6 @@
 # Messy Diet
 
-![app icon](/app/src/main/ic_launcher-playstore.png)
+![app icon](/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml)
 
 Nutrient tracker and diet manager. Create custom meals or scan the barcode of a food item to automatically retrieve the
 nutrients and serving size. Adjust the serving size of a meal to calculate the change in nutritional information.
