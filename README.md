@@ -1,6 +1,9 @@
 # Messy Diet
 
-Nutrient tracker and diet manager. Create custom meals or scan the barcode of a food item to automatically retrieve the nutrients and serving size. Adjust the serving size of a meal to calculate the change in nutritional information.
+![app icon](/app/src/main/ic_launcher-playstore.png)
+
+Nutrient tracker and diet manager. Create custom meals or scan the barcode of a food item to automatically retrieve the
+nutrients and serving size. Adjust the serving size of a meal to calculate the change in nutritional information.
 
 ## Barcode scanning
 
@@ -12,6 +15,11 @@ In the future, the plan is to add support for other api which could serve the sa
 
 ## Regarding the Code
 
-This is an exploratory android and compose project. As such, there is an unfortunate lack of uniformity in conventions of style, technique, and architectural design.
+This is an exploratory android and compose project. As such, there is an unfortunate lack of uniformity in conventions
+of style, technique, and architectural design.
 
-This project currently primarily uses Dagger Hilt for DI, but it also makes use of Kodein DI in the core:remote:food-data-central Gradle module. This was done as to experiment with Kodein. The plan is to unify the whole project under one DI framework (either manual, hilt, or Kodein).
+This project currently primarily uses Dagger Hilt for DI, but it also makes use of Kodein DI in the core:remote:
+food-data-central Gradle module. This was done as to experiment with Kodein. The plan is to unify the whole project
+under one DI framework (either manual, hilt, or Kodein).
+
+For a mocking framework, this project uses Mockk.
