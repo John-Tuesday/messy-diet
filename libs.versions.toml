@@ -28,6 +28,7 @@ moshiVersion = "1.14.0"
 coroutineVersion = "1.7.3"
 
 kodeinVersion = "7.20.2"
+# Cannot inline bytecode built with JVM target 11 into bytecode that is being built with JVM target 1.8 https://github.com/gradle/gradle/issues/2534
 mockkVersion = "1.13.7"
 
 # Plugins
@@ -35,7 +36,7 @@ kotlinVersion = "1.9.10"
 kotlinSerialization = "1.5.1"
 #kaptVersion = "1.9.10"
 kspVersion = "1.9.10-1.0.13"
-androidBuildVersion = "8.1.1"
+androidBuildVersion = "8.1.2"
 
 [libraries]
 # Compose Implementation
