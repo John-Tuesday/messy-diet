@@ -1,11 +1,8 @@
 plugins {
-//    id("messydiet.android.library")
-//    id("messydiet.android.hilt")
-    id("org.calamarfederal.android-common")
-    id("org.calamarfederal.hilt")
+    id("messydiet.android.feature")
+    id("messydiet.android.hilt")
 }
 
-group = "org.calamarfederal.messydiet.feature.search"
 
 android {
     namespace = "org.calamarfederal.messydiet.feature.search.presentation"
