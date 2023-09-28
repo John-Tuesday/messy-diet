@@ -34,8 +34,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "build-logic"
-include("build-platform")
-include("android-application")
-include("android-feature")
-include("kotlin-library")
 include(":convention")

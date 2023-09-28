@@ -1,9 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("org.calamarfederal.android-application") apply false
-    id("org.calamarfederal.android-common") apply false
-    id("org.calamarfederal.hilt") apply false
-    id("org.calamarfederal.room") apply false
-    id("org.calamarfederal.kotlin-library") apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+
+    alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.ksp) apply false
+    alias(libs.plugins.hilt) apply false
+    id("messydiet.android.feature") apply false
+    id("messydiet.android.hilt") apply false
+    id("messydiet.android.room") apply false
 }

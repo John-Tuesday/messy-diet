@@ -143,10 +143,12 @@ ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.g
 
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
+android-application = { id = "com.android.application", version.ref = "androidBuildVersion" }
+android-library = { id = "com.android.library", version.ref = "androidBuildVersion" }
+android-test = { id = "com.android.test", version.ref = "androidBuildVersion" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
-#kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kaptVersion" }
-kotlin-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 kotlin-serialization-gradle = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 kotlin-serialization-compiler = { id = "kotlinx-serialization-compiler-plugin", version.ref = "kotlinVersion" }
 kotlin-serialization-compiler-embeddable = { id = "kotlinx-serialization-compiler-plugin-embeddable", version.ref = "kotlinVersion" }
