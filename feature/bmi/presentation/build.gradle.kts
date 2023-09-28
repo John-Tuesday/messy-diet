@@ -20,9 +20,9 @@
  * SOFTWARE.                                                                  *
  ******************************************************************************/
 plugins {
-    id("org.calamarfederal.android-common")
-    id("org.calamarfederal.hilt")
-    id("org.calamarfederal.room")
+    id("messydiet.android.feature")
+    id("messydiet.android.hilt")
+    id("messydiet.android.room")
 }
 
 android {
