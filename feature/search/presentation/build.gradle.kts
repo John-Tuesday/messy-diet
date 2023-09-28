@@ -5,7 +5,7 @@ plugins {
     id("org.calamarfederal.hilt")
 }
 
-//group = "org.calamarfederal.messydiet.feature.search"
+group = "org.calamarfederal.messydiet.feature.search"
 
 android {
     namespace = "org.calamarfederal.messydiet.feature.search.presentation"

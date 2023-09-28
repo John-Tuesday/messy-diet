@@ -21,13 +21,15 @@
  * SOFTWARE.                                                                  *
  ******************************************************************************/
 plugins {
-    id("org.calamarfederal.android-common")
-    id("org.calamarfederal.hilt")
-    id("org.calamarfederal.room")
+    id("messydiet.android.library")
+    id("messydiet.android.hilt")
+    id("messydiet.android.room")
     alias(libs.plugins.kotlin.serialization.gradle)
 }
 
-group = "org.calamarfederal.messydiet.feature.bmi"
+android {
+    namespace = "org.calamarfederal.messydiet.feature.bmi.data"
+}
 
 dependencies {
     implementation(platform("org.calamarfederal.platform:plugins-platform"))

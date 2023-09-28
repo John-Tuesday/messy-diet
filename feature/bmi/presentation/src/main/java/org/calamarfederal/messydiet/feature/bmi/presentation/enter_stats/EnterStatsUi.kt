@@ -41,7 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.calamarfederal.feature.bmi.data.Bmi
 import org.calamarfederal.feature.bmi.data.BmiCategory.*
-import org.calamarfederal.messydiet.feature.bmi.R
+import org.calamarfederal.messydiet.feature.bmi.presentation.R
 import org.calamarfederal.messydiet.feature.measure.MeasuredUnitField
 import org.calamarfederal.messydiet.feature.measure.fullString
 import org.calamarfederal.messydiet.feature.measure.labelString

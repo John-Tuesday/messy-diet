@@ -25,10 +25,8 @@ plugins {
     id("org.calamarfederal.room")
 }
 
-group = "org.calamarfederal.messydiet.feature.bmi"
-
 android {
-    namespace = project.group.toString()
+    namespace = "org.calamarfederal.messydiet.feature.bmi.presentation"
 }
 
 dependencies {
