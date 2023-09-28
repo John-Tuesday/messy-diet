@@ -1,5 +1,29 @@
 plugins {
-    id("org.calamarfederal.android-application")
+    id("messydiet.android.application")
+    id("messydiet.android.application.compose")
+    id("messydiet.android.hilt")
+}
+
+android {
+    namespace = "org.calamarfederal.messydiet"
+
+    defaultConfig {
+        applicationId = "org.calamarfederal.messydiet"
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
 }
 
 dependencies {
