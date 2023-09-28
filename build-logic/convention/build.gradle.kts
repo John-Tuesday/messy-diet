@@ -41,5 +41,9 @@ gradlePlugin {
             id = "messydiet.android.hilt"
             implementationClass = "AndroidHiltConvention"
         }
+        register("androidRoom") {
+            id = "messydiet.android.room"
+            implementationClass = "AndroidRoomConvention"
+        }
     }
 }
