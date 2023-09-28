@@ -5,7 +5,6 @@ plugins {
 group = "org.calamarfederal.messydiet.test.remote"
 
 dependencies {
-    implementation(platform("org.calamarfederal.platform:plugins-platform"))
     implementation(platform(project(":app-platform")))
 
     implementation(project(":core:remote:food-data-central"))

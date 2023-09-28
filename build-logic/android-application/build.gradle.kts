@@ -26,7 +26,6 @@ plugins {
 }
 
 dependencies {
-    implementation(platform("org.calamarfederal.platform:plugins-platform"))
     implementation(platform(project(":build-platform")))
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 

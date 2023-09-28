@@ -20,8 +20,6 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("platforms")
-
 rootProject.name = "messydiet"
 include(":app-platform")
 include(":core:test:common")

@@ -28,7 +28,6 @@ plugins {
 group = "org.calamarfederal.messydiet.core.diet-data"
 
 dependencies {
-    implementation(platform("org.calamarfederal.platform:plugins-platform"))
     implementation(platform(project(":app-platform")))
     api(project(":core:measure"))
 }
