@@ -27,13 +27,13 @@ group = "org.calamarfederal.platform"
 
 dependencies {
     constraints {
-        api(libs.android.tools)
+        api(libs.android.gradlePlugin)
         api(libs.android.build)
-        api(libs.kotlin.android)
+        api(libs.kotlin.android.gradlePlugin)
         api(libs.kotlin.jvm)
         api(libs.kotlin.stdlib)
         api(libs.hilt.plugin)
-        api(libs.kotlin.ksp)
+        api(libs.ksp.gradlePlugin)
         api(libs.kotlin.serialization.plugin)
     }
 }

@@ -1,7 +1,7 @@
 package org.calamarfederal.messydiet.measure
 
-import org.junit.Test
 import kotlin.math.absoluteValue
+import kotlin.test.Test
 
 private fun assertEqual(actual: Double, expected: Double, tolerance: Double = 0.000_001) = assert(
     (actual - expected).absoluteValue <= tolerance

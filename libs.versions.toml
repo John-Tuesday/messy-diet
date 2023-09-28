@@ -1,4 +1,6 @@
 [versions]
+androidxComposeCompilerVersion = "1.5.3"
+
 composeMaterialVersion = "1.6.0-alpha06"
 composeMaterial3Version = "1.2.0-alpha08"
 composeUiVersion = "1.6.0-alpha06"
@@ -61,7 +63,7 @@ lifecycle-compose-utils = { module = "androidx.lifecycle:lifecycle-runtime-compo
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltVersion" }
-hilt-navigation-compsoe = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavComposeVersion" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavComposeVersion" }
 
 # Room
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
@@ -127,24 +129,27 @@ kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version
 
 # Plugins
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinVersion" }
-kotlin-android = { module = "org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin", version.ref = "kotlinVersion" }
 kotlin-jvm = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlinVersion" }
 kotlin-serialization-plugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlinVersion" }
-kotlin-ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "kspVersion" }
 #kotlin-kapt = { module = "org.jetbrains.kotlin.kapt:org.jetbrains.kotlin.kapt.gradle.plugin", version.ref = "kotlinVersion" }
 android-build = { module = "com.android.build.gradle:com.android.application", version.ref = "androidBuildVersion" }
-android-tools = { module = "com.android.tools.build:gradle", version.ref = "androidBuildVersion" }
 hilt-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltVersion" }
 
+# Dependencies of only build-logic
+kotlin-android-gradlePlugin = { module = "org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin", version.ref = "kotlinVersion" }
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "androidBuildVersion" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
+ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "kspVersion" }
+
+
 [plugins]
-#kotlin-ksp = { id = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "kspVersion"}
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 #kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kaptVersion" }
-kotlin-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion"}
+kotlin-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 kotlin-serialization-gradle = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
-kotlin-serialization-compiler = { id = "kotlinx-serialization-compiler-plugin", version.ref = "kotlinVersion"}
+kotlin-serialization-compiler = { id = "kotlinx-serialization-compiler-plugin", version.ref = "kotlinVersion" }
 kotlin-serialization-compiler-embeddable = { id = "kotlinx-serialization-compiler-plugin-embeddable", version.ref = "kotlinVersion" }
-#kotlin-gradle = {  }
 
 [bundles]
 compose-implementation = [

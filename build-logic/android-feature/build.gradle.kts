@@ -28,8 +28,8 @@ dependencies {
     implementation(platform(project(":build-platform")))
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 
-    implementation(libs.kotlin.android)
-    implementation(libs.android.tools)
+    implementation(libs.kotlin.android.gradlePlugin)
+    implementation(libs.android.gradlePlugin)
     implementation(libs.hilt.plugin)
-    implementation(libs.kotlin.ksp)
+    implementation(libs.ksp.gradlePlugin)
 }

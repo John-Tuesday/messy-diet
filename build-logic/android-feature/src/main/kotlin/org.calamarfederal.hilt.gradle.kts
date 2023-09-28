@@ -36,7 +36,7 @@ val libs = the<LibrariesForLibs>()
 
 dependencies {
     implementation(libs.hilt.android)
-    implementation(libs.hilt.navigation.compsoe)
+    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.compiler)

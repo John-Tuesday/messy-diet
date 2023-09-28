@@ -1,10 +1,10 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
     }
-    includeBuild("build-logic")
 }
 
 dependencyResolutionManagement {
@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 
 includeBuild("platforms")
 
-rootProject.name = "messy-diet"
+rootProject.name = "messydiet"
 include(":app-platform")
 include(":core:test:common")
 include(":core:android:hilt")

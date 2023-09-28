@@ -1,5 +1,10 @@
 plugins {
-    id("org.calamarfederal.hilt")
+    id("messydiet.android.library")
+    id("messydiet.android.hilt")
+}
+
+android {
+    namespace = "org.calamarfederal.messydiet.core.android.hilt"
 }
 
 dependencies {

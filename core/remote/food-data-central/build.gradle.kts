@@ -1,5 +1,5 @@
 plugins {
-    id("org.calamarfederal.kotlin-library")
+    id("messydiet.kotlin.library")
     alias(libs.plugins.kotlin.serialization.gradle)
     alias(libs.plugins.kotlin.ksp)
 }

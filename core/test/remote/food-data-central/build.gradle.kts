@@ -1,5 +1,5 @@
 plugins {
-    id("org.calamarfederal.kotlin-library")
+    id("messydiet.kotlin.library")
 }
 
 group = "org.calamarfederal.messydiet.test.remote"
