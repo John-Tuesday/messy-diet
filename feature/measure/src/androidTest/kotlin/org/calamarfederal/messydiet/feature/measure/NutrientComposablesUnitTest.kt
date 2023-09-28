@@ -10,7 +10,6 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.calamarfederal.messydiet.diet_data.model.*
 import org.calamarfederal.messydiet.measure.*
-import org.calamarfederal.messydiet.measure.R
 import org.calamarfederal.messydiet.test.UnitTest
 import org.calamarfederal.messydiet.test.measure.MeasureSamples
 import org.junit.Rule

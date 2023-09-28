@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.calamarfederal.messydiet.diet_data.model.*
-import org.calamarfederal.messydiet.measure.R
 import org.calamarfederal.messydiet.measure.grams
 
 val simpleFormatter: LocalizedNumberFormatter

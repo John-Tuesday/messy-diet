@@ -1,8 +1,10 @@
 plugins {
-    id("org.calamarfederal.android-common")
+    id("messydiet.android.feature")
 }
 
-group = "$group.feature"
+android {
+    namespace = "org.calamarfederal.messydiet.feature.measure"
+}
 
 dependencies {
     implementation(platform("org.calamarfederal.platform:plugins-platform"))

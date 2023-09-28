@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.calamarfederal.messydiet.feature.meal.presentation.R
 import org.calamarfederal.messydiet.feature.measure.*
-import org.calamarfederal.messydiet.measure.R as M
+import org.calamarfederal.messydiet.feature.measure.R as M
 
 private fun String.filterWithDecimalFormat(decimalSeparator: Char = '.'): String {
     var hasDecimalSeparator = false

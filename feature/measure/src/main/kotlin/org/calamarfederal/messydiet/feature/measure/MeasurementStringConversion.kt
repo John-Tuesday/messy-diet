@@ -5,7 +5,6 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import org.calamarfederal.messydiet.measure.LengthUnit
-import org.calamarfederal.messydiet.measure.R
 import org.calamarfederal.messydiet.measure.VolumeUnit
 import org.calamarfederal.messydiet.measure.WeightUnit
 
