@@ -1,10 +1,12 @@
 plugins {
-    id("org.calamarfederal.android-common")
-    id("org.calamarfederal.hilt")
-    id("org.calamarfederal.room")
+    id("messydiet.android.library")
+    id("messydiet.android.hilt")
+    id("messydiet.android.room")
 }
 
-group = "$group.feature.meal"
+android {
+    namespace = "org.calamarfederal.messydiet.feature.meal.data"
+}
 
 dependencies {
     implementation(platform("org.calamarfederal.platform:plugins-platform"))
