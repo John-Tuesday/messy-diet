@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.ApplicationExtension
+import org.calamarfederal.messydiet.configureAndroidCommon
 import org.calamarfederal.messydiet.configureAndroidCompose
 import org.calamarfederal.messydiet.configureGradleManagedDevices
 import org.calamarfederal.messydiet.configureKotlinAndroid
@@ -16,6 +17,7 @@ class AndroidApplicationConvention : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
+                configureAndroidCommon(this)
                 defaultConfig.targetSdk = 34
                 configureGradleManagedDevices(this)
             }

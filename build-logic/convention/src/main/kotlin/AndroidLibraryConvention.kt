@@ -1,4 +1,5 @@
 import com.android.build.gradle.LibraryExtension
+import org.calamarfederal.messydiet.configureAndroidCommon
 import org.calamarfederal.messydiet.configureAndroidCompose
 import org.calamarfederal.messydiet.configureGradleManagedDevices
 import org.calamarfederal.messydiet.configureKotlinAndroid
@@ -17,6 +18,7 @@ class AndroidLibraryConvention : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
+                configureAndroidCommon(this)
 
                 defaultConfig.targetSdk = 34
                 configureGradleManagedDevices(this)
