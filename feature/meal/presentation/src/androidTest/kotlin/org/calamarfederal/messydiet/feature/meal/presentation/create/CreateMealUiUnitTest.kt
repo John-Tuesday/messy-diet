@@ -15,7 +15,7 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import org.calamarfederal.messydiet.measure.R as M
+import org.calamarfederal.messydiet.feature.measure.R as M
 
 @RunWith(AndroidJUnit4::class)
 internal class CreateMealUiUnitTest {

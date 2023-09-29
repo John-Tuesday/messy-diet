@@ -1,0 +1,2 @@
+Nutrient tracker and diet manager. Create custom meals or scan the barcode of a food item to automatically retrieve the
+nutrients and serving size. Adjust the serving size of a meal to calculate the change in nutritional information.
