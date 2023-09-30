@@ -1,19 +1,32 @@
-# Messy Diet
-
 ![app icon](/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp)
+
+# Messy Diet
 
 Nutrient tracker and diet manager. Create custom meals or scan the barcode of a food item to automatically retrieve the
 nutrients and serving size. Adjust the serving size of a meal to calculate the change in nutritional information.
 
 ## Screenshots
 
-![overview screenshot](/app/src/main/play/listings/en-US/graphics/phone-screenshots/1_all_meals.png)
-![search upc screenshot](/app/src/main/play/listings/en-US/graphics/phone-screenshots/2_search_upc.png)
-manually enter the UPC/GTIN or use the barcode scanner feature.
+Search for a food product by UPC/GTIN
 
-![search result screenshot](/app/src/main/play/listings/en-US/graphics/phone-screenshots/3_search_result.png)
-![custom meal screenshot simple](/app/src/main/play/listings/en-US/graphics/phone-screenshots/4_meal_custom_simple.png)
-![custom meal screenshot detailed](/app/src/main/play/listings/en-US/graphics/phone-screenshots/5_meal_custom_detailed.png)
+<img src="/app/src/main/play/listings/en-US/graphics/phone-screenshots/2_search_upc.png" width=25% height=25% alt="search upc"> <img src="/app/src/main/play/listings/en-US/graphics/phone-screenshots/3_search_result.png" width=25% height=25% alt="search result">
+
+> You can manually enter the code or scan the barcode it in the app.
+
+---
+
+Create custom meals with different levels of details
+
+ <img src="/app/src/main/play/listings/en-US/graphics/phone-screenshots/4_meal_custom_simple.png" width=25% height=25% alt="simple meal"> <img src="/app/src/main/play/listings/en-US/graphics/phone-screenshots/5_meal_custom_detailed.png" width=25% height=25% alt="detailed meal">
+ 
+<details>
+ <summary><b>More screenshots</b></summary>
+
+ Browse your saved meals
+ 
+ <img src="/app/src/main/play/listings/en-US/graphics/phone-screenshots/1_all_meals.png" width=25% height=25% alt="all meals">
+
+</details>
 
 ## Barcode scanning
 
@@ -44,24 +57,14 @@ device and run the app.
 
 ## Structure
 
-`:build-logic` contains convention plugins to create a single source of truth for the Android configurations.
-
-`:app-platform` defines a gradle platform to enforce dependency version alignment between all modules, except those
-added using `includedBuild` like `:build-logic`.
-
-`:core` holds all the shared and platform agnostic code. **Except** `:core:android:hilt` which handles Coroutine
-Dispatcher injection through Hilt and annotations. `:core:test:*` contains sample data and helper functions for use in
-other tests.
-
-`:feature` are where all the logical sections of the app are located. Each submodule in `:feature` contains two separate
-modules of their own: `:data` and `:presentation`. **Except** `:feature:measure` which defines shared string resources
-and compose code for units of measure (as defined in `:core:measure` and `:core:diet-model`).
-
-`:feature:bmi:*` is currently unused, but it's basically a BMI calculator. It needs to be either removed or integrated
-in the app.
-
-`:screenshot` is where automatic screenshots are (going to be) configured. The screenshots are for sharing on platforms
-like Github and F-droid, not for testing.
+| module | description |
+| ------ | ----------- |
+| `:build-logic` | contains convention plugins to create a single source of truth for the Android configurations. |
+| `:app-platform` | defines a gradle platform to enforce dependency version alignment between all modules, except those added using `includedBuild` like `:build-logic`. |
+| `:core` | holds all the shared and platform agnostic code. **Except** `:core:android:hilt` which handles Coroutine Dispatcher injection through Hilt and annotations. `:core:test:*` contains sample data and helper functions for use in other tests. |
+| `:feature` | are where all the logical sections of the app are located. Each submodule in `:feature` contains two separate modules of their own: `:data` and `:presentation`. **Except** `:feature:measure` which defines shared string resources and compose code for units of measure (as defined in `:core:measure` and `:core:diet-model`). |
+| `:feature:bmi:*` | is currently unused, but it's basically a BMI calculator. It needs to be either removed or integrated in the app. |
+| `:screenshot` | is where automatic screenshots are (going to be) configured. The screenshots are for sharing on platforms like Github and F-droid, not for testing. |
 
 App metadata is specified
 in [Triple-T Structure for F-Droid](https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/#triple-t-structure),
@@ -86,7 +89,7 @@ in `:app-platform`.
 This is an exploratory android and compose project. As such, there is an unfortunate lack of uniformity in conventions
 of style, technique, and architectural design.
 
-### DI
+### Dependency Injection
 
 This project currently primarily uses Dagger Hilt for DI, but it also makes use of Kodein DI in
 the `:core:remote:food-data-central` Gradle module. This was done as to experiment with Kodein. The plan is to unify the
