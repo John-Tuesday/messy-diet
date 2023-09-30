@@ -5,6 +5,16 @@
 Nutrient tracker and diet manager. Create custom meals or scan the barcode of a food item to automatically retrieve the
 nutrients and serving size. Adjust the serving size of a meal to calculate the change in nutritional information.
 
+## Screenshots
+
+![overview screenshot](/app/src/main/play/listings/en-US/graphics/phone-screenshots/1_all_meals.png)
+![search upc screenshot](/app/src/main/play/listings/en-US/graphics/phone-screenshots/2_search_upc.png)
+manually enter the UPC/GTIN or use the barcode scanner feature.
+
+![search result screenshot](/app/src/main/play/listings/en-US/graphics/phone-screenshots/3_search_result.png)
+![custom meal screenshot simple](/app/src/main/play/listings/en-US/graphics/phone-screenshots/4_meal_custom_simple.png)
+![custom meal screenshot detailed](/app/src/main/play/listings/en-US/graphics/phone-screenshots/5_meal_custom_detailed.png)
+
 ## Barcode scanning
 
 As of 25 September 2023, the barcode code is used to search only the USDA food database (FDC). The FDC database
