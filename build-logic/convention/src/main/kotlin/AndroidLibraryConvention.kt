@@ -1,12 +1,10 @@
 import com.android.build.gradle.LibraryExtension
-import org.calamarfederal.messydiet.configureAndroidCommon
-import org.calamarfederal.messydiet.configureAndroidCompose
-import org.calamarfederal.messydiet.configureGradleManagedDevices
-import org.calamarfederal.messydiet.configureKotlinAndroid
+import org.calamarfederal.messydiet.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.kotlin
 
 class AndroidLibraryConvention : Plugin<Project> {
     override fun apply(target: Project) {
@@ -22,6 +20,11 @@ class AndroidLibraryConvention : Plugin<Project> {
 
                 defaultConfig.targetSdk = 34
                 configureGradleManagedDevices(this)
+            }
+
+            dependencies {
+                testImplementation(kotlin("test"))
+                androidTestImplementation(kotlin("test"))
             }
         }
     }

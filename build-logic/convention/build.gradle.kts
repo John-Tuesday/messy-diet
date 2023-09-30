@@ -25,6 +25,14 @@ gradlePlugin {
             id = "messydiet.android.library.compose"
             implementationClass = "AndroidLibraryComposeConvention"
         }
+        register("androidTest") {
+            id = "messydiet.android.test"
+            implementationClass = "AndroidTestConvention"
+        }
+        register("androidTestCompose") {
+            id = "messydiet.android.test.compose"
+            implementationClass = "AndroidTestComposeConvention"
+        }
         register("androidFeature") {
             id = "messydiet.android.feature"
             implementationClass = "AndroidFeatureConvention"

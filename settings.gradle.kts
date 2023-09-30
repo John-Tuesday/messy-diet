@@ -22,12 +22,17 @@ dependencyResolutionManagement {
 
 rootProject.name = "messydiet"
 include(":app-platform")
+include(":app")
+
 include(":core:test:common")
 include(":core:android:hilt")
 include(":core:measure")
 include(":core:diet-model")
 include(":core:remote:food-data-central")
-include(":app")
+include(":core:test:measure")
+include(":core:test:remote:food-data-central")
+
+
 include(":feature:bmi:presentation")
 include(":feature:bmi:data")
 include(":feature:measure")
@@ -36,5 +41,4 @@ include(":feature:meal:data")
 include(":feature:search:presentation")
 include(":feature:search:data")
 
-include(":core:test:measure")
-include(":core:test:remote:food-data-central")
+include(":screenshot")

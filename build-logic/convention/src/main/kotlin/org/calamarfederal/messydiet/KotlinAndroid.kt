@@ -6,7 +6,6 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -27,10 +26,6 @@ internal fun Project.configureKotlinAndroid(
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
         }
-    }
-
-    dependencies {
-        androidTestImplementation(kotlin("test"))
     }
 
     configureKotlin()
@@ -59,6 +54,5 @@ private fun Project.configureKotlin() {
     dependencies {
         implementation(libs.findLibrary("kotlin.stdlib").get())
         implementation(libs.findLibrary("kotlin.coroutine").get())
-        testImplementation(kotlin("test"))
     }
 }
