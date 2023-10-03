@@ -1,6 +1,7 @@
 plugins {
     id("messydiet.android.application")
     id("messydiet.android.application.compose")
+    id("messydiet.android.application.flavors")
     id("messydiet.android.hilt")
 }
 

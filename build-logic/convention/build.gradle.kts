@@ -1,8 +1,15 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `kotlin-dsl`
 }
 
 group = "org.calamarfederal.messydiet.build-logic"
+
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    languageVersion = "1.9"
+}
 
 dependencies {
     compileOnly(libs.kotlin.android.gradlePlugin)
@@ -44,6 +51,10 @@ gradlePlugin {
         register("androidApplicationCompose") {
             id = "messydiet.android.application.compose"
             implementationClass = "AndroidApplicationComposeConvention"
+        }
+        register("androidApplicationFlavors") {
+            id = "messydiet.android.application.flavors"
+            implementationClass = "AndroidApplicationFlavorsConvention"
         }
         register("androidHilt") {
             id = "messydiet.android.hilt"

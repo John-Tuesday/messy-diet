@@ -1,8 +1,5 @@
 import com.android.build.api.dsl.ApplicationExtension
-import org.calamarfederal.messydiet.configureAndroidCommon
-import org.calamarfederal.messydiet.configureAndroidCompose
-import org.calamarfederal.messydiet.configureGradleManagedDevices
-import org.calamarfederal.messydiet.configureKotlinAndroid
+import org.calamarfederal.messydiet.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -34,6 +31,16 @@ class AndroidApplicationComposeConvention : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureAndroidCompose(this)
+            }
+        }
+    }
+}
+
+class AndroidApplicationFlavorsConvention : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            extensions.configure<ApplicationExtension> {
+                configureFlavors(this)
             }
         }
     }
