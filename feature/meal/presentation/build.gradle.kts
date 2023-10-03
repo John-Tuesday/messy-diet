@@ -25,4 +25,6 @@ dependencies {
     testImplementation(libs.junit)
     debugImplementation(libs.bundles.compose.debug)
     androidTestImplementation(libs.bundles.compose.androidTest)
+
+    androidTestDemoImplementation(project(":screenshot"))
 }
