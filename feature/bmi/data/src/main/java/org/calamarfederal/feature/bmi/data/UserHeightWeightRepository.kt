@@ -13,10 +13,7 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.serialization.protobuf.ProtoNumber
-import org.calamarfederal.messydiet.measure.Length
-import org.calamarfederal.messydiet.measure.Weight
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.meters
+import org.calamarfederal.physical.measurement.*
 import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
@@ -68,28 +65,28 @@ class UserHeightLocalSourceImplementation @Inject constructor(
     }
 }
 
-interface UserHeightWeightRepository {
+interface UserHeightMassRepository {
     val heightFlow: Flow<Length>
-    val weightFlow: Flow<Weight>
+    val massFlow: Flow<Mass>
 
     suspend fun setHeight(length: Length)
-    suspend fun setWeight(weight: Weight)
+    suspend fun setMass(mass: Mass)
 }
 
 class UserHeightRepositoryImplementation @Inject constructor(
-    private val heightWeightLocalSource: UserHeightLocalSource,
-) : UserHeightWeightRepository {
+    private val heightMassLocalSource: UserHeightLocalSource,
+) : UserHeightMassRepository {
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val heightFlow: Flow<Length> = heightWeightLocalSource.heightWeightFlow.mapLatest { it.meters.meters }
+    override val heightFlow: Flow<Length> = heightMassLocalSource.heightWeightFlow.mapLatest { it.meters.meters }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val weightFlow: Flow<Weight> = heightWeightLocalSource.heightWeightFlow.mapLatest { it.grams.grams }
+    override val massFlow: Flow<Mass> = heightMassLocalSource.heightWeightFlow.mapLatest { it.grams.grams }
 
     override suspend fun setHeight(length: Length) {
-        heightWeightLocalSource.updateHeightWeight { it.copy(meters = length.inMeters()) }
+        heightMassLocalSource.updateHeightWeight { it.copy(meters = length.inMeters()) }
     }
 
-    override suspend fun setWeight(weight: Weight) {
-        heightWeightLocalSource.updateHeightWeight { it.copy(grams = weight.inGrams()) }
+    override suspend fun setMass(mass: Mass) {
+        heightMassLocalSource.updateHeightWeight { it.copy(grams = mass.inGrams()) }
     }
 }

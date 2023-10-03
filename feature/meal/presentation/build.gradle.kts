@@ -14,7 +14,7 @@ dependencies {
     implementation(project(":feature:meal:data"))
     implementation(project(":feature:measure"))
     implementation(project(":core:diet-model"))
-    implementation(project(":core:measure"))
+    implementation(libs.measure)
 
     // Lifecycle
     implementation(libs.lifecycle.compose.utils)

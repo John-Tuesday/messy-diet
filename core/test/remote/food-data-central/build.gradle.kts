@@ -12,5 +12,5 @@ dependencies {
     implementation(project(":core:test:common"))
 
     implementation(project(":core:diet-model"))
-    implementation(project(":core:measure"))
+    implementation(libs.measure)
 }

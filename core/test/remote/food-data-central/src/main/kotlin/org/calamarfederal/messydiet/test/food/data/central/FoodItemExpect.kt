@@ -7,10 +7,10 @@ import org.calamarfederal.messydiet.diet_data.model.kcal
 import org.calamarfederal.messydiet.food.data.central.model.FDCDataType
 import org.calamarfederal.messydiet.food.data.central.model.FDCId
 import org.calamarfederal.messydiet.food.data.central.model.foodDataCentralId
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.micrograms
-import org.calamarfederal.messydiet.measure.milligrams
-import org.calamarfederal.messydiet.measure.milliliters
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.micrograms
+import org.calamarfederal.physical.measurement.milligrams
+import org.calamarfederal.physical.measurement.milliliters
 
 sealed class FoodItemExpectCase(
     val gtinUpc: String,

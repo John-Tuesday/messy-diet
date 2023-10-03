@@ -3,17 +3,15 @@ package org.calamarfederal.messydiet.feature.meal.data.local
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import org.calamarfederal.messydiet.diet_data.model.*
-import org.calamarfederal.messydiet.measure.Weight
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.liters
+import org.calamarfederal.physical.measurement.*
 import kotlin.math.absoluteValue
 
 internal class MealConverters {
     @TypeConverter
-    fun fromWeightToDoubleOrNull(weight: Weight?): Double? = weight?.inGrams()
+    fun fromWeightToDoubleOrNull(weight: Mass?): Double? = weight?.inGrams()
 
     @TypeConverter
-    fun fromDoubleToWeightOrNull(grams: Double?): Weight? = grams?.grams
+    fun fromDoubleToWeightOrNull(grams: Double?): Mass? = grams?.grams
 
     @TypeConverter
     fun fromFoodEnergyToDoubleOrNull(energy: FoodEnergy?): Double? = energy?.inKilocalories()
@@ -28,14 +26,14 @@ internal class MealConverters {
     fun fromDoubleToFoodEnergy(kcals: Double): FoodEnergy = kcals.kcal
 
     @TypeConverter
-    fun fromWeightToLong(weight: Weight): Double = weight.inGrams()
+    fun fromWeightToLong(weight: Mass): Double = weight.inGrams()
 
     @TypeConverter
-    fun fromDoubleToWeight(grams: Double): Weight = grams.grams
+    fun fromDoubleToWeight(grams: Double): Mass = grams.grams
 
     @TypeConverter
     fun fromPortionToPair(portion: Portion): Double {
-        portion.weight?.let { return it.inGrams() }
+        portion.mass?.let { return it.inGrams() }
         portion.volume?.let { return -it.inLiters() }
         return 0.00
     }
@@ -55,30 +53,30 @@ internal data class MealEntity(
     @ColumnInfo(index = true)
     val name: String,
     @ColumnInfo(name = "total_protein")
-    override val totalProtein: Weight,
-    override val fiber: Weight?,
-    override val sugar: Weight?,
+    override val totalProtein: Mass,
+    override val fiber: Mass?,
+    override val sugar: Mass?,
     @ColumnInfo(name = "sugar_alcohol")
-    override val sugarAlcohol: Weight?,
-    override val starch: Weight?,
+    override val sugarAlcohol: Mass?,
+    override val starch: Mass?,
     @ColumnInfo(name = "total_carbohydrates")
-    override val totalCarbohydrates: Weight,
-    override val monounsaturatedFat: Weight?,
-    override val polyunsaturatedFat: Weight?,
-    override val omega3: Weight?,
-    override val omega6: Weight?,
-    override val saturatedFat: Weight?,
-    override val transFat: Weight?,
-    override val cholesterol: Weight?,
+    override val totalCarbohydrates: Mass,
+    override val monounsaturatedFat: Mass?,
+    override val polyunsaturatedFat: Mass?,
+    override val omega3: Mass?,
+    override val omega6: Mass?,
+    override val saturatedFat: Mass?,
+    override val transFat: Mass?,
+    override val cholesterol: Mass?,
     @ColumnInfo(name = "total_fat")
-    override val totalFat: Weight,
-    override val calcium: Weight?,
-    override val chloride: Weight?,
-    override val iron: Weight?,
-    override val magnesium: Weight?,
-    override val phosphorous: Weight?,
-    override val potassium: Weight?,
-    override val sodium: Weight?,
+    override val totalFat: Mass,
+    override val calcium: Mass?,
+    override val chloride: Mass?,
+    override val iron: Mass?,
+    override val magnesium: Mass?,
+    override val phosphorous: Mass?,
+    override val potassium: Mass?,
+    override val sodium: Mass?,
     override val portion: Portion,
     @ColumnInfo(name = "food_energy")
     override val foodEnergy: FoodEnergy,

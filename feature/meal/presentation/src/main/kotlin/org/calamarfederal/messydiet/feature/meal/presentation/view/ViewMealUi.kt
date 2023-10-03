@@ -32,10 +32,7 @@ import org.calamarfederal.messydiet.diet_data.model.Nutrition
 import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.measure.*
-import org.calamarfederal.messydiet.measure.VolumeUnit
-import org.calamarfederal.messydiet.measure.WeightUnit
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.milliliters
+import org.calamarfederal.physical.measurement.*
 
 @Composable
 fun ViewMealUi(
@@ -113,7 +110,7 @@ private fun ViewMealInnerLayout(
             style = nameStyle,
         )
 
-        fun extractPortion() = (meal.portion.weight?.inGrams() ?: meal.portion.volume?.inMilliliters())!!.toFloat()
+        fun extractPortion() = (meal.portion.mass?.inGrams() ?: meal.portion.volume?.inMilliliters())!!.toFloat()
 
         var portionState by remember(meal) {
             mutableFloatStateOf(extractPortion())
@@ -121,7 +118,7 @@ private fun ViewMealInnerLayout(
 
         val adjustedNutrition by remember(meal) {
             derivedStateOf {
-                val portion = meal.portion.weight?.let {
+                val portion = meal.portion.mass?.let {
                     Portion(portionState.grams)
                 } ?: meal.portion.volume?.let {
                     Portion(portionState.milliliters)
@@ -140,7 +137,7 @@ private fun ViewMealInnerLayout(
                 val nutritionInfoStyle = NutrientInfoTextStyle.default()
                 val portionUnitString = when {
                     meal.portion.volume != null -> VolumeUnit.Milliliter.labelString
-                    meal.portion.weight != null -> WeightUnit.Gram.labelString
+                    meal.portion.mass != null -> MassUnit.Gram.labelString
                     else -> throw (NoServingSizeSpecified())
                 }
 

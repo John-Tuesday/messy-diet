@@ -10,7 +10,7 @@ dependencies {
     implementation(project(":core:test:common"))
 
     api(project(":core:diet-model"))
-    api(project(":core:measure"))
+    api(libs.measure)
 
     implementation(libs.kotlin.test.junit)
 }

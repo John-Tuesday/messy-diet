@@ -22,13 +22,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.calamarfederal.messydiet.diet_data.model.*
-import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.inGrams
+import org.calamarfederal.physical.measurement.inMilligrams
+import org.calamarfederal.physical.measurement.inMilliliters
 
 val simpleFormatter: LocalizedNumberFormatter
     @Composable get() = NumberFormatter.withLocale(LocalConfiguration.current.locales[0]).precision(Precision.integer())
 
 /**
- * Exception when [Portion.weight] and [Portion.volume] are both null
+ * Exception when [Portion.mass] and [Portion.volume] are both null
  */
 class NoServingSizeSpecified : Throwable("Expected portion.weight or portion.volume to not be null")
 
@@ -82,7 +85,7 @@ fun NutrientInfoTextStyle.Companion.default(
  * Read only column of all nutritional info in [nutrition].
  *
  * when [hidePortion] is `true`, [nutrition] should have a [Portion] with either
- * [Portion.weight] or [Portion.volume] (exclusive).
+ * [Portion.mass] or [Portion.volume] (exclusive).
  *
  * @throws NoServingSizeSpecified when [nutrition] does not provide a [Portion] with either a valid weight or volume
  */
@@ -100,7 +103,7 @@ fun NutritionInfoColumn(
             item(key = R.string.serving_size) {
                 NutritionRow(
                     label = stringResource(id = R.string.serving_size),
-                    amount = nutrition.portion.weight?.inGrams() ?: nutrition.portion.volume?.inMilliliters()
+                    amount = nutrition.portion.mass?.inGrams() ?: nutrition.portion.volume?.inMilliliters()
                     ?: throw (NoServingSizeSpecified()),
                     unitLabel = if (nutrition.portion.volume != null)
                         stringResource(id = R.string.milliliter_label)

@@ -22,18 +22,17 @@
 
 package org.calamarfederal.messydiet.feature.bmi.presentation.enter_stats
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import org.calamarfederal.feature.bmi.data.Bmi
 import org.calamarfederal.feature.bmi.data.BmiRepository
-import org.calamarfederal.feature.bmi.data.UserHeightWeightRepository
-import org.calamarfederal.messydiet.measure.meters
+import org.calamarfederal.feature.bmi.data.UserHeightMassRepository
+import org.calamarfederal.physical.measurement.meters
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -42,7 +41,7 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class EnterStatsViewModel @Inject constructor(
     private val bmiRepository: BmiRepository,
-    private val userHeightWeightRepository: UserHeightWeightRepository,
+    private val userHeightWeightRepository: UserHeightMassRepository,
 ) : ViewModel() {
     private fun <T> Flow<T>.stateInViewModel(initial: T) = stateIn(
         scope = viewModelScope,
@@ -53,22 +52,21 @@ class EnterStatsViewModel @Inject constructor(
     private val _heightAndWeightInputState = MutableStateFlow(HeightAndWeightInputStateImpl().apply {
         runBlocking {
             setHeight(userHeightWeightRepository.heightFlow.first())
-            setWeight(userHeightWeightRepository.weightFlow.first())
+            setWeight(userHeightWeightRepository.massFlow.first())
         }
     })
     val heightAndWeightInputState: StateFlow<HeightAndWeightInputState> = _heightAndWeightInputState.asStateFlow()
 
 
-    @OptIn(FlowPreview::class)
     val bmiState = _heightAndWeightInputState.mapLatest {
-        combine(snapshotFlow { it.weightState.value }, snapshotFlow { it.heightState.value }) { weight, height ->
+        combine(snapshotFlow { it.weightState.value }, snapshotFlow { it.heightState.value }) { mass, height ->
             if (height != 0.meters)
                 bmiRepository.bmiOf(
                     height = height,
-                    weight = weight,
+                    mass = mass,
                 ).also {
                     userHeightWeightRepository.setHeight(height)
-                    userHeightWeightRepository.setWeight(weight)
+                    userHeightWeightRepository.setMass(mass)
                 }
             else
                 Bmi()

@@ -5,25 +5,25 @@ import android.icu.number.NumberFormatter.DecimalSeparatorDisplay
 import android.icu.number.Precision
 import androidx.compose.runtime.*
 import org.calamarfederal.messydiet.feature.bmi.presentation.enter_stats.HeightInputType.OnlyMeters
-import org.calamarfederal.messydiet.measure.*
+import org.calamarfederal.physical.measurement.*
 import java.math.RoundingMode
 import java.util.Locale
 
-private fun formatWeight(unit: WeightUnit, weight: Weight, locale: java.util.Locale): String = NumberFormatter
+private fun formatWeight(unit: MassUnit, weight: Mass, locale: java.util.Locale): String = NumberFormatter
     .withLocale(locale)
     .precision(
         Precision.maxFraction(
             when (unit) {
-                WeightUnit.Micrograms -> 0
-                WeightUnit.Milligram -> 0
-                WeightUnit.Gram -> 0
-                WeightUnit.Kilogram -> 2
-                WeightUnit.Pound -> 0
-                WeightUnit.Ounce -> 0
+                MassUnit.Microgram -> 0
+                MassUnit.Milligram -> 0
+                MassUnit.Gram -> 0
+                MassUnit.Kilogram -> 2
+                MassUnit.Pound -> 0
+                MassUnit.Ounce -> 0
             }
         )
     ).decimal(DecimalSeparatorDisplay.AUTO)
-    .format(weight.inUnits(unit))
+    .format(weight.inUnitsOf(unit))
     .toString()
 
 private fun formatHeight(type: HeightInputType, height: Length, locale: java.util.Locale): Pair<String, String> {
@@ -42,18 +42,18 @@ private fun formatHeight(type: HeightInputType, height: Length, locale: java.uti
         footWithInchFormatter.format(height.inFeet()).toString() to standardFormatter
             .precision(Precision.maxFraction(1))
             .format(
-            height.inInches().rem(1.feet.inInches())
-        ).toString()
+                height.inInches().rem(1.feet.inInches())
+            ).toString()
     } else {
-        standardFormatter.format(height.inUnits(type.lengthUnit)).toString() to ""
+        standardFormatter.format(height.inUnitsOf(type.lengthUnit)).toString() to ""
     }
 }
 
 enum class HeightInputType(val lengthUnit: LengthUnit, val optionalLengthUnit: LengthUnit? = null) {
     OnlyMeters(LengthUnit.Meter),
-    OnlyFeet(LengthUnit.Feet),
+    OnlyFeet(LengthUnit.Foot),
     OnlyInches(LengthUnit.Inch),
-    FeetAndInches(LengthUnit.Feet, LengthUnit.Inch),
+    FeetAndInches(LengthUnit.Foot, LengthUnit.Inch),
     ;
 }
 
@@ -64,7 +64,7 @@ interface HeightAndWeightInputState {
     var heightInputType: HeightInputType
 
     var weightInput: String
-    var weightInputUnit: WeightUnit
+    var weightInputUnit: MassUnit
 }
 
 internal class HeightAndWeightInputStateImpl : HeightAndWeightInputState {
@@ -72,13 +72,11 @@ internal class HeightAndWeightInputStateImpl : HeightAndWeightInputState {
     override var heightInputOptional: String by mutableStateOf("")
 
     val heightState = derivedStateOf {
-        heightInputType.lengthUnit.lengthOf(
-            heightInput.toDoubleOrNull() ?: 0.00
-        ).plus(
-            heightInputType.optionalLengthUnit?.lengthOf(
-                heightInputOptional.toDoubleOrNull() ?: 0.00
-            ) ?: lengthOf()
-        )
+        Length(
+            heightInput.toDoubleOrNull() ?: 0.00,
+            heightInputType.lengthUnit
+        ) + (heightInputType.optionalLengthUnit?.let { Length(heightInputOptional.toDoubleOrNull() ?: 0.00, it) }
+            ?: 0.meters)
     }
 
     fun setHeight(height: Length, locale: Locale = Locale.getDefault()) {
@@ -101,26 +99,24 @@ internal class HeightAndWeightInputStateImpl : HeightAndWeightInputState {
     }
 
     override var weightInput: String by mutableStateOf("")
-    private val _weightInputUnitState = mutableStateOf(WeightUnit.Kilogram)
-    override var weightInputUnit: WeightUnit
+    private val _weightInputUnitState = mutableStateOf(MassUnit.Kilogram)
+    override var weightInputUnit: MassUnit
         get() = _weightInputUnitState.value
         set(value) {
             convertWeightUnits(value)
         }
 
-    private fun convertWeightUnits(weightUnit: WeightUnit) {
+    private fun convertWeightUnits(weightUnit: MassUnit) {
         val weight = weightState.value
         _weightInputUnitState.value = weightUnit
         setWeight(weight)
     }
 
     val weightState = derivedStateOf {
-        weightInputUnit.weightOf(
-            weightInput.toDoubleOrNull() ?: 0.00
-        )
+        Mass(weightInput.toDoubleOrNull() ?: 0.00, weightInputUnit)
     }
 
-    fun setWeight(weight: Weight, locale: Locale = Locale.getDefault()) {
+    fun setWeight(weight: Mass, locale: Locale = Locale.getDefault()) {
         weightInput = formatWeight(weightInputUnit, weight, locale)
     }
 }

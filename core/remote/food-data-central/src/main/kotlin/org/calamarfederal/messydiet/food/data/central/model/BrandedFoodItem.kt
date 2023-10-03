@@ -3,10 +3,9 @@ package org.calamarfederal.messydiet.food.data.central.model
 import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultFoodSchema
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.milligrams
-import org.calamarfederal.messydiet.measure.milliliters
-
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.milligrams
+import org.calamarfederal.physical.measurement.milliliters
 
 data class BrandedFDCId internal constructor(
     override val fdcId: Int,

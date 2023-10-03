@@ -23,9 +23,7 @@
 package org.calamarfederal.feature.bmi.data
 
 import org.calamarfederal.feature.bmi.data.BmiCategory.*
-import org.calamarfederal.messydiet.measure.Weight
-import org.calamarfederal.messydiet.measure.Length
-import org.calamarfederal.messydiet.measure.meters
+import org.calamarfederal.physical.measurement.*
 import javax.inject.Inject
 import kotlin.math.pow
 
@@ -60,15 +58,15 @@ data class Bmi(
 )
 
 interface BmiRepository {
-    fun bmiOf(height: Length, weight: Weight): Bmi
+    fun bmiOf(height: Length, mass: Mass): Bmi
 }
 
 class BmiRepositoryImplementation @Inject constructor() : BmiRepository {
-    override fun bmiOf(height: Length, weight: Weight): Bmi {
+    override fun bmiOf(height: Length, mass: Mass): Bmi {
         require(height != 0.00.meters) {
             "Height is a divisor and so cannot be zero"
         }
-        val bmiIndex = weight.inKilograms() / height.inMeters().pow(2)
+        val bmiIndex = mass.inKilograms() / height.inMeters().pow(2)
         return Bmi(bmiIndex, bmiCategoryOf(bmiIndex))
     }
 }

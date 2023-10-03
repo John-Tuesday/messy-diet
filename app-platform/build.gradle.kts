@@ -35,7 +35,6 @@ dependencies {
         api(project(":feature:search:data"))
         api(project(":feature:search:presentation"))
         api(project(":core:diet-model"))
-        api(project(":core:measure"))
         api(project(":core:android:hilt"))
         api(project(":core:remote:food-data-central"))
     }

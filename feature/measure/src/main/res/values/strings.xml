@@ -77,6 +77,8 @@
     <string name="us_teaspoon_label">tsp</string>
     <string name="us_tablespoon">US Tablespoon</string>
     <string name="us_tablespoon_label">tbsp</string>
+    <string name="us_fluid_ounce">US Fluid Ounce</string>
+    <string name="us_fluid_ounce_label">flOz</string>
 
     <string-array name="volume_full_names">
         <item>@string/kiloliter</item>
@@ -85,6 +87,7 @@
         <item>@string/us_gallon</item>
         <item>@string/us_teaspoon</item>
         <item>@string/us_tablespoon</item>
+        <item>@string/us_fluid_ounce</item>
     </string-array>
 
     <string-array name="volume_short_names">
@@ -94,6 +97,7 @@
         <item>@string/us_gallon_label</item>
         <item>@string/us_teaspoon_label</item>
         <item>@string/us_tablespoon_label</item>
+        <item>@string/us_fluid_ounce_label</item>
     </string-array>
 
     <string name="calories">Calories</string>

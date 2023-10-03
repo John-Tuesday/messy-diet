@@ -29,5 +29,5 @@ group = "org.calamarfederal.messydiet.core.diet-data"
 
 dependencies {
     implementation(platform(project(":app-platform")))
-    api(project(":core:measure"))
+    api(libs.measure)
 }

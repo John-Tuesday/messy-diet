@@ -45,7 +45,7 @@ import org.calamarfederal.messydiet.feature.bmi.presentation.R
 import org.calamarfederal.messydiet.feature.measure.MeasuredUnitField
 import org.calamarfederal.messydiet.feature.measure.fullString
 import org.calamarfederal.messydiet.feature.measure.labelString
-import org.calamarfederal.messydiet.measure.WeightUnit
+import org.calamarfederal.physical.measurement.MassUnit
 import java.util.Locale
 
 @Composable
@@ -61,17 +61,17 @@ fun EnterStatsScreen(
         when (currentLocale) {
             Locale.US -> {
                 inputState.heightInputType = HeightInputType.FeetAndInches
-                inputState.weightInputUnit = WeightUnit.Pound
+                inputState.weightInputUnit = MassUnit.Pound
             }
 
             Locale.CANADA -> {
                 inputState.heightInputType = HeightInputType.FeetAndInches
-                inputState.weightInputUnit = WeightUnit.Pound
+                inputState.weightInputUnit = MassUnit.Pound
             }
 
             else -> {
                 inputState.heightInputType = HeightInputType.OnlyMeters
-                inputState.weightInputUnit = WeightUnit.Kilogram
+                inputState.weightInputUnit = MassUnit.Kilogram
             }
         }
     }
@@ -198,8 +198,8 @@ private fun HeightAndWeightInputFields(
             input = state.weightInput,
             onInputChange = { state.weightInput = it },
             unitLabel = state.weightInputUnit.labelString,
-            possibleLengthUnits = WeightUnit.entries.map { it.fullString },
-            onLengthUnitChange = { state.weightInputUnit = WeightUnit.entries[it] },
+            possibleLengthUnits = MassUnit.entries.map { it.fullString },
+            onLengthUnitChange = { state.weightInputUnit = MassUnit.entries[it] },
             modifier = Modifier.fillMaxWidth(),
         )
     }

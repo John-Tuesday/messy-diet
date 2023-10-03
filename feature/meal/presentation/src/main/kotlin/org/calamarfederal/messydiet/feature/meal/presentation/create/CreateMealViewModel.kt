@@ -19,14 +19,14 @@ import org.calamarfederal.messydiet.feature.meal.data.MealRepository
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.measure.PortionInputState
 import org.calamarfederal.messydiet.feature.measure.WeightInputState
-import org.calamarfederal.messydiet.measure.Weight
-import org.calamarfederal.messydiet.measure.WeightUnit
-import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.physical.measurement.Mass
+import org.calamarfederal.physical.measurement.MassUnit
+import org.calamarfederal.physical.measurement.grams
 import java.util.Locale
 import javax.inject.Inject
 
 class CreateMealUiState(
-    val portionInput: PortionInputState = PortionInputState(initialWeightUnit = WeightUnit.Gram),
+    val portionInput: PortionInputState = PortionInputState(initialWeightUnit = MassUnit.Gram),
 
     val proteinInput: WeightInputState = WeightInputState(),
 
@@ -141,7 +141,7 @@ class CreateMealUiState(
     }.combine(proteinInput.weightFlow) { baseNutrition, protein ->
         baseNutrition.copy(totalProtein = protein ?: 0.grams)
     }.combine(portionInput.portionFlow) { baseNutrition, portion ->
-        if (portion != null && (portion.weight != null || portion.volume != null))
+        if (portion != null && (portion.mass != null || portion.volume != null))
             baseNutrition.copy(portion = portion)
         else
             null
@@ -164,7 +164,7 @@ class CreateMealUiState(
     }
 }
 
-private fun WeightInputState.setInputFromWeightOrNull(weight: Weight?, formatter: LocalizedNumberFormatter) {
+private fun WeightInputState.setInputFromWeightOrNull(weight: Mass?, formatter: LocalizedNumberFormatter) {
     if (weight != null) setInputFromWeight(weight, formatter = formatter)
     else input = ""
 }

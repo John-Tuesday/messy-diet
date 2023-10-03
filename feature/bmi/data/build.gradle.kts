@@ -34,7 +34,7 @@ android {
 dependencies {
     implementation(platform(project(":app-platform")))
     implementation(project(":core:diet-model"))
-    implementation(project(":core:measure"))
+    implementation(libs.measure)
 
     // Serialization
     implementation(libs.kotlin.serialization.protobuf)

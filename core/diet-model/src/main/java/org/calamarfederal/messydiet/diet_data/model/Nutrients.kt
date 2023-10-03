@@ -22,39 +22,42 @@
 
 package org.calamarfederal.messydiet.diet_data.model
 
-import org.calamarfederal.messydiet.measure.*
+import org.calamarfederal.physical.measurement.*
+
+operator fun Mass.times(number: Number) = Mass(inGrams() * number.toDouble(), MassUnit.Gram)
+
 
 class Portion private constructor(
-    val weight: Weight?,
+    val mass: Mass?,
     val volume: Volume?,
 ) {
-    constructor(weight: Weight) : this(weight = weight, volume = null)
-    constructor(volume: Volume) : this(weight = null, volume = volume)
+    constructor(mass: Mass) : this(mass = mass, volume = null)
+    constructor(volume: Volume) : this(mass = null, volume = volume)
     constructor() : this(null, null)
 
     override fun toString(): String =
-        "${this::class.simpleName}(weight=${weight.toString()}, volume=${volume.toString()})"
+        "${this::class.simpleName}(weight=${mass.toString()}, volume=${volume.toString()})"
 
     override fun equals(other: Any?): Boolean {
         if (other is Portion) {
-            return weight == other.weight && volume == other.volume
+            return mass == other.mass && volume == other.volume
         }
         return false
     }
 
     operator fun plus(other: Portion): Portion? {
         return when {
-            other.weight != null && volume == null -> Portion((weight ?: 0.grams) + other.weight)
-            other.volume != null && weight == null -> Portion((volume ?: 0.liters) + other.volume)
-            volume == null && weight == null -> other
-            other.volume == null && other.weight == null -> this
+            other.mass != null && volume == null -> Portion((mass ?: 0.grams) + other.mass)
+            other.volume != null && mass == null -> Portion((volume ?: 0.liters) + other.volume)
+            volume == null && mass == null -> other
+            other.volume == null && other.mass == null -> this
             else -> null
         }
     }
 
     operator fun div(other: Portion): Double? {
-        if (other.weight != null && weight != null) {
-            return weight / other.weight
+        if (other.mass != null && mass != null) {
+            return mass / other.mass
         } else if (other.volume != null && volume != null) {
             return volume / other.volume
         }
@@ -62,7 +65,7 @@ class Portion private constructor(
     }
 
     override fun hashCode(): Int {
-        var result = weight?.hashCode() ?: 0
+        var result = mass?.hashCode() ?: 0
         result = 31 * result + (volume?.hashCode() ?: 0)
         return result
     }
@@ -141,43 +144,43 @@ enum class Nutrients {
 }
 
 interface Protein : Nutrient {
-    val totalProtein: Weight
+    val totalProtein: Mass
 }
 
 interface Carbohydrate : Nutrient {
-    val fiber: Weight?
-    val sugar: Weight?
-    val sugarAlcohol: Weight?
-    val starch: Weight?
-    val totalCarbohydrates: Weight
+    val fiber: Mass?
+    val sugar: Mass?
+    val sugarAlcohol: Mass?
+    val starch: Mass?
+    val totalCarbohydrates: Mass
 }
 
 interface Fat : Nutrient {
-    val monounsaturatedFat: Weight?
-    val polyunsaturatedFat: Weight?
-    val omega3: Weight?
-    val omega6: Weight?
-    val saturatedFat: Weight?
-    val transFat: Weight?
-    val cholesterol: Weight?
-    val totalFat: Weight
+    val monounsaturatedFat: Mass?
+    val polyunsaturatedFat: Mass?
+    val omega3: Mass?
+    val omega6: Mass?
+    val saturatedFat: Mass?
+    val transFat: Mass?
+    val cholesterol: Mass?
+    val totalFat: Mass
 }
 
 interface MacroNutrients : Protein, Carbohydrate, Fat
 
 interface Mineral : Nutrient {
-    val calcium: Weight?
-    val chloride: Weight?
-    val iron: Weight?
-    val magnesium: Weight?
-    val phosphorous: Weight?
-    val potassium: Weight?
-    val sodium: Weight?
+    val calcium: Mass?
+    val chloride: Mass?
+    val iron: Mass?
+    val magnesium: Mass?
+    val phosphorous: Mass?
+    val potassium: Mass?
+    val sodium: Mass?
 }
 
 interface Vitamin : Nutrient {
-    val vitaminA: Weight? get() = null
-    val vitaminC: Weight? get() = null
+    val vitaminA: Mass? get() = null
+    val vitaminC: Mass? get() = null
 }
 
 interface NutritionInfo : MacroNutrients, Mineral, Vitamin {
@@ -187,7 +190,7 @@ interface NutritionInfo : MacroNutrients, Mineral, Vitamin {
     /**
      * Get the nutrient specified by [nutrient]. If nutrient is unset, it returns `null`
      */
-    operator fun get(nutrient: Nutrients): Weight? {
+    operator fun get(nutrient: Nutrients): Mass? {
         return when (nutrient) {
             Nutrients.Protein -> totalProtein
 
@@ -222,30 +225,30 @@ interface NutritionInfo : MacroNutrients, Mineral, Vitamin {
 
 data class Nutrition(
     override val portion: Portion = Portion(),
-    override val totalProtein: Weight = 0.grams,
-    override val fiber: Weight? = null,
-    override val sugar: Weight? = null,
-    override val sugarAlcohol: Weight? = null,
-    override val starch: Weight? = null,
-    override val totalCarbohydrates: Weight = 0.grams,
-    override val monounsaturatedFat: Weight? = null,
-    override val polyunsaturatedFat: Weight? = null,
-    override val omega3: Weight? = null,
-    override val omega6: Weight? = null,
-    override val saturatedFat: Weight? = null,
-    override val transFat: Weight? = null,
-    override val cholesterol: Weight? = null,
-    override val totalFat: Weight = 0.grams,
+    override val totalProtein: Mass = 0.grams,
+    override val fiber: Mass? = null,
+    override val sugar: Mass? = null,
+    override val sugarAlcohol: Mass? = null,
+    override val starch: Mass? = null,
+    override val totalCarbohydrates: Mass = 0.grams,
+    override val monounsaturatedFat: Mass? = null,
+    override val polyunsaturatedFat: Mass? = null,
+    override val omega3: Mass? = null,
+    override val omega6: Mass? = null,
+    override val saturatedFat: Mass? = null,
+    override val transFat: Mass? = null,
+    override val cholesterol: Mass? = null,
+    override val totalFat: Mass = 0.grams,
     override val foodEnergy: FoodEnergy = 0.kcal,
-    override val calcium: Weight? = null,
-    override val chloride: Weight? = null,
-    override val iron: Weight? = null,
-    override val magnesium: Weight? = null,
-    override val phosphorous: Weight? = null,
-    override val potassium: Weight? = null,
-    override val sodium: Weight? = null,
-    override val vitaminA: Weight? = null,
-    override val vitaminC: Weight? = null,
+    override val calcium: Mass? = null,
+    override val chloride: Mass? = null,
+    override val iron: Mass? = null,
+    override val magnesium: Mass? = null,
+    override val phosphorous: Mass? = null,
+    override val potassium: Mass? = null,
+    override val sodium: Mass? = null,
+    override val vitaminA: Mass? = null,
+    override val vitaminC: Mass? = null,
 ) : NutritionInfo {
 
     operator fun plus(other: NutritionInfo): Nutrition {
@@ -256,11 +259,11 @@ data class Nutrition(
             totalFat = totalFat + other.totalFat,
         )
         for (nutrient in Nutrients.entries) {
-            val weight = when (val thisWeight = this[nutrient]) {
+            val mass = when (val thisMass = this[nutrient]) {
                 null -> other[nutrient]
-                else -> other[nutrient]?.let { it + thisWeight } ?: thisWeight
+                else -> other[nutrient]?.let { it + thisMass } ?: thisMass
             }
-            result = result.copy(nutrient = nutrient, weight = weight)
+            result = result.copy(nutrient = nutrient, weight = mass)
         }
         return result
     }
@@ -280,7 +283,7 @@ data class Nutrition(
     }
 }
 
-fun Nutrition.copy(nutrient: Nutrients, weight: Weight?): Nutrition {
+fun Nutrition.copy(nutrient: Nutrients, weight: Mass?): Nutrition {
     return when (nutrient) {
         Nutrients.Protein -> copy(totalProtein = weight ?: throw (Throwable("protein mut not be null")))
 
@@ -333,7 +336,7 @@ fun Nutrition.merge(other: NutritionInfo): Nutrition {
 
 fun NutritionInfo.compareWith(
     other: NutritionInfo,
-    compareWeight: (Nutrients, Weight?, Weight?) -> Boolean,
+    compareWeight: (Nutrients, Mass?, Mass?) -> Boolean,
     comparePortion: (Portion, Portion) -> Boolean,
     compareEnergy: (FoodEnergy, FoodEnergy) -> Boolean,
     breakOnFalse: Boolean = true,

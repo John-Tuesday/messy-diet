@@ -3,8 +3,8 @@ package org.calamarfederal.messydiet.test.measure
 import org.calamarfederal.messydiet.diet_data.model.Nutrition
 import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.messydiet.diet_data.model.kcal
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.milligrams
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.milligrams
 
 data object MeasureSamples {
     val filledNutritionA = Nutrition(

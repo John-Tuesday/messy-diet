@@ -23,7 +23,7 @@ import org.calamarfederal.messydiet.feature.search.data.model.FoodId
 import org.calamarfederal.messydiet.feature.search.data.model.FoodIdDummy
 import org.calamarfederal.messydiet.feature.search.data.model.FoodItemDetails
 import org.calamarfederal.messydiet.feature.search.presentation.R
-import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.physical.measurement.grams
 
 @Composable
 fun FdcFoodItemDetailsUi(

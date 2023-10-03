@@ -1,12 +1,12 @@
 package org.calamarfederal.messydiet.test.measure
 
 import org.calamarfederal.messydiet.diet_data.model.*
-import org.calamarfederal.messydiet.measure.*
+import org.calamarfederal.physical.measurement.*
 import kotlin.math.absoluteValue
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
-fun assertEquals(expected: Weight, actual: Weight, absoluteTolerance: Weight, message: String? = null) {
+fun assertEquals(expected: Mass, actual: Mass, absoluteTolerance: Mass, message: String? = null) {
     val result = expected - actual
     assert(result <= absoluteTolerance.absoluteValue) {
         "$message\nexpected: $expected\nactual: $actual\ntolerance: $absoluteTolerance"
@@ -28,13 +28,13 @@ fun assertEquals(expected: Length, actual: Length, absoluteTolerance: Length, me
 }
 
 fun assertEquals(
-    expected: Weight,
-    actual: Weight,
+    expected: Mass,
+    actual: Mass,
     absoluteAccuracy: Double = .05,
-    ifZeroTolerance: Weight = absoluteAccuracy.grams,
+    ifZeroTolerance: Mass = absoluteAccuracy.grams,
     message: String? = null,
 ) {
-    if (expected == weightOf())
+    if (expected == 0.grams)
         assertEquals(expected, actual, ifZeroTolerance, message = message)
     else
         assertContains(
@@ -106,7 +106,7 @@ fun assertEquals(
             comparePortion = { a, b ->
                 when {
                     a.volume != null && b.volume != null -> (a.volume!! - b.volume!!).inMilliliters().absoluteValue <= tolerance.absoluteValue
-                    a.weight != null && b.weight != null -> true.also { assertEquals(a.weight!!, b.weight!!) }
+                    a.mass != null && b.mass != null -> true.also { assertEquals(a.mass!!, b.mass!!) }
                     else -> true.also { assertEquals(a, b, "expected both to be null\nfound \n$a\n$b") }
                 }
             }

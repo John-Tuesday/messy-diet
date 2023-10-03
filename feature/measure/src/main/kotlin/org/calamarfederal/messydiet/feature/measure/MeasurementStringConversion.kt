@@ -4,21 +4,21 @@ import android.content.res.Resources
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import org.calamarfederal.messydiet.measure.LengthUnit
-import org.calamarfederal.messydiet.measure.VolumeUnit
-import org.calamarfederal.messydiet.measure.WeightUnit
+import org.calamarfederal.physical.measurement.LengthUnit
+import org.calamarfederal.physical.measurement.MassUnit
+import org.calamarfederal.physical.measurement.VolumeUnit
 
 /**
  * Unit symbol / abbreviation
  */
-val WeightUnit.labelString: String
+val MassUnit.labelString: String
     @Composable
     get() = stringResource(id = weightUnitToShortRId(this))
 
 /**
  * Unit full name
  */
-val WeightUnit.fullString: String
+val MassUnit.fullString: String
     @Composable
     get() = stringResource(id = weightUnitToFullRId(this))
 
@@ -54,7 +54,7 @@ val VolumeUnit.fullString: String
  * Unit full name
  */
 fun weightUnitFullString(
-    unitType: WeightUnit,
+    unitType: MassUnit,
     resources: Resources,
 ): String = resources.getString(weightUnitToFullRId(unitType))
 
@@ -62,7 +62,7 @@ fun weightUnitFullString(
  * Unit symbol / abbreviation
  */
 fun weightUnitShortString(
-    unitType: WeightUnit,
+    unitType: MassUnit,
     resources: Resources,
 ): String = resources.getString(weightUnitToShortRId(unitType))
 
@@ -103,14 +103,14 @@ fun volumeUnitShortString(
  */
 @StringRes
 internal fun weightUnitToFullRId(
-    unitType: WeightUnit,
+    unitType: MassUnit,
 ): Int = when (unitType) {
-    WeightUnit.Kilogram -> R.string.kilogram
-    WeightUnit.Gram -> R.string.gram
-    WeightUnit.Milligram -> R.string.milligram
-    WeightUnit.Micrograms -> R.string.microgram
-    WeightUnit.Pound -> R.string.pound_weight
-    WeightUnit.Ounce -> R.string.ounce_weight
+    MassUnit.Kilogram -> R.string.kilogram
+    MassUnit.Gram -> R.string.gram
+    MassUnit.Milligram -> R.string.milligram
+    MassUnit.Microgram -> R.string.microgram
+    MassUnit.Pound -> R.string.pound_weight
+    MassUnit.Ounce -> R.string.ounce_weight
 }
 
 /**
@@ -118,14 +118,14 @@ internal fun weightUnitToFullRId(
  */
 @StringRes
 internal fun weightUnitToShortRId(
-    unitType: WeightUnit,
+    unitType: MassUnit,
 ): Int = when (unitType) {
-    WeightUnit.Kilogram -> R.string.kilogram_label
-    WeightUnit.Gram -> R.string.gram_label
-    WeightUnit.Milligram -> R.string.milligram_label
-    WeightUnit.Micrograms -> R.string.microgram_label
-    WeightUnit.Pound -> R.string.pound_weight_label
-    WeightUnit.Ounce -> R.string.ounce_weight_label
+    MassUnit.Kilogram -> R.string.kilogram_label
+    MassUnit.Gram -> R.string.gram_label
+    MassUnit.Milligram -> R.string.milligram_label
+    MassUnit.Microgram -> R.string.microgram_label
+    MassUnit.Pound -> R.string.pound_weight_label
+    MassUnit.Ounce -> R.string.ounce_weight_label
 }
 
 /**
@@ -141,7 +141,7 @@ internal fun lengthUnitToFullRId(
         LengthUnit.Centimeter -> R.string.centimeter
         LengthUnit.Millimeter -> R.string.millimeter
         LengthUnit.Mile -> R.string.mile
-        LengthUnit.Feet -> R.string.feet
+        LengthUnit.Foot -> R.string.feet
         LengthUnit.Inch -> R.string.inch
     }
 }
@@ -158,7 +158,7 @@ internal fun lengthUnitToShortRId(
     LengthUnit.Centimeter -> R.string.centimeter_label
     LengthUnit.Millimeter -> R.string.millimeter_label
     LengthUnit.Mile -> R.string.mile_label
-    LengthUnit.Feet -> R.string.feet_label
+    LengthUnit.Foot -> R.string.feet_label
     LengthUnit.Inch -> R.string.inch_label
 }
 
@@ -169,9 +169,11 @@ internal fun lengthUnitToShortRId(
 internal fun volumeUnitToFullRId(
     unitType: VolumeUnit,
 ): Int = when (unitType) {
+    VolumeUnit.Kiloliter -> R.string.kiloliter
     VolumeUnit.Milliliter -> R.string.milliliter
     VolumeUnit.Liter -> R.string.liter
     VolumeUnit.UsGallon -> R.string.us_gallon
+    VolumeUnit.UsFluidOunce -> R.string.us_fluid_ounce
     VolumeUnit.UsTablespoon -> R.string.us_tablespoon
     VolumeUnit.UsTeaspoon -> R.string.us_teaspoon
 }
@@ -185,7 +187,9 @@ internal fun volumeUnitToShortRId(
 ): Int = when (unitType) {
     VolumeUnit.Milliliter -> R.string.milliliter_label
     VolumeUnit.Liter -> R.string.liter_label
+    VolumeUnit.Kiloliter -> R.string.kiloliter_label
     VolumeUnit.UsGallon -> R.string.us_gallon_label
     VolumeUnit.UsTablespoon -> R.string.us_tablespoon_label
     VolumeUnit.UsTeaspoon -> R.string.us_teaspoon_label
+    VolumeUnit.UsFluidOunce -> R.string.us_fluid_ounce_label
 }

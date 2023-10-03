@@ -3,7 +3,8 @@ package org.calamarfederal.messydiet.food.data.central.model
 import org.calamarfederal.messydiet.diet_data.model.FoodEnergyUnit
 import org.calamarfederal.messydiet.diet_data.model.energyIn
 import org.calamarfederal.messydiet.food.data.central.remote.schema.*
-import org.calamarfederal.messydiet.measure.weightIn
+import org.calamarfederal.physical.measurement.Mass
+import org.calamarfederal.physical.measurement.invoke
 
 data class LegacyFdcId internal constructor(override val fdcId: Int) : FDCId
 data class SurveyFdcId internal constructor(override val fdcId: Int) : FDCId
@@ -82,16 +83,16 @@ internal fun FDCNutritionInfo.parseNutrient(nutrientSchema: AbridgedFoodNutrient
         return copy(foodEnergy = calories)
     }
 
-    val weightUnit = nutrientSchema.unitName?.let { stringToWeightUnitOrNull(it) } ?: return null
-    val weight = nutrientSchema.amount?.weightIn(weightUnit) ?: return null
+    val massUnit = nutrientSchema.unitName?.let { stringToMassUnitOrNull(it) } ?: return null
+    val mass = nutrientSchema.amount?.let { Mass(it, massUnit) } ?: return null
 
     return when (nutrientSchema.number) {
-        "203" -> copy(totalProtein = weight)
-        "205" -> copy(totalCarbohydrates = weight)
-        "605" -> copy(transFat = weight)
-        "204" -> copy(totalFat = weight)
-        "298" -> copy(totalFat = weight)
-        "645" -> copy(monounsaturatedFat = weight)
+        "203" -> copy(totalProtein = mass)
+        "205" -> copy(totalCarbohydrates = mass)
+        "605" -> copy(transFat = mass)
+        "204" -> copy(totalFat = mass)
+        "298" -> copy(totalFat = mass)
+        "645" -> copy(monounsaturatedFat = mass)
         else -> null
     }
 }

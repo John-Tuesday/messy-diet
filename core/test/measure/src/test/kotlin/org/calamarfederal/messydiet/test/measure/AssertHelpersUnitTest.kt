@@ -1,7 +1,7 @@
 package org.calamarfederal.messydiet.test.measure
 
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.plus
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.plus
 import kotlin.test.Test
 import kotlin.test.assertFails
 

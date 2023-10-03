@@ -7,7 +7,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import org.calamarfederal.messydiet.diet_data.model.Portion
-import org.calamarfederal.messydiet.measure.*
+import org.calamarfederal.physical.measurement.*
 
 /**
  * State holder for [Portion] Input. Designed to be used with [MeasuredUnitField]
@@ -15,13 +15,13 @@ import org.calamarfederal.messydiet.measure.*
 @Stable
 interface PortionInputState {
     var input: String
-    val weightUnit: WeightUnit?
+    val weightUnit: MassUnit?
     val volumeUnit: VolumeUnit?
 
     val isInWeight: Boolean
     val isInVolume: Boolean
 
-    val weightUnitChoices: List<WeightUnit>
+    val weightUnitChoices: List<MassUnit>
     val volumeUnitChoices: List<VolumeUnit>
 
     val portionFlow: Flow<Portion?>
@@ -31,14 +31,14 @@ interface PortionInputState {
     fun changeToWeightUnit(index: Int)
     fun changeToVolumeUnit(index: Int)
 
-    fun forceWeightUnit(unit: WeightUnit)
+    fun forceWeightUnit(unit: MassUnit)
     fun forceVolumeUnit(unit: VolumeUnit)
 
     companion object {
         operator fun invoke(
             initialInput: String = "",
-            initialWeightUnit: WeightUnit = WeightUnit.Gram,
-            weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+            initialWeightUnit: MassUnit = MassUnit.Gram,
+            weightUnitChoices: List<MassUnit> = MassUnit.entries,
             volumeUnitChoices: List<VolumeUnit> = VolumeUnit.entries,
         ): PortionInputState = PortionInputStateImplementation(
             initialInput = initialInput,
@@ -50,7 +50,7 @@ interface PortionInputState {
         operator fun invoke(
             initialInput: String = "",
             initialVolumeUnit: VolumeUnit = VolumeUnit.Milliliter,
-            weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+            weightUnitChoices: List<MassUnit> = MassUnit.entries,
             volumeUnitChoices: List<VolumeUnit> = VolumeUnit.entries,
         ): PortionInputState = PortionInputStateImplementation(
             initialInput = initialInput,
@@ -63,15 +63,15 @@ interface PortionInputState {
 
 internal class PortionInputStateImplementation private constructor(
     initialInput: String = "",
-    initialWeightUnit: WeightUnit? = WeightUnit.Gram,
+    initialWeightUnit: MassUnit? = MassUnit.Gram,
     initialVolumeUnit: VolumeUnit? = null,
-    override val weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+    override val weightUnitChoices: List<MassUnit> = MassUnit.entries,
     override val volumeUnitChoices: List<VolumeUnit> = VolumeUnit.entries,
 ) : PortionInputState {
     constructor(
         initialInput: String = "",
         initialVolumeUnit: VolumeUnit = VolumeUnit.Milliliter,
-        weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+        weightUnitChoices: List<MassUnit> = MassUnit.entries,
         volumeUnitChoices: List<VolumeUnit> = VolumeUnit.entries,
     ) : this(
         initialInput = initialInput,
@@ -83,8 +83,8 @@ internal class PortionInputStateImplementation private constructor(
 
     constructor(
         initialInput: String = "",
-        initialWeightUnit: WeightUnit = WeightUnit.Gram,
-        weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+        initialWeightUnit: MassUnit = MassUnit.Gram,
+        weightUnitChoices: List<MassUnit> = MassUnit.entries,
         volumeUnitChoices: List<VolumeUnit> = VolumeUnit.entries,
     ) : this(
         initialInput = initialInput,
@@ -101,9 +101,9 @@ internal class PortionInputStateImplementation private constructor(
             inputText = value
         }
 
-    private var _weightUnit: WeightUnit? by mutableStateOf(initialWeightUnit)
+    private var _weightUnit: MassUnit? by mutableStateOf(initialWeightUnit)
     private var _volumeUnit: VolumeUnit? by mutableStateOf(initialVolumeUnit)
-    override var weightUnit: WeightUnit?
+    override var weightUnit: MassUnit?
         get() = _weightUnit
         private set(value) {
             _volumeUnit = null
@@ -127,11 +127,11 @@ internal class PortionInputStateImplementation private constructor(
         snapshotFlow { inputText },
         snapshotFlow { weightUnit },
         snapshotFlow { volumeUnit },
-    ) { str, weight, volume ->
+    ) { str, massUnit, volume ->
         val num = str.toDoubleOrNull() ?: return@combine null
         when {
-            weight != null && volume == null -> Portion(weight.weightOf(num))
-            weight == null && volume != null -> Portion(volume.volumeOf(num))
+            massUnit != null && volume == null -> Portion(Mass(num, massUnit))
+            massUnit == null && volume != null -> Portion(Volume(num, volume))
             else -> null
         }
     }
@@ -142,8 +142,8 @@ internal class PortionInputStateImplementation private constructor(
 
         require(volumeUnitLocal != null || weightUnitLocal != null)
         val number = when {
-            weightUnitLocal != null && portion.weight != null -> portion.weight!!.inUnits(weightUnitLocal)
-            volumeUnitLocal != null && portion.volume != null -> portion.volume!!.inUnits(volumeUnitLocal)
+            weightUnitLocal != null && portion.mass != null -> portion.mass!!.inUnitsOf(weightUnitLocal)
+            volumeUnitLocal != null && portion.volume != null -> portion.volume!!.inUnitsOf(volumeUnitLocal)
             else -> throw (IllegalStateException("weightUnit or volumeUnit does not match with input portion"))
         }
 
@@ -158,7 +158,7 @@ internal class PortionInputStateImplementation private constructor(
         volumeUnit = volumeUnitChoices[index]
     }
 
-    override fun forceWeightUnit(unit: WeightUnit) {
+    override fun forceWeightUnit(unit: MassUnit) {
         weightUnit = unit
     }
 
@@ -183,7 +183,7 @@ val PortionInputState.Companion.saver
         restore = { data ->
             val weightChoices = data[3].toInt()
             val volumeChoices = data[4].toInt()
-            val weightUnit = data[1].toIntOrNull()?.let { WeightUnit.entries[it] }
+            val weightUnit = data[1].toIntOrNull()?.let { MassUnit.entries[it] }
             val volumeUnit = data[2].toIntOrNull()?.let { VolumeUnit.entries[it] }
             require((weightUnit != null || volumeUnit != null) && (weightUnit == null || volumeUnit == null))
             require(data.size == 5 + weightChoices + volumeChoices)
@@ -191,7 +191,7 @@ val PortionInputState.Companion.saver
                 PortionInputStateImplementation(
                     initialInput = data[0],
                     initialWeightUnit = weightUnit,
-                    weightUnitChoices = data.subList(5, 5 + weightChoices).map { WeightUnit.entries[it.toInt()] },
+                    weightUnitChoices = data.subList(5, 5 + weightChoices).map { MassUnit.entries[it.toInt()] },
                     volumeUnitChoices = data.subList(5 + weightChoices, 5 + weightChoices + volumeChoices)
                         .map { VolumeUnit.entries[it.toInt()] },
                 )
@@ -199,7 +199,7 @@ val PortionInputState.Companion.saver
                 PortionInputStateImplementation(
                     initialInput = data[0],
                     initialVolumeUnit = volumeUnit,
-                    weightUnitChoices = data.subList(5, 5 + weightChoices).map { WeightUnit.entries[it.toInt()] },
+                    weightUnitChoices = data.subList(5, 5 + weightChoices).map { MassUnit.entries[it.toInt()] },
                     volumeUnitChoices = data.subList(5 + weightChoices, 5 + weightChoices + volumeChoices)
                         .map { VolumeUnit.entries[it.toInt()] },
                 )
@@ -213,7 +213,7 @@ val PortionInputState.Companion.saver
 fun rememberPortionInputState(
     initialInput: String = "",
     initialVolumeUnit: VolumeUnit = VolumeUnit.Milliliter,
-    weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+    weightUnitChoices: List<MassUnit> = MassUnit.entries,
     volumeUnitChoices: List<VolumeUnit> = VolumeUnit.entries,
 ) = rememberSaveable(saver = PortionInputState.saver) {
     PortionInputState(
@@ -227,8 +227,8 @@ fun rememberPortionInputState(
 @Composable
 fun rememberPortionInputState(
     initialInput: String = "",
-    initialWeightUnit: WeightUnit = WeightUnit.Gram,
-    weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+    initialWeightUnit: MassUnit = MassUnit.Gram,
+    weightUnitChoices: List<MassUnit> = MassUnit.entries,
     volumeUnitChoices: List<VolumeUnit> = VolumeUnit.entries,
 ) = rememberSaveable(saver = PortionInputState.saver) {
     PortionInputState(
@@ -245,16 +245,16 @@ fun rememberPortionInputState(
 @Stable
 interface WeightInputState {
     var input: String
-    val weightUnit: WeightUnit
-    val weightUnitChoices: List<WeightUnit>
+    val weightUnit: MassUnit
+    val weightUnitChoices: List<MassUnit>
 
-    val weightFlow: Flow<Weight?>
+    val weightFlow: Flow<Mass?>
 
-    fun setInputFromWeight(weight: Weight, formatter: LocalizedNumberFormatter)
+    fun setInputFromWeight(weight: Mass, formatter: LocalizedNumberFormatter)
 
     fun changeWeightUnitByIndex(index: Int)
 
-    fun forceWeightUnit(unit: WeightUnit)
+    fun forceWeightUnit(unit: MassUnit)
 
     companion object {
         operator fun invoke(): WeightInputState = WeightInputStateImpl()
@@ -262,8 +262,8 @@ interface WeightInputState {
 }
 
 internal class WeightInputStateImpl constructor(
-    initialWeightUnit: WeightUnit = WeightUnit.Gram,
-    override val weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+    initialWeightUnit: MassUnit = MassUnit.Gram,
+    override val weightUnitChoices: List<MassUnit> = MassUnit.entries,
     private val inputFilter: (String) -> String = { it },
 ) : WeightInputState {
     private var inputText by mutableStateOf("")
@@ -276,18 +276,18 @@ internal class WeightInputStateImpl constructor(
         internal set
 
     override val weightFlow = combine(snapshotFlow { input }, snapshotFlow { weightUnit }) { str, unit ->
-        str.toDoubleOrNull()?.weightIn(unit)
+        str.toDoubleOrNull()?.let { Mass(it, unit) }
     }
 
-    override fun setInputFromWeight(weight: Weight, formatter: LocalizedNumberFormatter) {
-        inputText = formatter.format(weight.inUnits(weightUnit)).toString()
+    override fun setInputFromWeight(weight: Mass, formatter: LocalizedNumberFormatter) {
+        inputText = formatter.format(weight.inUnitsOf(weightUnit)).toString()
     }
 
     override fun changeWeightUnitByIndex(index: Int) {
         weightUnit = weightUnitChoices[index]
     }
 
-    override fun forceWeightUnit(unit: WeightUnit) {
+    override fun forceWeightUnit(unit: MassUnit) {
         weightUnit = unit
     }
 }
@@ -303,17 +303,17 @@ val WeightInputState.Companion.saver
         },
         restore = {
             WeightInputStateImpl(
-                initialWeightUnit = WeightUnit.entries[it[1].toInt()],
-                weightUnitChoices = it.drop(2).map { s -> WeightUnit.entries[s.toInt()] },
+                initialWeightUnit = MassUnit.entries[it[1].toInt()],
+                weightUnitChoices = it.drop(2).map { s -> MassUnit.entries[s.toInt()] },
             )
         },
     )
 
 @Composable
 fun rememberWeightInputState(
-    initialWeightUnit: WeightUnit,
+    initialWeightUnit: MassUnit,
     initialValue: String = "",
-    weightUnitChoices: List<WeightUnit> = WeightUnit.entries,
+    weightUnitChoices: List<MassUnit> = MassUnit.entries,
 ) = rememberSaveable(saver = WeightInputState.saver) {
     WeightInputStateImpl(
         initialWeightUnit = initialWeightUnit,
@@ -392,11 +392,11 @@ internal class VolumeInputStateImplementation(
         snapshotFlow { inputText },
         snapshotFlow { volumeUnit },
     ) { str, unit ->
-        str.toDoubleOrNull()?.let { unit.volumeOf(it) }
+        str.toDoubleOrNull()?.let { Volume(it, unit) }
     }
 
     override fun setInputFromVolume(volume: Volume, formatter: LocalizedNumberFormatter) {
-        inputText = formatter.format(volume.inUnits(volumeUnit)).toString()
+        inputText = formatter.format(volume.inUnitsOf(volumeUnit)).toString()
     }
 
     override fun changeVolumeUnitByIndex(index: Int) {

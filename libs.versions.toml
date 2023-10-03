@@ -15,6 +15,7 @@ androidCameraxVersion = "1.3.0-rc02"
 
 androidMlKitBarcodeVersion = "17.2.0"
 
+measureVersion = "1.0.0"
 navVersion = "2.7.3"
 
 hiltVersion = "2.48"
@@ -74,11 +75,13 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVer
 # Retrofit
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
 retrofit-mock = { module = "com.squareup.retrofit2:retrofit-mock", version.ref = "retrofitVersion" }
-retrofit-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofitVersion"}
+retrofit-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofitVersion" }
 # Moshi
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshiVersion" }
-moshi-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiVersion"}
+moshi-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiVersion" }
 moshi-reflect = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiVersion" }
+
+measure = { module = "io.github.john-tuesday:measure", version.ref = "measureVersion" }
 
 # MLKit
 mlkit-barcode = { module = "com.google.mlkit:barcode-scanning", version.ref = "androidMlKitBarcodeVersion" }

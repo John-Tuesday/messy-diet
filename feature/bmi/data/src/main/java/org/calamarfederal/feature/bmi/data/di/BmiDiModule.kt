@@ -49,7 +49,7 @@ abstract class HeightWeightBinder {
     abstract fun bindHeightWeightLocalSource(impl: UserHeightLocalSourceImplementation): UserHeightLocalSource
 
     @Binds
-    abstract fun bindHeightWeightRepository(impl: UserHeightRepositoryImplementation): UserHeightWeightRepository
+    abstract fun bindHeightWeightRepository(impl: UserHeightRepositoryImplementation): UserHeightMassRepository
 }
 
 @Module

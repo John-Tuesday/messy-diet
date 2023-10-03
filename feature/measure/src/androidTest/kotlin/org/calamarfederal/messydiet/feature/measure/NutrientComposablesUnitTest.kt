@@ -9,9 +9,9 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.calamarfederal.messydiet.diet_data.model.*
-import org.calamarfederal.messydiet.measure.*
 import org.calamarfederal.messydiet.test.UnitTest
 import org.calamarfederal.messydiet.test.measure.MeasureSamples
+import org.calamarfederal.physical.measurement.*
 import org.junit.Rule
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
@@ -53,7 +53,7 @@ internal class NutrientComposablesUnitTest {
             .onNode(
                 hasTextExactly(
                     composeRule.activity.getString(R.string.serving_size),
-                    weightFormatter.format(testNutrition.portion.weight!!.inGrams()).toString(),
+                    weightFormatter.format(testNutrition.portion.mass!!.inGrams()).toString(),
                     composeRule.activity.getString(R.string.gram_label)
                 )
             )
@@ -106,7 +106,7 @@ internal class NutrientComposablesUnitTest {
             .assertExists()
     }
 
-    private fun assertNutrient(label: String, weight: Weight) {
+    private fun assertNutrient(label: String, mass: Mass) {
         scrollContainer
             .performScrollToNode(hasText(label))
         composeRule
@@ -115,7 +115,7 @@ internal class NutrientComposablesUnitTest {
             .performScrollTo()
             .assertIsDisplayed()
             .onSiblings()
-            .filterToOne(hasText(weightFormatter.format(weight.inGrams()).toString()))
+            .filterToOne(hasText(weightFormatter.format(mass.inGrams()).toString()))
     }
 
     @Test
@@ -125,7 +125,7 @@ internal class NutrientComposablesUnitTest {
         for (fatNutrient in Nutrients.fats) {
             assertNutrient(
                 label = composeRule.activity.getString(fatNutrient.stringResId),
-                weight = testNutrition[fatNutrient]!!,
+                mass = testNutrition[fatNutrient]!!,
             )
         }
     }
@@ -147,7 +147,7 @@ internal class NutrientComposablesUnitTest {
         for (carbohydrateNutrient in Nutrients.carbohydrates) {
             assertNutrient(
                 label = composeRule.activity.getString(carbohydrateNutrient.stringResId),
-                weight = testNutrition[carbohydrateNutrient]!!,
+                mass = testNutrition[carbohydrateNutrient]!!,
             )
         }
     }
@@ -169,7 +169,7 @@ internal class NutrientComposablesUnitTest {
         for (mineralNutrient in Nutrients.minerals) {
             assertNutrient(
                 label = composeRule.activity.getString(mineralNutrient.stringResId),
-                weight = testNutrition[mineralNutrient]!!,
+                mass = testNutrition[mineralNutrient]!!,
             )
         }
     }
@@ -190,7 +190,7 @@ internal class NutrientComposablesUnitTest {
         for (vitaminNutrient in Nutrients.vitamins) {
             assertNutrient(
                 label = composeRule.activity.getString(vitaminNutrient.stringResId),
-                weight = testNutrition[vitaminNutrient]!!,
+                mass = testNutrition[vitaminNutrient]!!,
             )
         }
     }

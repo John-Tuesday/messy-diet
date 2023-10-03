@@ -8,34 +8,31 @@ import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError
 import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError.UnrecognizedWeightUnitFormat
 import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodNutrientSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodNutrientSchema
-import org.calamarfederal.messydiet.measure.WeightUnit
-import org.calamarfederal.messydiet.measure.grams
-import org.calamarfederal.messydiet.measure.milliliters
-import org.calamarfederal.messydiet.measure.weightOf
+import org.calamarfederal.physical.measurement.*
 
 /**
  * Tries to convert [text] to [WeightUnit].
  */
-internal fun stringToWeightUnitOrNull(
+internal fun stringToMassUnitOrNull(
     text: String,
-): WeightUnit? = when (text.lowercase().trim()) {
-    "µg" -> WeightUnit.Micrograms
-    "g" -> WeightUnit.Gram
-    "mg" -> WeightUnit.Milligram
-    "kg" -> WeightUnit.Kilogram
-    "oz" -> WeightUnit.Ounce
-    "lbs" -> WeightUnit.Pound
+): MassUnit? = when (text.lowercase().trim()) {
+    "µg" -> MassUnit.Microgram
+    "g" -> MassUnit.Gram
+    "mg" -> MassUnit.Milligram
+    "kg" -> MassUnit.Kilogram
+    "oz" -> MassUnit.Ounce
+    "lbs" -> MassUnit.Pound
     else -> null
 }
 
 /**
- * Tries to convert Remote formatted weight unit to [WeightUnit].
+ * Tries to convert Remote formatted weight unit to [MassUnit].
  *
  * throws [UnrecognizedWeightUnitFormat]
  */
 internal fun stringToWeightUnit(
     text: String,
-): WeightUnit = stringToWeightUnitOrNull(text = text) ?: throw (UnrecognizedWeightUnitFormat(input = text))
+): MassUnit = stringToMassUnitOrNull(text = text) ?: throw (UnrecognizedWeightUnitFormat(input = text))
 
 internal fun stringToFoodEnergyUnit(
     text: String,
@@ -92,41 +89,42 @@ internal fun parseNutrientNumber(
     unitName: String,
     nutrientNumber: String,
 ): FDCNutritionInfo {
-    val weightUnit = stringToWeightUnitOrNull(unitName)
+    val weightUnit = stringToMassUnitOrNull(unitName)
     val energyUnit = stringToFoodEnergyUnit(unitName)
+    val mass = weightUnit?.let { Mass(amount, it) }
     return when (nutrientNumber) {
-        "203" -> FDCNutritionInfo(totalProtein = weightUnit!!.weightOf(amount))
-        "204" -> FDCNutritionInfo(totalFat = weightUnit!!.weightOf(amount))
-        "205" -> FDCNutritionInfo(totalCarbohydrates = weightUnit!!.weightOf(amount))
+        "203" -> FDCNutritionInfo(totalProtein = mass!!)
+        "204" -> FDCNutritionInfo(totalFat = mass!!)
+        "205" -> FDCNutritionInfo(totalCarbohydrates = mass!!)
         "208" -> FDCNutritionInfo(foodEnergy = energyUnit!!.energyOf(amount))
         "262" -> FDCNutritionInfo(/* caffeine */)
-        "269" -> FDCNutritionInfo(sugar = weightUnit!!.weightOf(amount))
-        "291" -> FDCNutritionInfo(fiber = weightUnit!!.weightOf(amount))
+        "269" -> FDCNutritionInfo(sugar = mass)
+        "291" -> FDCNutritionInfo(fiber = mass)
         "295" -> FDCNutritionInfo(/* fiberSoluble */)
-        "299" -> FDCNutritionInfo(sugarAlcohol = weightUnit!!.weightOf(amount))
-        "301" -> FDCNutritionInfo(calcium = weightUnit!!.weightOf(amount))
-        "303" -> FDCNutritionInfo(iron = weightUnit!!.weightOf(amount))
-        "304" -> FDCNutritionInfo(magnesium = weightUnit!!.weightOf(amount))
-        "305" -> FDCNutritionInfo(phosphorous = weightUnit!!.weightOf(amount))
-        "306" -> FDCNutritionInfo(potassium = weightUnit!!.weightOf(amount))
-        "307" -> FDCNutritionInfo(sodium = weightUnit!!.weightOf(amount))
+        "299" -> FDCNutritionInfo(sugarAlcohol = mass)
+        "301" -> FDCNutritionInfo(calcium = mass)
+        "303" -> FDCNutritionInfo(iron = mass)
+        "304" -> FDCNutritionInfo(magnesium = mass)
+        "305" -> FDCNutritionInfo(phosphorous = mass)
+        "306" -> FDCNutritionInfo(potassium = mass)
+        "307" -> FDCNutritionInfo(sodium = mass)
         "309" -> FDCNutritionInfo(/* zinc */)
         "318" -> FDCNutritionInfo(/* vitaminA */)
         "324" -> FDCNutritionInfo(/* vitaminD (D2 + D3) */)
         "328" -> FDCNutritionInfo(/* vitaminD (D2 + D3) */)
-        "401" -> FDCNutritionInfo(vitaminC = weightUnit!!.weightOf(amount))
+        "401" -> FDCNutritionInfo(vitaminC = mass)
         "404" -> FDCNutritionInfo(/* thiamin */)
         "415" -> FDCNutritionInfo(/* vitaminB6 */)
         "417" -> FDCNutritionInfo(/* totalFolate */)
         "418" -> FDCNutritionInfo(/* vitaminB12 */)
         "431" -> FDCNutritionInfo(/* folicAcid */)
-        "539" -> FDCNutritionInfo(/* sugar = weightUnit!!.weightOf(amount) */) // sugar added
-        "601" -> FDCNutritionInfo(cholesterol = weightUnit!!.weightOf(amount))
-        "605" -> FDCNutritionInfo(transFat = weightUnit!!.weightOf(amount))
-        "606" -> FDCNutritionInfo(saturatedFat = weightUnit!!.weightOf(amount))
-        "645" -> FDCNutritionInfo(monounsaturatedFat = weightUnit!!.weightOf(amount))
-        "646" -> FDCNutritionInfo(polyunsaturatedFat = weightUnit!!.weightOf(amount))
-        "960" -> FDCNutritionInfo(vitaminA = weightUnit!!.weightOf(amount))
+        "539" -> FDCNutritionInfo(/* sugar = mass */) // sugar added
+        "601" -> FDCNutritionInfo(cholesterol = mass)
+        "605" -> FDCNutritionInfo(transFat = mass)
+        "606" -> FDCNutritionInfo(saturatedFat = mass)
+        "645" -> FDCNutritionInfo(monounsaturatedFat = mass)
+        "646" -> FDCNutritionInfo(polyunsaturatedFat = mass)
+        "960" -> FDCNutritionInfo(vitaminA = mass)
         else -> throw (UnrecognizedNutrientNumber(number = nutrientNumber))
     }
 }
@@ -194,7 +192,7 @@ internal fun processMap(
             if (key.isPerSering)
                 value.copy(portion = servingSize)
             else
-                value.copy(portion = if (servingSize.weight != null) Portion(100.grams) else Portion(100.milliliters))
+                value.copy(portion = if (servingSize.mass != null) Portion(100.grams) else Portion(100.milliliters))
         }
     }
 

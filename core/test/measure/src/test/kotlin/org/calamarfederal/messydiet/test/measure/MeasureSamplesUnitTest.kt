@@ -1,7 +1,7 @@
 package org.calamarfederal.messydiet.test.measure
 
 import org.calamarfederal.messydiet.diet_data.model.Nutrients
-import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.physical.measurement.grams
 import kotlin.test.Test
 
 class MeasureSamplesUnitTest {

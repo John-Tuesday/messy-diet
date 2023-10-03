@@ -15,7 +15,7 @@ import org.calamarfederal.messydiet.feature.search.data.model.FoodItemDetails
 import org.calamarfederal.messydiet.feature.search.data.model.SearchRemoteError
 import org.calamarfederal.messydiet.feature.search.data.model.foodId
 import org.calamarfederal.messydiet.feature.search.presentation.R
-import org.calamarfederal.messydiet.measure.grams
+import org.calamarfederal.physical.measurement.grams
 import org.junit.Rule
 import org.junit.runner.RunWith
 import kotlin.test.BeforeTest
