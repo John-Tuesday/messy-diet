@@ -1,11 +1,10 @@
 plugins {
-    id("messydiet.android.test")
-    id("messydiet.android.test.compose")
+    id("messydiet.android.library")
+    id("messydiet.android.library.compose")
 }
 
 android {
     namespace = "org.calamarfederal.messydiet.screenshot"
-    targetProjectPath = ":app"
 }
 
 dependencies {
