@@ -15,7 +15,7 @@ androidCameraxVersion = "1.3.0-rc02"
 
 androidMlKitBarcodeVersion = "17.2.0"
 
-measureVersion = "1.0.0"
+measureVersion = "1.1.0"
 navVersion = "2.7.3"
 
 hiltVersion = "2.48"

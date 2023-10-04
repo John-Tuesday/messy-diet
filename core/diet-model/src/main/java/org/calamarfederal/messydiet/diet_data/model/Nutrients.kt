@@ -24,9 +24,6 @@ package org.calamarfederal.messydiet.diet_data.model
 
 import org.calamarfederal.physical.measurement.*
 
-operator fun Mass.times(number: Number) = Mass(inGrams() * number.toDouble(), MassUnit.Gram)
-
-
 class Portion private constructor(
     val mass: Mass?,
     val volume: Volume?,
