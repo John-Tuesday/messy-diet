@@ -29,7 +29,6 @@ android {
 
 dependencies {
     implementation(platform(project(":app-platform")))
-    implementation(project(":core:diet-model"))
     implementation(project(":feature:bmi:presentation"))
     implementation(project(":feature:meal:presentation"))
     implementation(project(":feature:search:presentation"))

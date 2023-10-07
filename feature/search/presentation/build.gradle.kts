@@ -13,7 +13,6 @@ dependencies {
 
     implementation(project(":feature:search:data"))
     implementation(project(":feature:measure"))
-    implementation(project(":core:diet-model"))
 
     androidTestImplementation(project(":core:test:common"))
 

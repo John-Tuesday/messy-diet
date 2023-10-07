@@ -17,7 +17,6 @@ dependencies {
     implementation(project(":core:remote:food-data-central"))
     testImplementation(project(":core:test:remote:food-data-central"))
     implementation(project(":core:android:hilt"))
-    implementation(project(":core:diet-model"))
 
     implementation(project(":feature:meal:data"))
 

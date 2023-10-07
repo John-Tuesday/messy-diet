@@ -34,7 +34,6 @@ dependencies {
 
     implementation(project(":feature:bmi:data"))
     implementation(project(":feature:measure"))
-    implementation(project(":core:diet-model"))
     implementation(libs.measure)
 
     // Lifecycle

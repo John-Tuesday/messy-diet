@@ -12,7 +12,6 @@ dependencies {
     implementation(platform(project(":app-platform")))
 
     implementation(project(":feature:measure"))
-    implementation(project(":core:diet-model"))
     implementation(libs.measure)
     implementation(project(":core:android:hilt"))
 

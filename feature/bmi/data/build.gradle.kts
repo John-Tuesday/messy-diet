@@ -33,7 +33,6 @@ android {
 
 dependencies {
     implementation(platform(project(":app-platform")))
-    implementation(project(":core:diet-model"))
     implementation(libs.measure)
 
     // Serialization
