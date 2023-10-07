@@ -1,16 +1,12 @@
 package org.calamarfederal.messydiet.test.food.data.central
 
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
-import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
-import org.calamarfederal.messydiet.diet_data.model.Portion
-import org.calamarfederal.messydiet.diet_data.model.kcal
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.NutrientType
+import io.github.john.tuesday.nutrition.Portion
 import org.calamarfederal.messydiet.food.data.central.model.FDCDataType
 import org.calamarfederal.messydiet.food.data.central.model.FDCId
 import org.calamarfederal.messydiet.food.data.central.model.foodDataCentralId
-import org.calamarfederal.physical.measurement.grams
-import org.calamarfederal.physical.measurement.micrograms
-import org.calamarfederal.physical.measurement.milligrams
-import org.calamarfederal.physical.measurement.milliliters
+import org.calamarfederal.physical.measurement.*
 
 sealed class FoodItemExpectCase(
     val gtinUpc: String,
@@ -25,8 +21,8 @@ sealed class FoodItemExpectCase(
     val publicationDateDayOfMonth: Int,
 
     ) {
-    abstract val nutritionPerServing: NutritionInfo
-    abstract val nutritionPer100: NutritionInfo
+    abstract val nutritionPerServing: FoodNutrition
+    abstract val nutritionPer100: FoodNutrition
 
     open val name: String get() = searchDescription
 }
@@ -42,26 +38,28 @@ data object FoodItemExpect {
         publicationDateDayOfMonth = 31,
         publicationDateYear = 8,
     ) {
-        override val nutritionPer100: NutritionInfo
+        override val nutritionPer100: FoodNutrition
             get() = TODO("Not yet implemented")
 
-        override val nutritionPerServing: Nutrition = Nutrition(
+        override val nutritionPerServing: FoodNutrition = FoodNutrition(
             portion = Portion(360.milliliters),
-            foodEnergy = 39.kcal,
-            totalProtein = 0.grams,
-            totalFat = 0.grams,
-            saturatedFat = 0.grams,
-            transFat = 0.grams,
-            cholesterol = 0.grams,
-            totalCarbohydrates = 10.83.grams,
-            //caffeine = 0.grams,
-            sugar = 10.56.grams, // 10.6 added
-            fiber = 0.grams,
-            calcium = 0.grams,
-            iron = 0.grams,
-            sodium = 19.0.milligrams,
-            vitaminC = 0.milligrams,
-            vitaminA = 0.micrograms,
+            foodEnergy = 39.kilocalories,
+            nutritionMap = mapOf(
+                NutrientType.Protein to 0.grams,
+                NutrientType.TotalFat to 0.grams,
+                NutrientType.SaturatedFat to 0.grams,
+                NutrientType.TransFat to 0.grams,
+                NutrientType.Cholesterol to 0.grams,
+                NutrientType.TotalCarbohydrate to 10.83.grams,
+                //caffeine to 0.grams,
+                NutrientType.Sugar to 10.56.grams, // 10.6 added
+                NutrientType.Fiber to 0.grams,
+                NutrientType.Calcium to 0.grams,
+                NutrientType.Iron to 0.grams,
+                NutrientType.Sodium to 19.0.milligrams,
+                NutrientType.VitaminC to 0.milligrams,
+                NutrientType.VitaminA to 0.micrograms,
+            ),
         )
     }
 
@@ -75,49 +73,53 @@ data object FoodItemExpect {
         publicationDateDayOfMonth = 31,
         publicationDateYear = 8,
     ) {
-        override val nutritionPer100: Nutrition = Nutrition(
+        override val nutritionPer100: FoodNutrition = FoodNutrition(
             portion = Portion(100.grams),
-            foodEnergy = 359.kcal,
-            totalProtein = 12.8.grams,
-            totalFat = 6.41.grams,
-            totalCarbohydrates = 74.4.grams,
-            fiber = 10.3.grams,
-            sugar = 5.13.grams, // 5.1 added
-            calcium = 333.milligrams,
-            iron = 32.3.milligrams,
-//        magnesium = 700.milligrams, // 700 from DV
-//        phosphorous = 123.milligrams, // 256 from DV ?? 750
-            potassium = 641.milligrams,
-            sodium = 487.milligrams,
+            foodEnergy = 359.kilocalories,
+            nutritionMap = mapOf(
+                NutrientType.Protein to 12.8.grams,
+                NutrientType.TotalFat to 6.41.grams,
+                NutrientType.TotalCarbohydrate to 74.4.grams,
+                NutrientType.Fiber to 10.3.grams,
+                NutrientType.Sugar to 5.13.grams, // 5.1 added
+                NutrientType.Calcium to 333.milligrams,
+                NutrientType.Iron to 32.3.milligrams,
+//        NutrientType.Magnesium to 700.milligrams, // 700 from DV
+//        NutrientType.Phosphorous to 123.milligrams, // 256 from DV ?? 750
+                NutrientType.Potassium to 641.milligrams,
+                NutrientType.Sodium to 487.milligrams,
 //        zinc
-//        vitaminC = 90.milligrams, // ?? 15.4 3.7
-            saturatedFat = 1.28.grams,
-            monounsaturatedFat = 2.56.grams,
-            polyunsaturatedFat = 2.56.grams,
-            transFat = 0.grams,
-            cholesterol = 0.milligrams,
+//        NutrientType.VitaminC to 90.milligrams, // ?? 15.4 3.7
+                NutrientType.SaturatedFat to 1.28.grams,
+                NutrientType.MonounsaturatedFat to 2.56.grams,
+                NutrientType.PolyunsaturatedFat to 2.56.grams,
+                NutrientType.TransFat to 0.grams,
+                NutrientType.Cholesterol to 0.milligrams,
+            ),
         )
-        override val nutritionPerServing: Nutrition = Nutrition(
+        override val nutritionPerServing: FoodNutrition = FoodNutrition(
             portion = Portion(20.grams),
-            foodEnergy = 117.kcal,
-            totalProtein = 5.56.grams,
-            totalFat = 1.85.grams,
-            totalCarbohydrates = 21.6.grams,
-            fiber = 2.5.grams,
-            sugar = 4.93.grams, // 1.2 added
-            calcium = 160.milligrams,
-            iron = 7.78.milligrams,
-            magnesium = 37.milligrams,
-//        phosphorous = 123.milligrams,
-            potassium = 278.milligrams,
-            sodium = 487.milligrams,
+            foodEnergy = 117.kilocalories,
+            nutritionMap = mapOf(
+                NutrientType.Protein to 5.56.grams,
+                NutrientType.TotalFat to 1.85.grams,
+                NutrientType.TotalCarbohydrate to 21.6.grams,
+                NutrientType.Fiber to 2.5.grams,
+                NutrientType.Sugar to 4.93.grams, // 1.2 added
+                NutrientType.Calcium to 160.milligrams,
+                NutrientType.Iron to 7.78.milligrams,
+                NutrientType.Magnesium to 37.milligrams,
+//        NutrientType.Phosphorous to 123.milligrams,
+                NutrientType.Potassium to 278.milligrams,
+                NutrientType.Sodium to 487.milligrams,
 //        zinc
-            vitaminC = 90.milligrams, // ?? 15.4 3.7
-            saturatedFat = 0.62.grams,
-            monounsaturatedFat = 0.62.grams,
-            polyunsaturatedFat = 0.62.grams,
-            transFat = 0.grams,
-            cholesterol = 0.milligrams,
+                NutrientType.VitaminC to 90.milligrams, // ?? 15.4 3.7
+                NutrientType.SaturatedFat to 0.62.grams,
+                NutrientType.MonounsaturatedFat to 0.62.grams,
+                NutrientType.PolyunsaturatedFat to 0.62.grams,
+                NutrientType.TransFat to 0.grams,
+                NutrientType.Cholesterol to 0.milligrams,
+            ),
         )
     }
 
@@ -134,17 +136,19 @@ data object FoodItemExpect {
         publicationDateMonthOfYear = 3,
         publicationDateDayOfMonth = 16,
     ) {
-        override val nutritionPerServing: NutritionInfo
+        override val nutritionPerServing: FoodNutrition
             get() = TODO("Not yet implemented")
-        override val nutritionPer100: Nutrition = Nutrition(
+        override val nutritionPer100: FoodNutrition = FoodNutrition(
             portion = Portion(100.grams),
-            foodEnergy = 263.kcal,
-            totalProtein = 0.grams,
-            totalFat = 0.grams,
-            totalCarbohydrates = 52.6.grams,
-            sugar = 0.grams,
-            sugarAlcohol = 53.grams,
-            sodium = 0.grams,
+            foodEnergy = 263.kilocalories,
+            nutritionMap = mapOf(
+                NutrientType.Protein to 0.grams,
+                NutrientType.TotalFat to 0.grams,
+                NutrientType.TotalCarbohydrate to 52.6.grams,
+                NutrientType.Sugar to 0.grams,
+                NutrientType.SugarAlcohol to 53.grams,
+                NutrientType.Sodium to 0.grams,
+            ),
         )
     }
 }

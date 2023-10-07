@@ -1,6 +1,7 @@
 package org.calamarfederal.messydiet.food.data.central.model
 
-import org.calamarfederal.messydiet.diet_data.model.Portion
+import io.github.john.tuesday.nutrition.Portion
+import io.github.john.tuesday.nutrition.scaleToPortion
 import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResultFoodSchema
 import org.calamarfederal.physical.measurement.grams

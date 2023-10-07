@@ -1,9 +1,9 @@
 package org.calamarfederal.messydiet.food.data.central.model
 
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
+import io.github.john.tuesday.nutrition.FoodNutrition
 import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSchema
 
-typealias FDCNutritionInfo = Nutrition
+typealias FDCNutritionInfo = FoodNutrition
 
 
 data class FDCDate(

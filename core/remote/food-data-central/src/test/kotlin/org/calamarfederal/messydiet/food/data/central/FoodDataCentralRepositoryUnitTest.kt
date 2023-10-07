@@ -1,21 +1,21 @@
 package org.calamarfederal.messydiet.food.data.central
 
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.prettyPrint
+import io.github.john.tuesday.nutrition.scaleToPortion
 import kotlinx.coroutines.runBlocking
-import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
 import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.model.getResponseOrNull
 import org.calamarfederal.messydiet.food.data.central.model.getValueOrNull
 import org.calamarfederal.messydiet.food.data.central.model.isSuccess
 import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
 import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpectCase
-import org.calamarfederal.messydiet.test.measure.prettyPrint
 import org.kodein.di.direct
 import org.kodein.di.instance
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import org.calamarfederal.messydiet.test.measure.assertEquals as assertAboutEqual
 
 internal class FoodDataCentralRepositoryUnitTest {
     private lateinit var repo: FoodDataCentralRepository
@@ -43,7 +43,7 @@ internal class FoodDataCentralRepositoryUnitTest {
 
     fun testGetDetails(
         expectCase: FoodItemExpectCase,
-        expectNutrition: NutritionInfo = expectCase.nutritionPerServing,
+        expectNutrition: FoodNutrition = expectCase.nutritionPerServing,
     ) {
         val result = runBlocking {
             repo.getFoodDetails(expectCase.fdcId)
@@ -56,7 +56,7 @@ internal class FoodDataCentralRepositoryUnitTest {
         assertNotNull(foodItem.nutritionalInfo)
         val nutritionInfo = foodItem.nutritionalInfo!!
         prettyPrint(nutritionInfo)
-        assertAboutEqual(expectNutrition, nutritionInfo)
+        assertEquals(expectNutrition, nutritionInfo)
     }
 
     @Test

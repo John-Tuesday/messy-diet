@@ -11,6 +11,6 @@ dependencies {
 
     implementation(project(":core:test:common"))
 
-    implementation(project(":core:diet-model"))
+    implementation(libs.nutrition)
     implementation(libs.measure)
 }

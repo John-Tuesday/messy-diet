@@ -1,10 +1,10 @@
 package org.calamarfederal.messydiet.food.data.central.model
 
-import org.calamarfederal.messydiet.diet_data.model.FoodEnergyUnit
-import org.calamarfederal.messydiet.diet_data.model.energyIn
+import io.github.john.tuesday.nutrition.NutrientType
+import io.github.john.tuesday.nutrition.Portion
+import io.github.john.tuesday.nutrition.mutate
 import org.calamarfederal.messydiet.food.data.central.remote.schema.*
-import org.calamarfederal.physical.measurement.Mass
-import org.calamarfederal.physical.measurement.invoke
+import org.calamarfederal.physical.measurement.*
 
 data class LegacyFdcId internal constructor(override val fdcId: Int) : FDCId
 data class SurveyFdcId internal constructor(override val fdcId: Int) : FDCId
@@ -78,27 +78,28 @@ internal fun SurveyFoodItemSchema.toModel(): FDCAbridgedFoodItem {
 
 internal fun FDCNutritionInfo.parseNutrient(nutrientSchema: AbridgedFoodNutrientSchema): FDCNutritionInfo? {
     if (nutrientSchema.number == "208") {
-        val energyUnit = if (nutrientSchema.unitName != "kcal") return null else FoodEnergyUnit.Kilocalories
-        val calories = nutrientSchema.amount?.energyIn(energyUnit) ?: return null
-        return copy(foodEnergy = calories)
+        val energyUnit = if (nutrientSchema.unitName != "kcal") return null else EnergyUnit.Kilocalorie
+        val calories = nutrientSchema.amount?.let { Energy(it, energyUnit) } ?: return null
+        return mutate(foodEnergy = calories)
     }
 
     val massUnit = nutrientSchema.unitName?.let { stringToMassUnitOrNull(it) } ?: return null
     val mass = nutrientSchema.amount?.let { Mass(it, massUnit) } ?: return null
 
-    return when (nutrientSchema.number) {
-        "203" -> copy(totalProtein = mass)
-        "205" -> copy(totalCarbohydrates = mass)
-        "605" -> copy(transFat = mass)
-        "204" -> copy(totalFat = mass)
-        "298" -> copy(totalFat = mass)
-        "645" -> copy(monounsaturatedFat = mass)
-        else -> null
+    val type = when (nutrientSchema.number) {
+        "203" -> NutrientType.Protein
+        "205" -> NutrientType.TotalCarbohydrate
+        "605" -> NutrientType.TransFat
+        "204" -> NutrientType.TotalFat
+        "298" -> NutrientType.TotalFat
+        "645" -> NutrientType.MonounsaturatedFat
+        else -> return null
     }
+    return mutate(nutritionMap = nutrients.toMutableMap().apply { put(type, mass) })
 }
 
 internal fun parseNutrients(foodNutrients: List<AbridgedFoodNutrientSchema>): FDCNutritionInfo {
-    var nutrition = FDCNutritionInfo()
+    var nutrition = FDCNutritionInfo(Portion(0.grams), 0.kilocalories, mapOf())
     for (n in foodNutrients) {
         nutrition = nutrition.parseNutrient(n) ?: nutrition
     }

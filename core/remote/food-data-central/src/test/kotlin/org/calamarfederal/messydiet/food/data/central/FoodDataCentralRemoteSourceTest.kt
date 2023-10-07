@@ -1,19 +1,19 @@
 package org.calamarfederal.messydiet.food.data.central
 
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.prettyPrint
+import io.github.john.tuesday.nutrition.scaleToPortion
 import kotlinx.coroutines.runBlocking
-import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
 import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.model.*
 import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
 import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpectCase
-import org.calamarfederal.messydiet.test.measure.prettyPrint
 import org.kodein.di.direct
 import org.kodein.di.instance
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import org.calamarfederal.messydiet.test.measure.assertEquals as assertAboutEqual
 
 internal class FoodDataCentralRemoteSourceTest {
     private lateinit var remote: FoodDataCentralRemoteSource
@@ -45,7 +45,7 @@ internal class FoodDataCentralRemoteSourceTest {
         assertEquals(expectCase.searchDescription, foodItem.description)
     }
 
-    fun testGetFood(expectCase: FoodItemExpectCase, expectNutrition: NutritionInfo = expectCase.nutritionPerServing) {
+    fun testGetFood(expectCase: FoodItemExpectCase, expectNutrition: FoodNutrition = expectCase.nutritionPerServing) {
         val result = runBlocking {
             remote.getFoodByFdcId(
                 fdcId = expectCase.fdcId,
@@ -58,7 +58,8 @@ internal class FoodDataCentralRemoteSourceTest {
         prettyPrint(foodItem.nutritionalInfo!!)
         assertEquals(expectCase.fdcId, foodItem.fdcId)
         assertEquals(expectCase.searchDescription, foodItem.description)
-        assertAboutEqual(expectNutrition, foodItem.nutritionalInfo!!)
+//        assertAboutEqual(expectNutrition, foodItem.nutritionalInfo!!)
+        assertEquals(expectNutrition, foodItem.nutritionalInfo!!)
     }
 
     @Test
