@@ -28,8 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
-import org.calamarfederal.messydiet.diet_data.model.Portion
+import io.github.john.tuesday.nutrition.MassPortion
+import io.github.john.tuesday.nutrition.VolumePortion
+import io.github.john.tuesday.nutrition.scaleToPortion
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.measure.*
 import org.calamarfederal.physical.measurement.*
@@ -110,7 +111,8 @@ private fun ViewMealInnerLayout(
             style = nameStyle,
         )
 
-        fun extractPortion() = (meal.portion.mass?.inGrams() ?: meal.portion.volume?.inMilliliters())!!.toFloat()
+        fun extractPortion() = (meal.foodNutrition.portion.mass?.inGrams()
+            ?: meal.foodNutrition.portion.volume?.inMilliliters())!!.toFloat()
 
         var portionState by remember(meal) {
             mutableFloatStateOf(extractPortion())
@@ -118,12 +120,12 @@ private fun ViewMealInnerLayout(
 
         val adjustedNutrition by remember(meal) {
             derivedStateOf {
-                val portion = meal.portion.mass?.let {
-                    Portion(portionState.grams)
-                } ?: meal.portion.volume?.let {
-                    Portion(portionState.milliliters)
-                } ?: Portion()
-                (Nutrition() + meal).scaleToPortion(portion)
+                meal.foodNutrition.scaleToPortion(
+                    when (meal.foodNutrition.portion) {
+                        is MassPortion -> MassPortion(portionState.grams)
+                        is VolumePortion -> VolumePortion(portionState.milliliters)
+                    }
+                )
             }
         }
         Surface(
@@ -136,8 +138,8 @@ private fun ViewMealInnerLayout(
             ) {
                 val nutritionInfoStyle = NutrientInfoTextStyle.default()
                 val portionUnitString = when {
-                    meal.portion.volume != null -> VolumeUnit.Milliliter.labelString
-                    meal.portion.mass != null -> MassUnit.Gram.labelString
+                    meal.foodNutrition.portion.volume != null -> VolumeUnit.Milliliter.labelString
+                    meal.foodNutrition.portion.mass != null -> MassUnit.Gram.labelString
                     else -> throw (NoServingSizeSpecified())
                 }
 
@@ -301,7 +303,6 @@ private fun ViewMealPreview() {
     ViewMealScreenLayout(
         meal = Meal(
             name = "Test Name",
-            portion = Portion(1.grams)
         ),
         onNavigateUp = {},
     )

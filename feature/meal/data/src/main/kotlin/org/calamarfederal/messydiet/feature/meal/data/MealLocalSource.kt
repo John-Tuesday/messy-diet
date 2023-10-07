@@ -1,17 +1,22 @@
 package org.calamarfederal.messydiet.feature.meal.data
 
+import androidx.room.withTransaction
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.NutritionMap
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 import org.calamarfederal.messydiet.core.android.hilt.IODispatcher
 import org.calamarfederal.messydiet.feature.meal.data.local.MealEntity
+import org.calamarfederal.messydiet.feature.meal.data.local.MealNutrientEntity
 import org.calamarfederal.messydiet.feature.meal.data.local.SavedMealDao
+import org.calamarfederal.messydiet.feature.meal.data.local.SavedMealLocalDb
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 internal interface MealLocalSource {
     /**
@@ -23,8 +28,6 @@ internal interface MealLocalSource {
      * Watch [Meal] (with [Flow.distinctUntilChanged] applied)
      */
     fun getMeal(id: Long): Flow<Meal?>
-
-    fun getAllMeals(): Flow<List<Meal>>
 
     /**
      * find matching [Meal] by [Meal.id] and return if found and atomically updated.
@@ -50,103 +53,98 @@ internal interface MealLocalSource {
     suspend fun deleteMeals(ids: List<Long>)
 }
 
-internal fun MealEntity.toMeal(): Meal = Meal(
-    id = id,
-    name = name,
-    totalProtein = totalProtein,
-    fiber = fiber,
-    sugar = sugar,
-    sugarAlcohol = sugarAlcohol,
-    starch = starch,
-    totalCarbohydrates = totalCarbohydrates,
-    monounsaturatedFat = monounsaturatedFat,
-    polyunsaturatedFat = polyunsaturatedFat,
-    omega3 = omega3,
-    omega6 = omega6,
-    saturatedFat = saturatedFat,
-    transFat = transFat,
-    cholesterol = cholesterol,
-    totalFat = totalFat,
-    calcium = calcium,
-    chloride = chloride,
-    iron = iron,
-    magnesium = magnesium,
-    phosphorous = phosphorous,
-    potassium = potassium,
-    sodium = sodium,
-    portion = portion,
-    foodEnergy = foodEnergy
-)
-
 internal fun Meal.toMealEntity(): MealEntity = MealEntity(
     id = id,
     name = name,
-    totalProtein = totalProtein,
-    fiber = fiber,
-    sugar = sugar,
-    sugarAlcohol = sugarAlcohol,
-    starch = starch,
-    totalCarbohydrates = totalCarbohydrates,
-    monounsaturatedFat = monounsaturatedFat,
-    polyunsaturatedFat = polyunsaturatedFat,
-    omega3 = omega3,
-    omega6 = omega6,
-    saturatedFat = saturatedFat,
-    transFat = transFat,
-    cholesterol = cholesterol,
-    totalFat = totalFat,
-    calcium = calcium,
-    chloride = chloride,
-    iron = iron,
-    magnesium = magnesium,
-    phosphorous = phosphorous,
-    potassium = potassium,
-    sodium = sodium,
-    portion = portion,
-    foodEnergy = foodEnergy
+    portion = foodNutrition.portion,
+    foodEnergy = foodNutrition.foodEnergy,
 )
 
+internal fun Meal.toNutrientEntity(): List<MealNutrientEntity> = foodNutrition.nutrients.map { (type, amount) ->
+    MealNutrientEntity(
+        mealId = id,
+        nutrientType = type,
+        amount = amount,
+    )
+}
+
 internal class MealLocalSourceImplementation @Inject constructor(
+    private val db: SavedMealLocalDb,
     private val dao: SavedMealDao,
     @IODispatcher
     private val ioDispatcher: CoroutineDispatcher,
 ) : MealLocalSource {
+    operator fun FoodNutrition.Companion.invoke(meal: MealEntity, nutrients: NutritionMap): FoodNutrition {
+        return FoodNutrition(portion = meal.portion, foodEnergy = meal.foodEnergy, nutritionMap = nutrients)
+    }
+
     override fun getMealIds(): Flow<List<Long>> = dao.getAllMealIds()
         .distinctUntilChanged()
         .flowOn(ioDispatcher)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getMeal(id: Long): Flow<Meal?> = dao
-        .getMeal(id = id)
-        .distinctUntilChanged()
-        .mapLatest { it?.toMeal() }
-        .flowOn(ioDispatcher)
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getAllMeals(): Flow<List<Meal>> = dao
-            .getAlMeals()
+    override fun getMeal(id: Long): Flow<Meal?> {
+        return dao.getMeal(id = id)
             .distinctUntilChanged()
-            .mapLatest { it.map { it.toMeal() } }
-            .flowOn(ioDispatcher)
+            .combine(dao.getAllNutrientsOf(mealId = id).distinctUntilChanged()) { meal, nutrients ->
+                meal?.let {
+                    Meal(
+                        id = meal.id,
+                        name = meal.name,
+                        foodNutrition = FoodNutrition(meal = meal, nutrients = nutrients)
+                    )
+                }
+            }.flowOn(ioDispatcher)
+    }
 
     override suspend fun updateMeal(meal: Meal): Boolean = withContext(ioDispatcher) {
-        dao.updateMeal(meal = meal.toMealEntity()) != 0
+        val result = runCatching {
+            db.withTransaction {
+                if (dao.updateMeal(meal.toMealEntity()) == 0) throw (CancellationException())
+                val nutrients = meal.toNutrientEntity()
+                if (dao.updateNutrients(nutrients) != nutrients.size) throw (CancellationException())
+            }
+        }
+
+        return@withContext result.isSuccess
     }
 
     override suspend fun insertOrUpdate(meal: Meal) {
-        dao.upsertMeal(meal = meal.toMealEntity())
+        withContext(ioDispatcher) {
+            db.withTransaction {
+                dao.upsertMeal(meal.toMealEntity())
+                dao.updateNutrients(meal.toNutrientEntity())
+            }
+        }
     }
 
     override suspend fun insertMeal(meal: Meal, generateId: Boolean): Long = withContext(ioDispatcher) {
-        val mealEntity = meal.toMealEntity().let { if (generateId) it.copy(id = MealEntity.UNSET_ID) else it }
-        dao.insertMeal(meal = mealEntity)
+        val result = runCatching {
+            var id: Long = -1L
+            db.withTransaction {
+                val mealAlt = if (generateId) meal.copy(id = MealEntity.UNSET_ID) else meal
+                id = dao.insertMeal(mealAlt.toMealEntity())
+                if (id == -1L) throw (CancellationException())
+                val nutrients = mealAlt.toNutrientEntity()
+                if (dao.insertNutrients(nutrients).size != nutrients.size) throw (CancellationException())
+
+            }
+            id
+        }
+
+        return@withContext result.fold(onSuccess = { it }, onFailure = { throw (it) })
     }
 
     override suspend fun deleteMeal(id: Long): Boolean = withContext(ioDispatcher) {
-        dao.deleteMeal(id = id) > 0
+        db.withTransaction {
+            dao.deleteAllNutrientsOf(mealIds = listOf(id))
+            dao.deleteMeal(id = id) > 0
+        }
     }
 
     override suspend fun deleteMeals(ids: List<Long>) {
-        return dao.deleteMeals(ids)
+        db.withTransaction {
+            dao.deleteAllNutrientsOf(ids)
+            dao.deleteMeals(ids)
+        }
     }
 }

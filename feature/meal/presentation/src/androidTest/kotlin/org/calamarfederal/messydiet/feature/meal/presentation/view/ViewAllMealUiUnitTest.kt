@@ -2,19 +2,19 @@ package org.calamarfederal.messydiet.feature.meal.presentation.view
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.semantics.SemanticsActions
-import androidx.compose.ui.test.assertHasClickAction
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.test.performSemanticsAction
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.Portion
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
+import org.calamarfederal.messydiet.feature.meal.presentation.R
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.kilocalories
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.calamarfederal.messydiet.feature.meal.presentation.R
 
 @RunWith(AndroidJUnit4::class)
 class ViewAllMealUiUnitTest {
@@ -26,15 +26,33 @@ class ViewAllMealUiUnitTest {
     @Before
     fun setUp() {
         testMeals = listOf(
-            Meal(id = 1, name = "alpha"),
-            Meal(id = 2, name = "BETA"),
-            Meal(id = 3, name = "chArlie"),
+            Meal(
+                id = 1, name = "alpha", foodNutrition = FoodNutrition(
+                    portion = Portion(1.grams),
+                    foodEnergy = 1.kilocalories,
+                    nutritionMap = mapOf(),
+                )
+            ),
+            Meal(
+                id = 2, name = "BETA", foodNutrition = FoodNutrition(
+                    portion = Portion(1.grams),
+                    foodEnergy = 1.kilocalories,
+                    nutritionMap = mapOf(),
+                )
+            ),
+            Meal(
+                id = 3, name = "chArlie", foodNutrition = FoodNutrition(
+                    portion = Portion(1.grams),
+                    foodEnergy = 1.kilocalories,
+                    nutritionMap = mapOf(),
+                )
+            ),
         )
 
         composeRule.setContent {
             ViewAllMealsLayout(
                 meals = testMeals,
-                )
+            )
         }
     }
 

@@ -13,6 +13,7 @@ dependencies {
 
     implementation(project(":feature:measure"))
     implementation(libs.measure)
+    implementation(libs.nutrition)
     implementation(project(":core:android:hilt"))
 
     // Lifecycle

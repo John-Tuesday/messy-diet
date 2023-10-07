@@ -1,5 +1,6 @@
 package org.calamarfederal.messydiet.feature.search.data
 
+import io.github.john.tuesday.nutrition.Portion
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
@@ -11,6 +12,8 @@ import org.calamarfederal.messydiet.food.data.central.model.FDCNutritionInfo
 import org.calamarfederal.messydiet.food.data.central.model.ResultResponse
 import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
 import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpectCase
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.kilocalories
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -56,7 +59,10 @@ class FoodSearchRepositoryUnitTest(
                 mockk {
                     every { fdcId } returns expectCase.fdcId
                     every { description } returns expectCase.searchDescription
-                    every { nutritionalInfo } returns FDCNutritionInfo()
+                    every { nutritionalInfo } returns FDCNutritionInfo(
+                        portion = Portion(0.grams),
+                        foodEnergy = 0.kilocalories
+                    )
                 }
             )
         )
@@ -84,7 +90,10 @@ class FoodSearchRepositoryUnitTest(
                             val foodItem = value.results.single()
                             assertEquals(expectCase.name, foodItem.name)
                             assertEquals(expectCase.fdcIdInt, foodItem.id)
-                            assertEquals(FDCNutritionInfo(), foodItem.nutritionInfo)
+                            assertEquals(
+                                FDCNutritionInfo(portion = Portion(0.grams), foodEnergy = 0.kilocalories),
+                                foodItem.nutritionInfo
+                            )
                         }
 
                         else -> fail("There should only be 2 emissions")

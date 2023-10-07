@@ -1,11 +1,9 @@
 package org.calamarfederal.messydiet.feature.meal.data
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import org.calamarfederal.messydiet.feature.meal.data.local.MealEntity
+import kotlinx.coroutines.flow.flowOf
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import javax.inject.Inject
-import kotlin.random.Random
 
 interface MealRepository {
     /**
@@ -54,7 +52,7 @@ internal class MealRepositoryImplementation @Inject constructor(
 ) : MealRepository {
     override fun getMeal(id: Long): Flow<Meal?> = mealLocalSource.getMeal(id = id)
 
-    override fun getAllMeals(): Flow<List<Meal>> = mealLocalSource.getAllMeals()
+    override fun getAllMeals(): Flow<List<Meal>> = flowOf(listOf())//mealLocalSource.getAllMeals()
 
     override suspend fun insertMeal(meal: Meal, generateId: Boolean): Long =
         mealLocalSource.insertMeal(meal = meal, generateId = generateId)

@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
-import org.calamarfederal.messydiet.diet_data.model.Portion
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.Portion
 import org.calamarfederal.messydiet.feature.measure.NutritionInfoColumn
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
@@ -24,6 +24,7 @@ import org.calamarfederal.messydiet.feature.search.data.model.FoodIdDummy
 import org.calamarfederal.messydiet.feature.search.data.model.FoodItemDetails
 import org.calamarfederal.messydiet.feature.search.presentation.R
 import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.kilocalories
 
 @Composable
 fun FdcFoodItemDetailsUi(
@@ -100,7 +101,7 @@ internal fun FoodItemDetailsLayoutFromStatus(
             is FoodDetailsStatus.Success -> {
                 FoodItemDetailsColumn(
                     name = state.results.name,
-                    nutrition = state.results.nutritionInfo as Nutrition,
+                    nutrition = state.results.nutritionInfo,
                     modifier = Modifier.align(Alignment.TopCenter)
                 )
             }
@@ -141,7 +142,7 @@ private fun FoodDetailsLoading(
 @Composable
 internal fun FoodItemDetailsColumn(
     name: String,
-    nutrition: Nutrition,
+    nutrition: FoodNutrition,
     modifier: Modifier = Modifier,
     nameStyle: TextStyle = LocalTextStyle.current + MaterialTheme.typography.headlineMedium,
 ) {
@@ -172,7 +173,7 @@ private fun FoodDetailsPreview() {
     val foodItem = FoodItemDetails(
         foodId = FoodIdDummy,
         name = "Sprite Bottle, 1.75 Liters",
-        nutritionInfo = Nutrition(portion = Portion(1.grams)),
+        nutritionInfo = FoodNutrition(portion = Portion(1.grams), foodEnergy = 0.kilocalories),
     )
     Surface {
         FoodItemDetailsScreen(

@@ -10,7 +10,6 @@ import org.calamarfederal.messydiet.feature.search.data.model.FoodIdDummy
 import org.calamarfederal.messydiet.feature.search.data.model.SearchRemoteError
 import org.calamarfederal.messydiet.feature.search.data.model.foodId
 import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
-import org.calamarfederal.messydiet.food.data.central.model.FDCNutritionInfo
 import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError
 import org.calamarfederal.messydiet.food.data.central.model.ResultResponse
 import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
@@ -21,7 +20,6 @@ import org.junit.experimental.theories.Theories
 import org.junit.experimental.theories.Theory
 import org.junit.runner.RunWith
 import kotlin.test.*
-import org.calamarfederal.messydiet.test.measure.assertEquals as assertMeasureEquals
 
 @RunWith(Theories::class)
 class FoodDetailsRepositoryUnitTest {
@@ -82,7 +80,7 @@ class FoodDetailsRepositoryUnitTest {
             mockk {
                 every { fdcId } returns expectCase.fdcId
                 every { description } returns expectCase.searchDescription
-                every { nutritionalInfo } returns expectCase.nutritionPerServing as FDCNutritionInfo
+                every { nutritionalInfo } returns expectCase.nutritionPerServing
             }
         )
 
@@ -112,7 +110,7 @@ class FoodDetailsRepositoryUnitTest {
                             expectCase.fdcIdInt,
                             value.results.foodId.id,
                         )
-                        assertMeasureEquals(
+                        assertEquals(
                             expectCase.nutritionPerServing,
                             value.results.nutritionInfo,
                         )

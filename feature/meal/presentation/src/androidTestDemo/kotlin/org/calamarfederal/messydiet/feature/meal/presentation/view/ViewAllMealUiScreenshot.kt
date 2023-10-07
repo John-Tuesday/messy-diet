@@ -42,7 +42,7 @@ class ViewAllMealUiScreenshot {
             .captureToImage()
 
         saveScreenshot(
-            "ViewAllMealUiScreenshot",
+            "ViewAllMealUiScreenshot.png",
             bmp.asAndroidBitmap(),
         )
     }

@@ -16,6 +16,9 @@ dependencies {
 
     androidTestImplementation(project(":core:test:common"))
 
+    implementation(libs.measure)
+    implementation(libs.nutrition)
+
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera2)
     implementation(libs.androidx.camerax.lifecycle)

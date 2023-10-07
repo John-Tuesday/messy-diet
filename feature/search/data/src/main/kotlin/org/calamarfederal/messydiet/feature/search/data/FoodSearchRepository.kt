@@ -1,13 +1,16 @@
 package org.calamarfederal.messydiet.feature.search.data
 
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.Portion
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
 import org.calamarfederal.messydiet.feature.search.data.model.*
 import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
 import org.calamarfederal.messydiet.food.data.central.model.FDCFoodItem
 import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError
 import org.calamarfederal.messydiet.food.data.central.model.fold
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.kilocalories
 import javax.inject.Inject
 
 /**
@@ -40,7 +43,7 @@ internal fun FoodDataCentralError.toSearchRemoteError(): SearchRemoteError = whe
 internal fun FDCFoodItem.toSearchResultFoodItem(): SearchResultFoodItem = SearchResultFoodItem(
     name = description,
     foodId = FdcFoodId(fdcId),
-    nutritionInfo = nutritionalInfo ?: Nutrition(),
+    nutritionInfo = nutritionalInfo ?: FoodNutrition(portion = Portion(0.grams), foodEnergy = 0.kilocalories),
 )
 
 internal class FoodSearchRepositoryImplementation @Inject constructor(
@@ -65,7 +68,7 @@ internal class FoodSearchRepositoryImplementation @Inject constructor(
 internal fun FDCFoodItem.toFoodItemDetails(): FoodItemDetails = FoodItemDetails(
     name = description,
     foodId = FdcFoodId(fdcId),
-    nutritionInfo = nutritionalInfo ?: Nutrition(),
+    nutritionInfo = nutritionalInfo ?: FoodNutrition(portion = Portion(0.grams), foodEnergy = 0.kilocalories),
 )
 
 internal class FoodDetailsRepositoryImplementation @Inject constructor(

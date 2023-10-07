@@ -8,7 +8,11 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.Portion
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.kilocalories
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,11 +23,16 @@ internal class ViewMealUiUnitTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
-    private var testMeal by mutableStateOf(Meal())
+    private val initialMeal = Meal(
+        id = 1,
+        name = "TestName",
+        foodNutrition = FoodNutrition(portion = Portion(1.grams), foodEnergy = 1.kilocalories, nutritionMap = mapOf())
+    )
+    private var testMeal by mutableStateOf(initialMeal)
 
     @Before
     fun setUp() {
-        testMeal = Meal(id = 1, name = "TestName")
+        testMeal = initialMeal
 
         composeRule.setContent {
             ViewMealScreenLayout(

@@ -4,9 +4,9 @@ import android.icu.number.LocalizedNumberFormatter
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
+import io.github.john.tuesday.nutrition.Portion
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import org.calamarfederal.messydiet.diet_data.model.Portion
 import org.calamarfederal.physical.measurement.*
 
 /**

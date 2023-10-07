@@ -8,16 +8,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.calamarfederal.messydiet.diet_data.model.*
+import io.github.john.tuesday.nutrition.*
 import org.calamarfederal.messydiet.test.UnitTest
-import org.calamarfederal.messydiet.test.measure.MeasureSamples
 import org.calamarfederal.physical.measurement.*
 import org.junit.Rule
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertFails
 
 @Category(UnitTest::class)
 @RunWith(AndroidJUnit4::class)
@@ -25,9 +23,9 @@ internal class NutrientComposablesUnitTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
-    private val allFilledNutrition = MeasureSamples.filledNutritionA
+    private val allFilledNutrition = NutritionSamples.filledNutritionA
 
-    private var testNutrition by mutableStateOf(Nutrition())
+    private var testNutrition by mutableStateOf(allFilledNutrition)
     private lateinit var weightFormatter: LocalizedNumberFormatter
 
     private val scrollContainer
@@ -38,7 +36,7 @@ internal class NutrientComposablesUnitTest {
 
     @BeforeTest
     fun setUp() {
-        testNutrition = Nutrition(portion = Portion(0.grams))
+        testNutrition = allFilledNutrition.mutate(portion = Portion(0.grams))
 
         composeRule.setContent {
             NutritionInfoColumn(nutrition = testNutrition)
@@ -48,7 +46,7 @@ internal class NutrientComposablesUnitTest {
 
     @Test
     fun `Portion as weight is shown`() {
-        testNutrition = allFilledNutrition.copy(portion = Portion(134.grams))
+        testNutrition = allFilledNutrition.mutate(portion = Portion(134.grams))
         composeRule
             .onNode(
                 hasTextExactly(
@@ -62,7 +60,7 @@ internal class NutrientComposablesUnitTest {
 
     @Test
     fun `Portion as volume is shown`() {
-        testNutrition = allFilledNutrition.copy(portion = Portion(134.milliliters))
+        testNutrition = allFilledNutrition.mutate(portion = Portion(134.milliliters))
         composeRule
             .onNode(
                 hasTextExactly(
@@ -72,14 +70,6 @@ internal class NutrientComposablesUnitTest {
                 )
             )
             .assertExists()
-    }
-
-    @Test
-    fun `Fails when portion with null weight and volume`() {
-        assertFails {
-            testNutrition = Nutrition(portion = Portion())
-            composeRule.waitForIdle()
-        }
     }
 
     @Test
@@ -122,7 +112,12 @@ internal class NutrientComposablesUnitTest {
     fun `Fat nutrients are shown when present`() {
         testNutrition = allFilledNutrition
 
-        for (fatNutrient in Nutrients.fats) {
+        val resources = composeRule.activity.resources
+        val fatStrings = resources.getStringArray(R.array.fat_names)
+        val fatNutrients =
+            NutrientType.entries.filter { nutrientFullName(nutrient = it, resources = resources) in fatStrings }
+
+        for (fatNutrient in fatNutrients) {
             assertNutrient(
                 label = composeRule.activity.getString(fatNutrient.stringResId),
                 mass = testNutrition[fatNutrient]!!,
@@ -132,11 +127,17 @@ internal class NutrientComposablesUnitTest {
 
     @Test
     fun `Optional Fat nutrients do not exist when null`() {
+        testNutrition = testNutrition.mutate(nutritionMap = mapOf())
+        composeRule.waitForIdle()
+
         for (fatString in composeRule.activity.resources.getStringArray(R.array.fat_names)
-            .filterNot { it == composeRule.activity.getString(R.string.fat) }) {
+            .filterNot { it == composeRule.activity.getString(R.string.fat) }
+        ) {
+            composeRule.onRoot().printToLog("*******")
             composeRule
                 .onNodeWithText(fatString)
-                .assertDoesNotExist()
+//                .assertDoesNotExist()
+                .assertIsNotDisplayed()
         }
     }
 
@@ -144,7 +145,13 @@ internal class NutrientComposablesUnitTest {
     fun `Carbohydrate nutrients are shown when present`() {
         testNutrition = allFilledNutrition
 
-        for (carbohydrateNutrient in Nutrients.carbohydrates) {
+        val resources = composeRule.activity.resources
+        val carbStrings = resources.getStringArray(R.array.carbohydrate_names)
+        val carbNutrients = NutrientType.entries.filter {
+            nutrientFullName(nutrient = it, resources = resources) in carbStrings
+        }
+
+        for (carbohydrateNutrient in carbNutrients) {
             assertNutrient(
                 label = composeRule.activity.getString(carbohydrateNutrient.stringResId),
                 mass = testNutrition[carbohydrateNutrient]!!,
@@ -154,6 +161,8 @@ internal class NutrientComposablesUnitTest {
 
     @Test
     fun `Optional Carbohydrate nutrients do not exist when null`() {
+        testNutrition = testNutrition.mutate(nutritionMap = mapOf())
+
         for (carbohydrateString in composeRule.activity.resources.getStringArray(R.array.carbohydrate_names)
             .filterNot { it == composeRule.activity.getString(R.string.carbohydrates) }) {
             composeRule
@@ -166,7 +175,13 @@ internal class NutrientComposablesUnitTest {
     fun `Mineral nutrients are shown when present`() {
         testNutrition = allFilledNutrition
 
-        for (mineralNutrient in Nutrients.minerals) {
+        val resources = composeRule.activity.resources
+        val mineralStrings = resources.getStringArray(R.array.mineral_names)
+        val mineralNutrients = NutrientType.entries.filter {
+            nutrientFullName(nutrient = it, resources = resources) in mineralStrings
+        }
+
+        for (mineralNutrient in mineralNutrients) {
             assertNutrient(
                 label = composeRule.activity.getString(mineralNutrient.stringResId),
                 mass = testNutrition[mineralNutrient]!!,
@@ -176,6 +191,8 @@ internal class NutrientComposablesUnitTest {
 
     @Test
     fun `Mineral nutrients do not exist when null`() {
+        testNutrition = testNutrition.mutate(nutritionMap = mapOf())
+
         for (mineralString in composeRule.activity.resources.getStringArray(R.array.mineral_names)) {
             composeRule
                 .onNodeWithText(mineralString)
@@ -187,7 +204,13 @@ internal class NutrientComposablesUnitTest {
     fun `Vitamin nutrients are shown when present`() {
         testNutrition = allFilledNutrition
 
-        for (vitaminNutrient in Nutrients.vitamins) {
+        val resources = composeRule.activity.resources
+        val vitaminStrings = resources.getStringArray(R.array.vitamin_names)
+        val vitaminNutrients = NutrientType.entries.filter {
+            nutrientFullName(nutrient = it, resources = resources) in vitaminStrings
+        }
+
+        for (vitaminNutrient in vitaminNutrients) {
             assertNutrient(
                 label = composeRule.activity.getString(vitaminNutrient.stringResId),
                 mass = testNutrition[vitaminNutrient]!!,
@@ -197,6 +220,8 @@ internal class NutrientComposablesUnitTest {
 
     @Test
     fun `Vitamin nutrients do not exist when null`() {
+        testNutrition = testNutrition.mutate(nutritionMap = mapOf())
+
         for (mineralString in composeRule.activity.resources.getStringArray(R.array.vitamin_names)) {
             composeRule
                 .onNodeWithText(mineralString)

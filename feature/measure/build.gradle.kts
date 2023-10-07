@@ -8,6 +8,8 @@ android {
 
 dependencies {
     implementation(platform(project(":app-platform")))
+    implementation(libs.nutrition)
+    androidTestImplementation(libs.nutrition.test)
     implementation(libs.measure)
 
     androidTestImplementation(project(":core:test:common"))

@@ -1,99 +1,105 @@
 package org.calamarfederal.messydiet.feature.meal.data.local
 
 import androidx.room.*
+import io.github.john.tuesday.nutrition.NutrientType
+import io.github.john.tuesday.nutrition.Portion
 import kotlinx.coroutines.flow.Flow
-import org.calamarfederal.messydiet.diet_data.model.*
-import org.calamarfederal.physical.measurement.*
-import kotlin.math.absoluteValue
+import org.calamarfederal.physical.measurement.Energy
+import org.calamarfederal.physical.measurement.Mass
 
-internal class MealConverters {
-    @TypeConverter
-    fun fromWeightToDoubleOrNull(weight: Mass?): Double? = weight?.inGrams()
-
-    @TypeConverter
-    fun fromDoubleToWeightOrNull(grams: Double?): Mass? = grams?.grams
-
-    @TypeConverter
-    fun fromFoodEnergyToDoubleOrNull(energy: FoodEnergy?): Double? = energy?.inKilocalories()
-
-    @TypeConverter
-    fun fromDoubleToFoodEnergyOrNull(kcals: Double?): FoodEnergy? = kcals?.kcal
-
-    @TypeConverter
-    fun fromFoodEnergyToDouble(energy: FoodEnergy): Double = energy.inKilocalories()
-
-    @TypeConverter
-    fun fromDoubleToFoodEnergy(kcals: Double): FoodEnergy = kcals.kcal
-
-    @TypeConverter
-    fun fromWeightToLong(weight: Mass): Double = weight.inGrams()
-
-    @TypeConverter
-    fun fromDoubleToWeight(grams: Double): Mass = grams.grams
-
-    @TypeConverter
-    fun fromPortionToPair(portion: Portion): Double {
-        portion.mass?.let { return it.inGrams() }
-        portion.volume?.let { return -it.inLiters() }
-        return 0.00
-    }
-
-    @TypeConverter
-    fun fromPairToPortion(amount: Double): Portion = when {
-        amount > 0 -> Portion(amount.absoluteValue.grams)
-        amount < 0 -> Portion(amount.absoluteValue.liters)
-        else -> Portion()
-    }
-}
 @Entity(tableName = "meal")
-@TypeConverters(MealConverters::class)
+@TypeConverters(
+    MeasureConverters::class,
+    NutritionConverters::class,
+)
 internal data class MealEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     @ColumnInfo(index = true)
     val name: String,
-    @ColumnInfo(name = "total_protein")
-    override val totalProtein: Mass,
-    override val fiber: Mass?,
-    override val sugar: Mass?,
-    @ColumnInfo(name = "sugar_alcohol")
-    override val sugarAlcohol: Mass?,
-    override val starch: Mass?,
-    @ColumnInfo(name = "total_carbohydrates")
-    override val totalCarbohydrates: Mass,
-    override val monounsaturatedFat: Mass?,
-    override val polyunsaturatedFat: Mass?,
-    override val omega3: Mass?,
-    override val omega6: Mass?,
-    override val saturatedFat: Mass?,
-    override val transFat: Mass?,
-    override val cholesterol: Mass?,
-    @ColumnInfo(name = "total_fat")
-    override val totalFat: Mass,
-    override val calcium: Mass?,
-    override val chloride: Mass?,
-    override val iron: Mass?,
-    override val magnesium: Mass?,
-    override val phosphorous: Mass?,
-    override val potassium: Mass?,
-    override val sodium: Mass?,
-    override val portion: Portion,
     @ColumnInfo(name = "food_energy")
-    override val foodEnergy: FoodEnergy,
-) : NutritionInfo {
+    val foodEnergy: Energy,
+    val portion: Portion,
+) {
     companion object {
         internal const val UNSET_ID: Long = 0L
     }
 }
 
+@Entity(
+    tableName = "meal_nutrient",
+    primaryKeys = ["meal_id", "nutrient_type"],
+//    indices = [Index("meal_id", "nutrient_type", unique = true)],
+    foreignKeys = [
+        ForeignKey(
+            entity = MealEntity::class,
+            childColumns = ["meal_id"],
+            parentColumns = ["id"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+            deferred = true,
+        )
+    ],
+)
+@TypeConverters(
+    MeasureConverters::class,
+    NutritionConverters::class,
+)
+data class MealNutrientEntity(
+//    @PrimaryKey
+//    val id: Long,
+    @ColumnInfo(name = "meal_id")
+    val mealId: Long,
+    @ColumnInfo(name = "nutrient_type")
+    val nutrientType: NutrientType,
+    val amount: Mass,
+)
 
 @Dao
-internal interface SavedMealDao {
+internal interface MealNutrientDao {
+    @Query("SELECT amount FROM meal_nutrient WHERE meal_id = :mealId AND nutrient_type = :nutrientType")
+    @TypeConverters(MeasureConverters::class)
+    fun getNutrient(mealId: Long, nutrientType: NutrientType): Flow<Mass?>
+
+    @MapInfo(
+        keyColumn = "nutrient_type",
+        keyTable = "meal_nutrient",
+        valueColumn = "amount",
+        valueTable = "meal_nutrient"
+    )
+    @Query("SELECT * FROM meal_nutrient WHERE meal_id = :mealId")
+    @TypeConverters(MeasureConverters::class)
+    fun getAllNutrientsOf(mealId: Long): Flow<Map<NutrientType, Mass>>
+
+    @Upsert
+    suspend fun upsertNutrient(nutrient: MealNutrientEntity)
+
+    @Insert
+    suspend fun insertNutrients(nutrients: List<MealNutrientEntity>): List<Long>
+
+    @Update
+    suspend fun updateNutrients(nutrients: List<MealNutrientEntity>): Int
+
+    @Upsert
+    suspend fun upsertNutrients(nutrients: List<MealNutrientEntity>)
+
+    @Transaction
+    @Query("DELETE FROM meal_nutrient WHERE meal_id = :mealId AND nutrient_type in (:nutrientTypes)")
+    suspend fun deleteNutrientsOf(mealId: Long, nutrientTypes: List<NutrientType>)
+
+    @Transaction
+    @Query("DELETE FROM meal_nutrient WHERE meal_id in (:mealIds)")
+    suspend fun deleteAllNutrientsOf(mealIds: List<Long>)
+}
+
+
+@Dao
+internal interface SavedMealDao : MealNutrientDao {
     @Query("SELECT id FROM meal")
     fun getAllMealIds(): Flow<List<Long>>
 
     @Query("SELECT * FROM meal")
-    fun getAlMeals(): Flow<List<MealEntity>>
+    fun getAllMeals(): Flow<List<MealEntity>>
 
     @Query("SELECT * FROM meal WHERE id = :id")
     fun getMeal(id: Long): Flow<MealEntity?>
@@ -117,7 +123,7 @@ internal interface SavedMealDao {
 private const val DB_VERSION = 4
 
 @Database(
-    entities = [MealEntity::class],
+    entities = [MealEntity::class, MealNutrientEntity::class],
     version = DB_VERSION,
     exportSchema = false,
 )

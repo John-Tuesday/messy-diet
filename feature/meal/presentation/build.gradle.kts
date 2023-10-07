@@ -13,6 +13,7 @@ dependencies {
 
     implementation(project(":feature:meal:data"))
     implementation(project(":feature:measure"))
+    implementation(libs.nutrition)
     implementation(libs.measure)
 
     // Lifecycle

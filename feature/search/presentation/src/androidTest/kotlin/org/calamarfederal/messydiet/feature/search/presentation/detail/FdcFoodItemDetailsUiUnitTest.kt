@@ -8,14 +8,15 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
-import org.calamarfederal.messydiet.diet_data.model.Portion
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.Portion
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodItemDetails
 import org.calamarfederal.messydiet.feature.search.data.model.SearchRemoteError
 import org.calamarfederal.messydiet.feature.search.data.model.foodId
 import org.calamarfederal.messydiet.feature.search.presentation.R
 import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.kilocalories
 import org.junit.Rule
 import org.junit.runner.RunWith
 import kotlin.test.BeforeTest
@@ -71,7 +72,7 @@ class FdcFoodItemDetailsUiUnitTest {
             FoodItemDetails(
                 foodId = foodId(1, 2),
                 name = detailName,
-                nutritionInfo = Nutrition(portion = Portion(1.grams))
+                nutritionInfo = FoodNutrition(portion = Portion(1.grams), foodEnergy = 0.kilocalories)
             )
         )
 

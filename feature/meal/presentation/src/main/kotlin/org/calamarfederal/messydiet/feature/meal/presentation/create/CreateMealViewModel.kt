@@ -9,19 +9,18 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.john.tuesday.nutrition.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
-import org.calamarfederal.messydiet.diet_data.model.inKilocalories
-import org.calamarfederal.messydiet.diet_data.model.kcal
 import org.calamarfederal.messydiet.feature.meal.data.MealRepository
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.measure.PortionInputState
 import org.calamarfederal.messydiet.feature.measure.WeightInputState
 import org.calamarfederal.physical.measurement.Mass
 import org.calamarfederal.physical.measurement.MassUnit
-import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.inKilocalories
+import org.calamarfederal.physical.measurement.kilocalories
 import java.util.Locale
 import javax.inject.Inject
 
@@ -70,12 +69,12 @@ class CreateMealUiState(
         starchInput.weightFlow,
         carbohydrateTotalInput.weightFlow,
     ) { fiber, sugar, sugarAlcohol, starch, totalCarbohydrates ->
-        Nutrition(
-            fiber = fiber,
-            sugar = sugar,
-            sugarAlcohol = sugarAlcohol,
-            starch = starch,
-            totalCarbohydrates = totalCarbohydrates ?: 0.grams,
+        mapOf(
+            NutrientType.Fiber to fiber,
+            NutrientType.Sugar to sugar,
+            NutrientType.SugarAlcohol to sugarAlcohol,
+            NutrientType.Starch to starch,
+            NutrientType.TotalCarbohydrate to totalCarbohydrates,
         )
     }
 
@@ -89,15 +88,15 @@ class CreateMealUiState(
         cholesterolFatInput.weightFlow,
         fatTotalInput.weightFlow,
     ) {
-        Nutrition(
-            monounsaturatedFat = it[0],
-            polyunsaturatedFat = it[1],
-            omega3 = it[2],
-            omega6 = it[3],
-            saturatedFat = it[4],
-            transFat = it[5],
-            cholesterol = it[6],
-            totalFat = it[7] ?: 0.grams,
+        mapOf(
+            NutrientType.MonounsaturatedFat to it[0],
+            NutrientType.PolyunsaturatedFat to it[1],
+            NutrientType.Omega3 to it[2],
+            NutrientType.Omega6 to it[3],
+            NutrientType.SaturatedFat to it[4],
+            NutrientType.TransFat to it[5],
+            NutrientType.Cholesterol to it[6],
+            NutrientType.TotalFat to it[7],
         )
     }
 
@@ -110,14 +109,14 @@ class CreateMealUiState(
         potassiumInput.weightFlow,
         sodiumInput.weightFlow,
     ) {
-        Nutrition(
-            calcium = it[0],
-            chloride = it[1],
-            iron = it[2],
-            magnesium = it[3],
-            phosphorous = it[4],
-            potassium = it[5],
-            sodium = it[6],
+        mapOf(
+            NutrientType.Calcium to it[0],
+            NutrientType.Chloride to it[1],
+            NutrientType.Iron to it[2],
+            NutrientType.Magnesium to it[3],
+            NutrientType.Phosphorous to it[4],
+            NutrientType.Potassium to it[5],
+            NutrientType.Sodium to it[6],
         )
     }
 
@@ -125,9 +124,9 @@ class CreateMealUiState(
         vitaminA.weightFlow,
         vitaminC.weightFlow,
     ) { vitA, vitC ->
-        Nutrition(
-            vitaminA = vitA,
-            vitaminC = vitC,
+        mapOf(
+            NutrientType.VitaminA to vitA,
+            NutrientType.VitaminC to vitC,
         )
     }
 
@@ -139,27 +138,24 @@ class CreateMealUiState(
     ) { carb, fat, min, vit ->
         carb + fat + min + vit
     }.combine(proteinInput.weightFlow) { baseNutrition, protein ->
-        baseNutrition.copy(totalProtein = protein ?: 0.grams)
-    }.combine(portionInput.portionFlow) { baseNutrition, portion ->
-        if (portion != null && (portion.mass != null || portion.volume != null))
-            baseNutrition.copy(portion = portion)
-        else
-            null
+        baseNutrition + (NutrientType.Protein to protein)
     }
 
     val mealFlow: Flow<Meal?> = combine(
         snapshotFlow { nameInput },
         snapshotFlow { foodEnergyInput },
         nutrientFlow,
-    ) { name, foodEnergy, baseNutrition ->
-        if (baseNutrition == null) return@combine null
+        portionInput.portionFlow,
+    ) { name, foodEnergy, baseNutrition, portion ->
 
-        val mealNutrition = baseNutrition + Nutrition(
-            foodEnergy = (foodEnergy.toDoubleOrNull() ?: 0.00).kcal,
+        val mealNutrition = FoodNutrition(
+            foodEnergy = (foodEnergy.toDoubleOrNull() ?: 0.00).kilocalories,
+            portion = portion ?: return@combine null,
+            nutritionMap = baseNutrition.mapNotNull { (type, mass) -> mass?.let { type to mass } }.toMap(),
         )
         Meal(
             name = name,
-            nutritionInfo = mealNutrition,
+            foodNutrition = mealNutrition,
         )
     }
 }
@@ -175,26 +171,27 @@ internal fun CreateMealUiState.matchMeal(meal: Meal, locale: Locale) {
 
     val simpleFormatter = NumberFormatter.withLocale(locale)
 
-    portionInput.setInputFromPortion(meal.portion, simpleFormatter)
+    val foodNutrition = meal.foodNutrition
+    portionInput.setInputFromPortion(foodNutrition.portion, simpleFormatter)
 
-    foodEnergyInput = simpleFormatter.format(meal.foodEnergy.inKilocalories()).toString()
+    foodEnergyInput = simpleFormatter.format(foodNutrition.foodEnergy.inKilocalories()).toString()
 
-    proteinInput.setInputFromWeight(meal.totalProtein, simpleFormatter)
+    proteinInput.setInputFromWeightOrNull(foodNutrition.protein, simpleFormatter)
 
-    fiberInput.setInputFromWeightOrNull(meal.fiber, simpleFormatter)
-    sugarInput.setInputFromWeightOrNull(meal.sugar, simpleFormatter)
-    sugarAlcoholInput.setInputFromWeightOrNull(meal.sugarAlcohol, simpleFormatter)
-    starchInput.setInputFromWeightOrNull(meal.starch, simpleFormatter)
-    carbohydrateTotalInput.setInputFromWeight(meal.totalCarbohydrates, simpleFormatter)
+    fiberInput.setInputFromWeightOrNull(foodNutrition.fiber, simpleFormatter)
+    sugarInput.setInputFromWeightOrNull(foodNutrition.sugar, simpleFormatter)
+    sugarAlcoholInput.setInputFromWeightOrNull(foodNutrition.sugarAlcohol, simpleFormatter)
+    starchInput.setInputFromWeightOrNull(foodNutrition.starch, simpleFormatter)
+    carbohydrateTotalInput.setInputFromWeightOrNull(foodNutrition.totalCarbohydrate, simpleFormatter)
 
-    monounsaturatedFatInput.setInputFromWeightOrNull(meal.monounsaturatedFat, simpleFormatter)
-    polyunsaturatedFatInput.setInputFromWeightOrNull(meal.polyunsaturatedFat, simpleFormatter)
-    omega3Input.setInputFromWeightOrNull(meal.omega3, simpleFormatter)
-    omega6Input.setInputFromWeightOrNull(meal.omega6, simpleFormatter)
-    saturatedFatInput.setInputFromWeightOrNull(meal.saturatedFat, simpleFormatter)
-    transFatInput.setInputFromWeightOrNull(meal.transFat, simpleFormatter)
-    cholesterolFatInput.setInputFromWeightOrNull(meal.cholesterol, simpleFormatter)
-    fatTotalInput.setInputFromWeight(meal.totalFat, simpleFormatter)
+    monounsaturatedFatInput.setInputFromWeightOrNull(foodNutrition.monounsaturatedFat, simpleFormatter)
+    polyunsaturatedFatInput.setInputFromWeightOrNull(foodNutrition.polyunsaturatedFat, simpleFormatter)
+    omega3Input.setInputFromWeightOrNull(foodNutrition.omega3, simpleFormatter)
+    omega6Input.setInputFromWeightOrNull(foodNutrition.omega6, simpleFormatter)
+    saturatedFatInput.setInputFromWeightOrNull(foodNutrition.saturatedFat, simpleFormatter)
+    transFatInput.setInputFromWeightOrNull(foodNutrition.transFat, simpleFormatter)
+    cholesterolFatInput.setInputFromWeightOrNull(foodNutrition.cholesterol, simpleFormatter)
+    fatTotalInput.setInputFromWeightOrNull(foodNutrition.totalFat, simpleFormatter)
 }
 
 @HiltViewModel

@@ -21,11 +21,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.calamarfederal.messydiet.diet_data.model.*
-import org.calamarfederal.physical.measurement.grams
-import org.calamarfederal.physical.measurement.inGrams
-import org.calamarfederal.physical.measurement.inMilligrams
-import org.calamarfederal.physical.measurement.inMilliliters
+import io.github.john.tuesday.nutrition.*
+import org.calamarfederal.physical.measurement.*
 
 val simpleFormatter: LocalizedNumberFormatter
     @Composable get() = NumberFormatter.withLocale(LocalConfiguration.current.locales[0]).precision(Precision.integer())
@@ -91,7 +88,7 @@ fun NutrientInfoTextStyle.Companion.default(
  */
 @Composable
 fun NutritionInfoColumn(
-    nutrition: NutritionInfo,
+    nutrition: FoodNutrition,
     modifier: Modifier = Modifier,
     textStyles: NutrientInfoTextStyle = NutrientInfoTextStyle.default(),
     hidePortion: Boolean = false,
@@ -131,7 +128,7 @@ fun NutritionInfoColumn(
         item(key = R.string.fat) {
             NutritionRow(
                 label = stringResource(id = R.string.fat),
-                amount = nutrition.totalFat.inGrams(),
+                amount = nutrition.totalFat?.inGrams() ?: 0.00,
                 unitLabel = stringResource(id = R.string.gram_label),
                 labelStyle = textStyles.macroNutrientLabelStyle,
                 amountStyle = textStyles.macroNutrientValueStyle,
@@ -234,7 +231,7 @@ fun NutritionInfoColumn(
         item(key = R.string.carbohydrates) {
             NutritionRow(
                 label = stringResource(id = R.string.carbohydrates),
-                amount = nutrition.totalCarbohydrates.inGrams(),
+                amount = nutrition.totalCarbohydrate?.inGrams() ?: 0.00,
                 unitLabel = stringResource(id = R.string.gram_label),
                 labelStyle = textStyles.macroNutrientLabelStyle,
                 amountStyle = textStyles.macroNutrientValueStyle,
@@ -298,7 +295,7 @@ fun NutritionInfoColumn(
         item(key = R.string.protein) {
             NutritionRow(
                 label = stringResource(id = R.string.protein),
-                amount = nutrition.totalProtein.inGrams(),
+                amount = nutrition.protein?.inGrams() ?: 0.00,
                 unitLabel = stringResource(id = R.string.gram_label),
                 labelStyle = textStyles.macroNutrientLabelStyle,
                 amountStyle = textStyles.macroNutrientValueStyle,
@@ -484,35 +481,36 @@ private fun NutritionRow(
 private fun NutritionInfoPreview() {
     MaterialTheme {
         Surface {
-            val allFilledNutrition = Nutrition(
-                totalFat = 1.grams,
-                monounsaturatedFat = 2.grams,
-                polyunsaturatedFat = 3.grams,
-                transFat = 4.grams,
-                saturatedFat = 5.grams,
-                omega3 = 6.grams,
-                omega6 = 7.grams,
-                totalCarbohydrates = 8.grams,
-                sugar = 9.grams,
-                fiber = 10.grams,
-                sugarAlcohol = 11.grams,
-                starch = 12.grams,
-                totalProtein = 13.grams,
-                cholesterol = 14.grams,
-                foodEnergy = 15.kcal,
+            val allFilledNutrition = FoodNutrition(
+                foodEnergy = 15.kilocalories,
                 portion = Portion(16.grams),
-                vitaminC = 17.grams,
-                magnesium = 18.grams,
-                iron = 19.grams,
-                calcium = 20.grams,
-                chloride = 21.grams,
-                phosphorous = 22.grams,
-                potassium = 23.grams,
-                sodium = 24.grams,
+                nutritionMap = mapOf(
+                    NutrientType.TotalFat to 1.grams,
+                    NutrientType.MonounsaturatedFat to 2.grams,
+                    NutrientType.PolyunsaturatedFat to 3.grams,
+                    NutrientType.TransFat to 4.grams,
+                    NutrientType.SaturatedFat to 5.grams,
+                    NutrientType.Omega3 to 6.grams,
+                    NutrientType.Omega6 to 7.grams,
+                    NutrientType.TotalCarbohydrate to 8.grams,
+                    NutrientType.Sugar to 9.grams,
+                    NutrientType.Fiber to 10.grams,
+                    NutrientType.SugarAlcohol to 11.grams,
+                    NutrientType.Starch to 12.grams,
+                    NutrientType.Protein to 13.grams,
+                    NutrientType.Cholesterol to 14.grams,
+                    NutrientType.VitaminC to 17.grams,
+                    NutrientType.Magnesium to 18.grams,
+                    NutrientType.Iron to 19.grams,
+                    NutrientType.Calcium to 20.grams,
+                    NutrientType.Chloride to 21.grams,
+                    NutrientType.Phosphorous to 22.grams,
+                    NutrientType.Potassium to 23.grams,
+                    NutrientType.Sodium to 24.grams,
+                ),
             )
             NutritionInfoColumn(
                 nutrition = allFilledNutrition,
-//                modifier = Modifier.width(IntrinsicSize.Min)
             )
         }
     }

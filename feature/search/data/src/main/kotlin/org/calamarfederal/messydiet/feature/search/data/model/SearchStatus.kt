@@ -1,7 +1,7 @@
 package org.calamarfederal.messydiet.feature.search.data.model
 
 import androidx.compose.runtime.Stable
-import org.calamarfederal.messydiet.diet_data.model.NutritionInfo
+import io.github.john.tuesday.nutrition.FoodNutrition
 import org.calamarfederal.messydiet.food.data.central.model.FDCDataType
 import org.calamarfederal.messydiet.food.data.central.model.FDCId
 import org.calamarfederal.messydiet.food.data.central.model.dataType
@@ -69,7 +69,7 @@ internal class FdcFoodId(
 data class SearchResultFoodItem(
     val foodId: FoodId,
     val name: String,
-    val nutritionInfo: NutritionInfo,
+    val nutritionInfo: FoodNutrition,
 ) {
     /**
      * Convenience for `foodId.id`
@@ -83,7 +83,7 @@ data class SearchResultFoodItem(
 data class FoodItemDetails(
     val foodId: FoodId,
     val name: String,
-    val nutritionInfo: NutritionInfo,
+    val nutritionInfo: FoodNutrition,
 )
 
 /**

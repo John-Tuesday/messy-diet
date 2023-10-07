@@ -7,9 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.calamarfederal.messydiet.diet_data.model.Nutrition
+import io.github.john.tuesday.nutrition.FoodNutrition
+import io.github.john.tuesday.nutrition.Portion
 import org.calamarfederal.messydiet.feature.search.data.model.*
 import org.calamarfederal.messydiet.feature.search.presentation.R
+import org.calamarfederal.physical.measurement.grams
+import org.calamarfederal.physical.measurement.kilocalories
 import org.junit.Rule
 import org.junit.runner.RunWith
 import kotlin.random.Random
@@ -128,7 +131,11 @@ class SearchFdcUiUnitTest {
         }
         searchStatusState = SearchStatus.Success(
             resultNames.mapIndexed { index, name ->
-                SearchResultFoodItem(foodId = foodId(id = index, type = 2), name = name, nutritionInfo = Nutrition())
+                SearchResultFoodItem(
+                    foodId = foodId(id = index, type = 2),
+                    name = name,
+                    nutritionInfo = FoodNutrition(portion = Portion(0.grams), foodEnergy = 0.kilocalories)
+                )
             }
         )
 
