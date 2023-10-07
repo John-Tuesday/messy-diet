@@ -28,7 +28,6 @@ include(":core:test:common")
 include(":core:android:hilt")
 include(":core:diet-model")
 include(":core:remote:food-data-central")
-include(":core:test:measure")
 include(":core:test:remote:food-data-central")
 
 
