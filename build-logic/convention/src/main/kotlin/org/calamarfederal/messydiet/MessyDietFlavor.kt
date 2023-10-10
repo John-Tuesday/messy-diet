@@ -29,7 +29,6 @@ enum class ContentFlavor(override val applicationIdSuffix: String? = null) : Fla
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 fun configureFlavors(
     commonExtension: CommonExtension<*, *, *, *, *>,
 ) {
@@ -37,7 +36,7 @@ fun configureFlavors(
         flavorDimensions += ContentFlavor.dimensionName
         productFlavors {
             for (flavor in ContentFlavor.entries) {
-                create(flavor.flavorName) {
+                register(flavor.flavorName) {
                     dimension = flavor.dimension.dimensionName
                     if (commonExtension is ApplicationExtension && this is ApplicationProductFlavor && flavor.applicationIdSuffix != null)
                         applicationIdSuffix = flavor.applicationIdSuffix
