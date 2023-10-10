@@ -79,7 +79,8 @@ Android sample app [Now in Android](https://github.com/android/nowinandroid), wh
 on [https://developer.squareup.com/blog/herding-elephants/](https://developer.squareup.com/blog/herding-elephants/)
 and [https://github.com/jjohannes/idiomatic-gradle](https://github.com/jjohannes/idiomatic-gradle). The presentation and
 data layers of each feature are made separate gradle modules to enforce separation. The
-file [libs.versions.toml](/libs.versions.toml) acts as the single source of truth for dependency versions. To enforce
+file [libs.versions.toml](/gradle/libs.versions.toml) acts as the single source of truth for dependency versions. To
+enforce
 consistent version alignment of transient dependencies,
 a [platform](https://docs.gradle.org/current/userguide/java_platform_plugin.html#java_platform_plugin) is defined
 in `:app-platform`.
