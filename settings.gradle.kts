@@ -19,7 +19,6 @@ rootProject.name = "messydiet"
 include(":app-platform")
 include(":app")
 
-include(":core:test:common")
 include(":core:android:hilt")
 include(":core:remote:food-data-central")
 include(":core:test:remote:food-data-central")

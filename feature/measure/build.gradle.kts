@@ -20,7 +20,6 @@ kotlin {
         val androidTest by getting {
             dependencies {
                 implementation(libs.nutrition.test)
-                implementation(project(":core:test:common"))
                 implementation(libs.bundles.compose.androidTest)
             }
         }

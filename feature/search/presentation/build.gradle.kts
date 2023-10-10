@@ -36,7 +36,6 @@ kotlin {
 
         val androidTest by getting {
             dependencies {
-                implementation(project(":core:test:common"))
                 implementation(libs.kotlin.test.junit)
                 implementation(libs.bundles.compose.androidTest)
             }

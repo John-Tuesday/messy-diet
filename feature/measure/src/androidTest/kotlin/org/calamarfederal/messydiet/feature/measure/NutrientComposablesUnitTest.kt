@@ -9,15 +9,12 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.john.tuesday.nutrition.*
-import org.calamarfederal.messydiet.test.UnitTest
 import org.calamarfederal.physical.measurement.*
 import org.junit.Rule
-import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-@Category(UnitTest::class)
 @RunWith(AndroidJUnit4::class)
 internal class NutrientComposablesUnitTest {
     @get:Rule
