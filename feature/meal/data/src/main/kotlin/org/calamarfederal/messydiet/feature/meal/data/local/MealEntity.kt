@@ -7,7 +7,10 @@ import kotlinx.coroutines.flow.Flow
 import org.calamarfederal.physical.measurement.Energy
 import org.calamarfederal.physical.measurement.Mass
 
-@Entity(tableName = "meal")
+@Entity(
+    tableName = "meal",
+    indices = [Index("name", unique = true)]
+)
 @TypeConverters(
     MeasureConverters::class,
     NutritionConverters::class,
@@ -15,7 +18,6 @@ import org.calamarfederal.physical.measurement.Mass
 internal data class MealEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
-    @ColumnInfo(index = true)
     val name: String,
     @ColumnInfo(name = "food_energy")
     val foodEnergy: Energy,
