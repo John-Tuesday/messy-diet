@@ -29,8 +29,6 @@ internal interface MealLocalSource {
      */
     fun getMeal(id: Long): Flow<Meal?>
 
-    fun getAllMeals(): Flow<List<Meal>>
-
     fun getAllMealInfo(): Flow<List<MealInfo>>
 
     /**
@@ -99,13 +97,6 @@ internal class MealLocalSourceImplementation @Inject constructor(
                 }
             }.flowOn(ioDispatcher)
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getAllMeals(): Flow<List<Meal>> = dao
-        .getAllMeals()
-        .distinctUntilChanged()
-        .mapLatest { it.map { Meal(id = it.id, name = it.name) } }
-        .flowOn(ioDispatcher)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAllMealInfo(): Flow<List<MealInfo>> {

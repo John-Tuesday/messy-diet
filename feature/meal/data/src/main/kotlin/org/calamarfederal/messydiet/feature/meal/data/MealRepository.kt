@@ -11,11 +11,6 @@ interface MealRepository {
      */
     fun getMeal(id: Long): Flow<Meal?>
 
-    /**
-     * Cold flow of all [Meal] (emits when changed)
-     */
-    fun getAllMeals(): Flow<List<Meal>>
-
     fun getAllMealInfo(): Flow<List<MealInfo>>
 
     /**
@@ -53,8 +48,6 @@ internal class MealRepositoryImplementation @Inject constructor(
     private val mealLocalSource: MealLocalSource,
 ) : MealRepository {
     override fun getMeal(id: Long): Flow<Meal?> = mealLocalSource.getMeal(id = id)
-
-    override fun getAllMeals(): Flow<List<Meal>> = mealLocalSource.getAllMeals()
 
     override fun getAllMealInfo(): Flow<List<MealInfo>> = mealLocalSource.getAllMealInfo()
 

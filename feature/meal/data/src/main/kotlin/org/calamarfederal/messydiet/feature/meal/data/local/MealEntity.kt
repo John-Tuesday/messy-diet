@@ -30,7 +30,6 @@ internal data class MealEntity(
 @Entity(
     tableName = "meal_nutrient",
     primaryKeys = ["meal_id", "nutrient_type"],
-//    indices = [Index("meal_id", "nutrient_type", unique = true)],
     foreignKeys = [
         ForeignKey(
             entity = MealEntity::class,
@@ -47,8 +46,6 @@ internal data class MealEntity(
     NutritionConverters::class,
 )
 data class MealNutrientEntity(
-//    @PrimaryKey
-//    val id: Long,
     @ColumnInfo(name = "meal_id")
     val mealId: Long,
     @ColumnInfo(name = "nutrient_type")
