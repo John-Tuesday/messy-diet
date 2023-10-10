@@ -120,7 +120,7 @@ internal interface SavedMealDao : MealNutrientDao {
     suspend fun deleteMeals(ids: List<Long>)
 }
 
-private const val DB_VERSION = 4
+private const val DB_VERSION = 5
 
 @Database(
     entities = [MealEntity::class, MealNutrientEntity::class],
