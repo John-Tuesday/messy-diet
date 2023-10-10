@@ -33,6 +33,12 @@ sealed interface FoodDataCentralError {
         override val message: String? = "Unsupported nutrient number: '$number'",
     ) : ParseErrorType()
 
+    data class UnrecognizedNutrientDerivation(
+        val code: String,
+        val description: String?,
+        override val message: String? = "Unrecognized nutrient derivation: code = '$code' : description = '$description'",
+    ) : ParseErrorType()
+
     sealed interface RemoteErrorType : FoodDataCentralError
     data class NetworkError(
         override val message: String?,
