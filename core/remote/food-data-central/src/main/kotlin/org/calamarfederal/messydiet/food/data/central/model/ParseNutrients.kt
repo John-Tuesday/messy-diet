@@ -1,8 +1,7 @@
 package org.calamarfederal.messydiet.food.data.central.model
 
 import io.github.john.tuesday.nutrition.*
-import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError.UnrecognizedNutrientNumber
-import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError.UnrecognizedWeightUnitFormat
+import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError.*
 import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodNutrientSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.FoodNutrientSchema
 import org.calamarfederal.physical.measurement.*
@@ -25,9 +24,9 @@ internal fun stringToMassUnitOrNull(
 /**
  * Tries to convert Remote formatted weight unit to [MassUnit].
  *
- * throws [UnrecognizedWeightUnitFormat]
+ * @throws [UnrecognizedWeightUnitFormat]
  */
-internal fun stringToWeightUnit(
+internal fun stringToMassUnit(
     text: String,
 ): MassUnit = stringToMassUnitOrNull(text = text) ?: throw (UnrecognizedWeightUnitFormat(input = text))
 
@@ -81,99 +80,82 @@ internal fun nutrientNumberToNutrientType(nutrientNumber: String, strict: Boolea
     }
 }
 
-internal enum class NutrientDerivationType {
-    Per100Units,
-    LessThanPer100Units,
-    PerServing,
-    DailyValuePerServing,
+internal enum class NutrientDerivationType(val code: String?, val id: Int? = null) {
+    Per100Units(code = "LCCS", id = 70),
+    LessThanPer100Units(code = null, id = 79),
+    PerServing(code = "LCSA", id = 71),
+    DailyValuePerServing(code = "LCCD", id = 75),
     ;
 
     companion object {
-        internal fun fromRemoteId(id: Int): NutrientDerivationType? = when (id) {
-            70 -> Per100Units
-            71 -> PerServing
-            75 -> DailyValuePerServing
-            78 -> Per100Units
-            79 -> LessThanPer100Units
-            else -> null
-        }
+        internal fun fromRemoteId(id: Int): NutrientDerivationType? = entries.firstOrNull { it.id == id }
 
-        internal fun fromRemoteCode(code: String): NutrientDerivationType? = when (code) {
-//            "LCCL" -> PerServing
-            "LCCD" -> DailyValuePerServing
-            "LCCS" -> Per100Units
-            else -> null
-        }
+        internal fun fromRemoteCode(code: String): NutrientDerivationType? =
+            entries.firstOrNull { it.code == code }
     }
 }
 
-internal enum class CombinedNutrientType {
-    Per100,
-    PerServing,
-    PerServingDailyValue,
-    ;
-}
-
-internal val CombinedNutrientType.isPerSering: Boolean
+internal val NutrientDerivationType.isPerServing: Boolean
     get() = when (this) {
-        CombinedNutrientType.Per100 -> false
-        CombinedNutrientType.PerServing -> true
-        CombinedNutrientType.PerServingDailyValue -> true
+        NutrientDerivationType.PerServing, NutrientDerivationType.DailyValuePerServing -> true
+        else -> false
     }
 
-//internal fun processMap(
-//    info: List<Pair<NutrientDerivationType, FDCNutritionInfo>>,
-//    servingSize: Portion = Portion(100.grams),
-//): Map<CombinedNutrientType, FDCNutritionInfo> =
-//    info.fold<Pair<NutrientDerivationType, FDCNutritionInfo>, MutableMap<NutrientDerivationType, FDCNutritionInfo>>(
-//        mutableMapOf()
-//    ) { acc, (type, nutrition) ->
-//        acc[type] = acc[type]?.let { it + nutrition } ?: nutrition
-//        acc
-//    }.let { oldMap ->
-//        buildMap<CombinedNutrientType, FDCNutritionInfo> {
-//            for ((key, value) in oldMap) {
-//                val newKey = when (key) {
-//                    NutrientDerivationType.Per100Units, NutrientDerivationType.LessThanPer100Units -> CombinedNutrientType.Per100
-//                    NutrientDerivationType.PerServing -> CombinedNutrientType.PerServing
-//                    NutrientDerivationType.DailyValuePerServing -> CombinedNutrientType.PerServingDailyValue
-//                }
-//                set(newKey, get(newKey)?.plus(value) ?: value)
-//            }
-//        }.mapValues { (key, value) ->
-//            if (key.isPerSering)
-//                value.copy(portion = servingSize)
-//            else
-//                value.copy(portion = if (servingSize.mass != null) Portion(100.grams) else Portion(100.milliliters))
-//        }
-//    }
-
+/**
+ * Intermediate nutrient information when converting FDC nutrients to [FoodNutrition]
+ */
 internal data class ProtoNutrient(
     val amount: Number,
     val unitName: String,
     val nutrientNumber: String,
     val derivationCode: String,
+    val derivationDescription: String?,
 )
 
+/**
+ * Grouping by [NutrientDerivationType], convert FDC nutrient information into [FoodNutrition]
+ *
+ * This is meant to hold the abstract conversion logic for lists of FDC nutrients of different types. That is to say
+ * a list of [AbridgedFoodNutrientSchema] or [FoodNutrientSchema]. [nutrientSequence] yields common intermediate data
+ * holders to represent the necessary nutrient information.
+ *
+ * [Portion] information is required for [FoodNutrition] but is not defined in the lists of nutrients, so [getPortion]
+ * is used to inject the [Portion] if necessary
+ *
+ * [strict] is a flag to signify if unrecognized inputs should throw an exception or be ignored
+ *
+ * @throws[UnrecognizedNutrientDerivation] only if [strict] is true
+ * @throws[UnrecognizedNutrientNumber] if [strict] is true
+ * @throws[UnrecognizedWeightUnitFormat] if [strict] is true
+ */
 internal fun parseToNutritionalInfo(
     nutrientSequence: Sequence<ProtoNutrient>,
     getPortion: (NutrientDerivationType) -> Portion,
+    strict: Boolean = false,
 ): Map<NutrientDerivationType, FDCNutritionInfo> {
     val energyMap: MutableMap<NutrientDerivationType, Energy> = mutableMapOf()
     val nutritionMapMap: MutableMap<NutrientDerivationType, MutableMap<NutrientType, Mass>> = mutableMapOf()
-    for ((amount, unitName, nutrientNumber, derivationCode) in nutrientSequence) {
-        val derivationType = NutrientDerivationType.fromRemoteCode(derivationCode) ?: continue
+    for ((amount, unitName, nutrientNumber, derivationCode, derivationDescription) in nutrientSequence) {
+        val derivationType = NutrientDerivationType.fromRemoteCode(derivationCode)
+            ?: if (strict)
+                throw (UnrecognizedNutrientDerivation(
+                    code = derivationCode,
+                    description = derivationDescription
+                ))
+            else continue
 
+        // Check for energy manually because it's a compatible return type for [nutrientNumberToNutrientType]
         if (nutrientNumber == "208") {
             val energyUnit = stringToFoodEnergyUnit(unitName)!!
             energyMap[derivationType] = Energy(amount, energyUnit)
+            continue
         }
 
-        val nutrientType = nutrientNumberToNutrientType(nutrientNumber, strict = false) ?: continue
-        val massUnit = stringToMassUnitOrNull(unitName)!!
+        val nutrientType = nutrientNumberToNutrientType(nutrientNumber, strict = strict) ?: continue
+        val massUnit = stringToMassUnit(unitName)
         val mass = Mass(amount, massUnit)
 
-        val nutrientMap = nutritionMapMap.getOrElse(derivationType) { mutableMapOf() }
+        val nutrientMap = nutritionMapMap.getOrPut(derivationType) { mutableMapOf() }
         nutrientMap[nutrientType] = mass
         nutritionMapMap[derivationType] = nutrientMap
     }
@@ -187,67 +169,49 @@ internal fun parseToNutritionalInfo(
     }.toMap()
 }
 
-internal fun List<AbridgedFoodNutrientSchema>.toNutritionInfo(): Map<NutrientDerivationType, FDCNutritionInfo> {
-    return parseToNutritionalInfo(
+private fun servingSizeOr100Units(servingSize: Portion, nutrientDerivationType: NutrientDerivationType): Portion =
+    if (nutrientDerivationType.isPerServing)
+        servingSize
+    else when (servingSize) {
+        is MassPortion -> MassPortion(100.grams)
+        is VolumePortion -> VolumePortion(100.milliliters)
+    }
+
+internal fun List<AbridgedFoodNutrientSchema>.toNutritionInfo(
+    servingSize: Portion,
+    strict: Boolean = false,
+): Map<NutrientDerivationType, FDCNutritionInfo> =
+    parseToNutritionalInfo(
         nutrientSequence = asSequence().map { schema ->
             ProtoNutrient(
                 amount = schema.amount!!,
                 unitName = schema.unitName!!,
                 nutrientNumber = schema.number!!,
                 derivationCode = schema.derivationCode!!,
+                derivationDescription = schema.derivationDescription,
             )
         },
-        getPortion = { Portion(0.grams) },
+        getPortion = { servingSizeOr100Units(servingSize, it) },
+        strict = strict,
     )
-//    val infoMap = mapNotNull { schema ->
-//        val derivationType = schema.derivationCode?.let { NutrientDerivationType.fromRemoteCode(it) }
-//            ?: NutrientDerivationType.Per100Units
-//        val nutrition = parseNutrientNumber(
-//            amount = schema.amount ?: return@mapNotNull null,
-//            unitName = schema.unitName ?: return@mapNotNull null,
-//            nutrientNumber = schema.number ?: return@mapNotNull null,
-//        )
-//
-//        derivationType to nutrition
-//    }
-//
-//    return processMap(infoMap)
-}
 
-internal fun List<FoodNutrientSchema>.toNutritionInfo(servingSize: Portion = Portion(100.grams)): Map<NutrientDerivationType, FDCNutritionInfo> {
-    return parseToNutritionalInfo(
+internal fun List<FoodNutrientSchema>.toNutritionInfo(
+    servingSize: Portion,
+    strict: Boolean = false,
+): Map<NutrientDerivationType, FDCNutritionInfo> =
+    parseToNutritionalInfo(
         nutrientSequence = asSequence().map { schema ->
             ProtoNutrient(
                 amount = schema.amount!!,
                 unitName = schema.nutrient!!.unitName!!,
                 nutrientNumber = schema.nutrient.number!!,
                 derivationCode = schema.foodNutrientDerivation!!.code!!,
+                derivationDescription = schema.foodNutrientDerivation.description,
             )
         },
-        getPortion = { Portion(0.grams) },
+        getPortion = { servingSizeOr100Units(servingSize, it) },
+        strict = strict,
     )
-}
-//    mapNotNull { schema ->
-//        val derivationType = schema.foodNutrientDerivation?.id?.let {
-//            NutrientDerivationType.fromRemoteId(it)
-//                ?: throw (Throwable("Unrecognized Nutrient Derivation Type: id: '${it}'"))
-//        } ?: return@mapNotNull null
-//
-//        val nutrition = parseNutrientNumber(
-//            amount = schema.amount ?: return@mapNotNull null,
-//            unitName = schema.nutrient?.unitName ?: return@mapNotNull null,
-//            nutrientNumber = schema.nutrient.number ?: return@mapNotNull null,
-//        )
-//
-//        derivationType to nutrition
-//    }.let { processMap(it, servingSize) }
 
-//internal fun chooseBestFrom(nutritionMap: Map<CombinedNutrientType, FDCNutritionInfo>): FDCNutritionInfo? {
-//    return nutritionMap[CombinedNutrientType.Per100] ?: nutritionMap[CombinedNutrientType.PerServing]
-//    ?: nutritionMap[CombinedNutrientType.PerServingDailyValue]
-//}
-//
-//internal fun Map<CombinedNutrientType, FDCNutritionInfo>.chooseBest(): FDCNutritionInfo? =
-//    chooseBestFrom(this)
 internal fun Map<NutrientDerivationType, FoodNutrition>.chooseBest(): FoodNutrition? =
     get(NutrientDerivationType.Per100Units) ?: values.firstOrNull()
