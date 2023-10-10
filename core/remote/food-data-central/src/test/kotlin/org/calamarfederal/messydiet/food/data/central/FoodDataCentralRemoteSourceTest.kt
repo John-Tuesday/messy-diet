@@ -6,14 +6,13 @@ import io.github.john.tuesday.nutrition.scaleToPortion
 import kotlinx.coroutines.runBlocking
 import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.model.*
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpectCase
 import org.kodein.di.direct
 import org.kodein.di.instance
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+
 
 internal class FoodDataCentralRemoteSourceTest {
     private lateinit var remote: FoodDataCentralRemoteSource

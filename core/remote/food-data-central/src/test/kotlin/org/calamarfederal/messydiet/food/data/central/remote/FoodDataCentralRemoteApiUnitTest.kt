@@ -2,6 +2,7 @@ package org.calamarfederal.messydiet.food.data.central.remote
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
+import org.calamarfederal.messydiet.food.data.central.FoodItemExpect
 import org.calamarfederal.messydiet.food.data.central.di.API_KEY_TAG
 import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodItemSchema
@@ -18,7 +19,7 @@ import org.kodein.di.direct
 import org.kodein.di.instance
 import retrofit2.Response
 import kotlin.test.BeforeTest
-import kotlin.test.Test as KTest
+import kotlin.test.Test
 
 private fun <T> Response<T>.assertSuccessful(
     lazyMessage: (Response<T>) -> Unit = {},
@@ -43,7 +44,7 @@ internal class FoodDataCentralRemoteApiUnitTest {
     }
 
 
-    @KTest
+    @Test
     fun `Post food search `() {
         val result = fdcApi.postFoodsSearch(
             testApiKey,
@@ -95,7 +96,6 @@ internal class FoodDataCentralRemoteApiPrettyPrinter {
         println(
             Moshi.Builder().build().adapter<AbridgedFoodItemSchema>().indent("    ").toJson(result)
         )
-//        println(prettyFormatDataClassString(result.toString()))
     }
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -110,7 +110,6 @@ internal class FoodDataCentralRemoteApiPrettyPrinter {
         println(
             Moshi.Builder().build().adapter<BrandedFoodItemSchema>().indent("    ").toJson(result)
         )
-//        println(prettyFormatDataClassString(result.toString()))
     }
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -123,10 +122,10 @@ internal class FoodDataCentralRemoteApiPrettyPrinter {
         println(Moshi.Builder().build().adapter<SearchResultSchema>().indent("    ").toJson(result))
     }
 
-    @KTest
+    @Test
     fun `One off testing`() {
         prettyPrintGetFoodBranded(
-            fdcId = "2502945",
+            fdcId = FoodItemExpect.SpriteTest.fdcIdString,
         )
     }
 }

@@ -8,8 +8,6 @@ import org.calamarfederal.messydiet.food.data.central.di.testDi
 import org.calamarfederal.messydiet.food.data.central.model.getResponseOrNull
 import org.calamarfederal.messydiet.food.data.central.model.getValueOrNull
 import org.calamarfederal.messydiet.food.data.central.model.isSuccess
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpectCase
 import org.kodein.di.direct
 import org.kodein.di.instance
 import kotlin.test.BeforeTest
