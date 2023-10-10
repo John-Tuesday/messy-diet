@@ -16,7 +16,8 @@ import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.meal.data.model.MealInfo
 import javax.inject.Inject
 
-class TransactionError : Throwable()
+sealed class MealDatabaseError : Throwable()
+class TransactionError : MealDatabaseError()
 
 internal interface MealLocalSource {
     /**
@@ -70,6 +71,11 @@ internal fun Meal.toNutrientEntity(): List<MealNutrientEntity> = foodNutrition.n
     )
 }
 
+internal fun MealEntity.toMealInfo(): MealInfo = Meal(
+    id = id,
+    name = name,
+)
+
 internal class MealLocalSourceImplementation @Inject constructor(
     private val db: SavedMealLocalDb,
     private val dao: SavedMealDao,
@@ -103,7 +109,7 @@ internal class MealLocalSourceImplementation @Inject constructor(
         return dao
             .getAllMeals()
             .distinctUntilChanged()
-            .mapLatest { it.map { Meal(id = it.id, name = it.name) } }
+            .mapLatest { it.map { it.toMealInfo() } }
             .flowOn(ioDispatcher)
     }
 
@@ -142,7 +148,9 @@ internal class MealLocalSourceImplementation @Inject constructor(
             id
         }
 
-        return@withContext result.fold(onSuccess = { it }, onFailure = { throw (it) })
+        return@withContext result.fold(
+            onSuccess = { it },
+            onFailure = { if (it is TransactionError) -1L else throw (it) })
     }
 
     override suspend fun deleteMeal(id: Long): Boolean = withContext(ioDispatcher) {
@@ -153,9 +161,11 @@ internal class MealLocalSourceImplementation @Inject constructor(
     }
 
     override suspend fun deleteMeals(ids: List<Long>) {
-        db.withTransaction {
-            dao.deleteAllNutrientsOf(ids)
-            dao.deleteMeals(ids)
+        withContext(ioDispatcher) {
+            db.withTransaction {
+                dao.deleteAllNutrientsOf(ids)
+                dao.deleteMeals(ids)
+            }
         }
     }
 }
