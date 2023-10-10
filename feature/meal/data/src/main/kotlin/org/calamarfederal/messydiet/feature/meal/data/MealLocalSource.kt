@@ -4,10 +4,8 @@ import androidx.room.withTransaction
 import io.github.john.tuesday.nutrition.FoodNutrition
 import io.github.john.tuesday.nutrition.NutritionMap
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import org.calamarfederal.messydiet.core.android.hilt.IODispatcher
 import org.calamarfederal.messydiet.feature.meal.data.local.MealEntity
@@ -15,8 +13,10 @@ import org.calamarfederal.messydiet.feature.meal.data.local.MealNutrientEntity
 import org.calamarfederal.messydiet.feature.meal.data.local.SavedMealDao
 import org.calamarfederal.messydiet.feature.meal.data.local.SavedMealLocalDb
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
+import org.calamarfederal.messydiet.feature.meal.data.model.MealInfo
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
+
+class TransactionError : Throwable()
 
 internal interface MealLocalSource {
     /**
@@ -28,6 +28,10 @@ internal interface MealLocalSource {
      * Watch [Meal] (with [Flow.distinctUntilChanged] applied)
      */
     fun getMeal(id: Long): Flow<Meal?>
+
+    fun getAllMeals(): Flow<List<Meal>>
+
+    fun getAllMealInfo(): Flow<List<MealInfo>>
 
     /**
      * find matching [Meal] by [Meal.id] and return if found and atomically updated.
@@ -96,12 +100,28 @@ internal class MealLocalSourceImplementation @Inject constructor(
             }.flowOn(ioDispatcher)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getAllMeals(): Flow<List<Meal>> = dao
+        .getAllMeals()
+        .distinctUntilChanged()
+        .mapLatest { it.map { Meal(id = it.id, name = it.name) } }
+        .flowOn(ioDispatcher)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getAllMealInfo(): Flow<List<MealInfo>> {
+        return dao
+            .getAllMeals()
+            .distinctUntilChanged()
+            .mapLatest { it.map { Meal(id = it.id, name = it.name) } }
+            .flowOn(ioDispatcher)
+    }
+
     override suspend fun updateMeal(meal: Meal): Boolean = withContext(ioDispatcher) {
         val result = runCatching {
             db.withTransaction {
-                if (dao.updateMeal(meal.toMealEntity()) == 0) throw (CancellationException())
+                if (dao.updateMeal(meal.toMealEntity()) == 0) throw (TransactionError())
                 val nutrients = meal.toNutrientEntity()
-                if (dao.updateNutrients(nutrients) != nutrients.size) throw (CancellationException())
+                if (dao.updateNutrients(nutrients) != nutrients.size) throw (TransactionError())
             }
         }
 
@@ -112,7 +132,7 @@ internal class MealLocalSourceImplementation @Inject constructor(
         withContext(ioDispatcher) {
             db.withTransaction {
                 dao.upsertMeal(meal.toMealEntity())
-                dao.updateNutrients(meal.toNutrientEntity())
+                dao.upsertNutrients(meal.toNutrientEntity())
             }
         }
     }
@@ -123,9 +143,9 @@ internal class MealLocalSourceImplementation @Inject constructor(
             db.withTransaction {
                 val mealAlt = if (generateId) meal.copy(id = MealEntity.UNSET_ID) else meal
                 id = dao.insertMeal(mealAlt.toMealEntity())
-                if (id == -1L) throw (CancellationException())
-                val nutrients = mealAlt.toNutrientEntity()
-                if (dao.insertNutrients(nutrients).size != nutrients.size) throw (CancellationException())
+                if (id == -1L) throw (TransactionError())
+                val nutrients = mealAlt.copy(id = id).toNutrientEntity()
+                if (dao.insertNutrients(nutrients).size != nutrients.size) throw (TransactionError())
 
             }
             id

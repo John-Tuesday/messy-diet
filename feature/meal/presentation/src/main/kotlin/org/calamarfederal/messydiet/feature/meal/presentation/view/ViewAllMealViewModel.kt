@@ -16,7 +16,7 @@ class ViewAllMealViewModel @Inject constructor(
     private val mealRepo: MealRepository,
 ) : ViewModel() {
     val allMealsState = mealRepo
-        .getAllMeals()
+        .getAllMealInfo()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5.seconds),

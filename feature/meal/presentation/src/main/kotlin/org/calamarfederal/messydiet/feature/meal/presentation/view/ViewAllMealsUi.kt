@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
+import org.calamarfederal.messydiet.feature.meal.data.model.MealInfo
 import org.calamarfederal.messydiet.feature.meal.presentation.R
 
 @Composable
@@ -49,7 +50,7 @@ fun ViewAllMealsUi(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewAllMealsLayout(
-    meals: List<Meal>,
+    meals: List<MealInfo>,
     modifier: Modifier = Modifier,
     onSearchRemoteMeal: () -> Unit = {},
     onCreateMeal: () -> Unit = {},
@@ -168,8 +169,8 @@ private fun ViewAllMealTopBar(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun MealsLazyColumn(
-    meals: List<Meal>,
-    onViewMeal: (Meal) -> Unit,
+    meals: List<MealInfo>,
+    onViewMeal: (MealInfo) -> Unit,
     onDeleteMeal: (List<Long>) -> Unit,
     onEditMeal: (Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -246,7 +247,7 @@ private fun MealsLazyColumn(
 
 @Composable
 private fun MealListItem(
-    meal: Meal,
+    meal: MealInfo,
     modifier: Modifier = Modifier,
     selected: Boolean = false,
 ) {
