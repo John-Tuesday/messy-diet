@@ -53,6 +53,9 @@ internal interface MealInfoDao {
     @Query("SELECT * FROM meal WHERE id = :id")
     fun getMeal(id: Long): Flow<MealEntity?>
 
+    @Query("SELECT * FROM meal WHERE name = :name")
+    suspend fun findMealByName(name: String): MealEntity?
+
     @Insert
     suspend fun insertMeal(meal: MealEntity): Long
 

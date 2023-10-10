@@ -218,7 +218,7 @@ class CreateMealViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val enableSaveState: StateFlow<Boolean> = mealState
-        .mapLatest { it != null }
+        .mapLatest { it != null && mealRepo.isMealValidUpsert(it) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -229,7 +229,8 @@ class CreateMealViewModel @Inject constructor(
         viewModelScope.launch {
             mealState.value?.let {
                 val id = mealIdState.value
-                mealRepo.insertMeal(meal = it.copy(id = id ?: 0L), generateId = id == null)
+                val meal = it.copy(id = id ?: 0L)
+                mealRepo.insertMeal(meal = meal, generateId = id == null)
             }
         }
     }

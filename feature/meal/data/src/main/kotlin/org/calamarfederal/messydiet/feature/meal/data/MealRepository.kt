@@ -11,6 +11,8 @@ interface MealRepository {
      */
     fun getMeal(id: Long): Flow<Meal?>
 
+    suspend fun findMealInfoByName(name: String): MealInfo?
+
     fun getAllMealInfo(): Flow<List<MealInfo>>
 
     /**
@@ -42,12 +44,16 @@ interface MealRepository {
      * Delete every [Meal] whose [Meal.id] is contained in [ids]
      */
     suspend fun deleteMeals(ids: List<Long>)
+
+    suspend fun isMealValidUpsert(meal: Meal): Boolean
 }
 
 internal class MealRepositoryImplementation @Inject constructor(
     private val mealLocalSource: MealLocalSource,
 ) : MealRepository {
     override fun getMeal(id: Long): Flow<Meal?> = mealLocalSource.getMeal(id = id)
+
+    override suspend fun findMealInfoByName(name: String): MealInfo? = mealLocalSource.findMealInfoByName(name)
 
     override fun getAllMealInfo(): Flow<List<MealInfo>> = mealLocalSource.getAllMealInfo()
 
@@ -61,4 +67,8 @@ internal class MealRepositoryImplementation @Inject constructor(
     override suspend fun deleteMeal(id: Long): Boolean = mealLocalSource.deleteMeal(id = id)
     override suspend fun deleteMeals(ids: List<Long>) = mealLocalSource.deleteMeals(ids = ids)
 
+    override suspend fun isMealValidUpsert(meal: Meal): Boolean {
+        val result = findMealInfoByName(meal.name)
+        return result == null || result.id == meal.id
+    }
 }

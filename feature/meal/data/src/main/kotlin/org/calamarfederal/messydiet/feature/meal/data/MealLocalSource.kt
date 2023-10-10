@@ -30,6 +30,8 @@ internal interface MealLocalSource {
      */
     fun getMeal(id: Long): Flow<Meal?>
 
+    suspend fun findMealInfoByName(name: String): MealInfo?
+
     fun getAllMealInfo(): Flow<List<MealInfo>>
 
     /**
@@ -102,6 +104,10 @@ internal class MealLocalSourceImplementation @Inject constructor(
                     )
                 }
             }.flowOn(ioDispatcher)
+    }
+
+    override suspend fun findMealInfoByName(name: String): MealInfo? = withContext(ioDispatcher) {
+        dao.findMealByName(name)?.toMealInfo()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
