@@ -7,8 +7,14 @@ android {
     namespace = "org.calamarfederal.messydiet.screenshot"
 }
 
-dependencies {
-    implementation(libs.kotlin.test.junit)
-    implementation(libs.bundles.compose.debug)
-    implementation(libs.bundles.compose.androidTest)
+kotlin {
+    sourceSets {
+        val main by getting {
+            dependencies {
+                implementation(libs.kotlin.test.junit)
+                implementation(libs.bundles.compose.debug)
+                implementation(libs.bundles.compose.androidTest)
+            }
+        }
+    }
 }

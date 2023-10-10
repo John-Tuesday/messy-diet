@@ -31,19 +31,22 @@ android {
     namespace = "org.calamarfederal.messydiet.feature.bmi.data"
 }
 
+kotlin {
+    sourceSets {
+        val main by getting {
+            dependencies {
+                implementation(platform(project(":app-platform")))
+                implementation(libs.measure)
+                implementation(libs.kotlin.serialization.protobuf)
+                implementation(libs.datastore.proto)
+                implementation(libs.bundles.compose.implementation)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.navigation.compose)
+            }
+        }
+    }
+}
+
 dependencies {
-    implementation(platform(project(":app-platform")))
-    implementation(libs.measure)
-
-    // Serialization
-    implementation(libs.kotlin.serialization.protobuf)
-//    implementation(libs.kotlin.serialization.json)
-    implementation(libs.datastore.proto)
-
-    implementation(libs.bundles.compose.implementation)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.navigation.compose)
-    testImplementation(libs.junit)
     debugImplementation(libs.bundles.compose.debug)
-    androidTestImplementation(libs.bundles.compose.androidTest)
 }

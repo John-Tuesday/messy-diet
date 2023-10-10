@@ -125,42 +125,6 @@ internal class FoodDataCentralRemoteApiPrettyPrinter {
 
     @KTest
     fun `One off testing`() {
-//        prettyPrintGetFoodBranded(
-//            fdcId = FoodItemExpect.TridentGumTest.fdcIdString,
-//            formatFull = true,
-//        )
-//        prettyPrintGetFoodAbridged(
-//            fdcId = FoodItemExpect.TridentGumTest.fdcIdString,
-//        )
-//        prettyPrintSearchFood(
-//            FoodSearchCriteriaSchema(
-//                query = searchQuery { withUpc(FoodItemExpect.TridentGumTest.gtinUpc) },
-//            )
-//        )
-
-//        prettyPrintSearchFood(
-//            FoodSearchCriteriaSchema(
-//                query = searchQuery { withUpc("044000072490") },
-//            )
-//        )
-//        prettyPrintGetFoodBranded(
-//            fdcId = "2577315",
-//        )
-
-//        prettyPrintSearchFood(
-//            FoodSearchCriteriaSchema(
-//                query = searchQuery { withUpc("078742229423") },
-//            )
-//        )
-//        prettyPrintGetFoodBranded(
-//            fdcId = "1926907",
-//        )
-
-//        prettyPrintSearchFood(
-//            FoodSearchCriteriaSchema(
-//                query = searchQuery { withUpc("071068160241") },
-//            )
-//        )
         prettyPrintGetFoodBranded(
             fdcId = "2502945",
         )

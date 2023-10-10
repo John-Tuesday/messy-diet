@@ -29,20 +29,35 @@ android {
     namespace = "org.calamarfederal.messydiet.feature.bmi.presentation"
 }
 
+kotlin {
+    sourceSets {
+        val main by getting {
+            dependencies {
+                implementation(platform(project(":app-platform")))
+                implementation(project(":feature:bmi:data"))
+                implementation(project(":feature:measure"))
+                implementation(libs.measure)
+                implementation(libs.lifecycle.compose.utils)
+                implementation(libs.bundles.compose.implementation)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.navigation.compose)
+            }
+        }
+
+        val test by getting {
+            dependencies {
+                implementation(libs.junit)
+            }
+        }
+
+        val androidTest by getting {
+            dependencies {
+                implementation(libs.bundles.compose.androidTest)
+            }
+        }
+    }
+}
+
 dependencies {
-    implementation(platform(project(":app-platform")))
-
-    implementation(project(":feature:bmi:data"))
-    implementation(project(":feature:measure"))
-    implementation(libs.measure)
-
-    // Lifecycle
-    implementation(libs.lifecycle.compose.utils)
-
-    implementation(libs.bundles.compose.implementation)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.navigation.compose)
-    testImplementation(libs.junit)
     debugImplementation(libs.bundles.compose.debug)
-    androidTestImplementation(libs.bundles.compose.androidTest)
 }
