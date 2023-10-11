@@ -3,26 +3,28 @@ package org.calamarfederal.messydiet.food.data.central
 import io.github.john.tuesday.nutrition.FoodNutrition
 import io.github.john.tuesday.nutrition.prettyPrint
 import io.github.john.tuesday.nutrition.scaleToPortion
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.calamarfederal.messydiet.food.data.central.di.testDi
+import org.calamarfederal.messydiet.food.data.central.di.FoodDataCentral
 import org.calamarfederal.messydiet.food.data.central.model.getResponseOrNull
 import org.calamarfederal.messydiet.food.data.central.model.getValueOrNull
 import org.calamarfederal.messydiet.food.data.central.model.isSuccess
 import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpect
 import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpectCase
-import org.kodein.di.direct
-import org.kodein.di.instance
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-internal class FoodDataCentralRepositoryUnitTest {
+internal class FoodDataCentralRepositoryRemoteApiTest {
     private lateinit var repo: FoodDataCentralRepository
 
     @BeforeTest
     fun setUp() {
-        repo = testDi.direct.instance()
+        repo = FoodDataCentral.repository(
+            networkDispatcher = Dispatchers.Main,
+            apiKey = FoodDataCentral.DemoKey,
+        )
     }
 
     fun testSearchByUpcGtin(expectCase: FoodItemExpectCase) {

@@ -2,8 +2,7 @@ package org.calamarfederal.messydiet.food.data.central.remote
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
-import org.calamarfederal.messydiet.food.data.central.di.API_KEY_TAG
-import org.calamarfederal.messydiet.food.data.central.di.testDi
+import org.calamarfederal.messydiet.food.data.central.di.FoodDataCentral
 import org.calamarfederal.messydiet.food.data.central.remote.schema.AbridgedFoodItemSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemSchema
 import org.calamarfederal.messydiet.food.data.central.remote.schema.DataTypeSchema.Foundation
@@ -15,8 +14,6 @@ import org.calamarfederal.messydiet.food.data.central.remote.schema.SearchResult
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SortBySchema.DataTypeKeyword
 import org.calamarfederal.messydiet.food.data.central.remote.schema.SortOrderSchema.Ascending
 import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpect
-import org.kodein.di.direct
-import org.kodein.di.instance
 import retrofit2.Response
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -33,19 +30,18 @@ private fun <T> Response<T>.assertSuccessful(
     return this
 }
 
-internal class FoodDataCentralRemoteApiUnitTest {
+class FoodDataCentralApiRemoteApiTest {
     private lateinit var fdcApi: FoodDataCentralApi
     private lateinit var testApiKey: String
 
     @BeforeTest
     fun setUp() {
-        fdcApi = testDi.direct.instance()
-        testApiKey = testDi.direct.instance(tag = API_KEY_TAG)
+        fdcApi = FoodDataCentral.foodDataCentralApi()
+        testApiKey = FoodDataCentral.DemoKey
     }
 
-
     @Test
-    fun `Post food search `() {
+    fun `post food search`() {
         val result = fdcApi.postFoodsSearch(
             testApiKey,
             FoodSearchCriteriaSchema(
@@ -66,23 +62,13 @@ internal class FoodDataCentralRemoteApiUnitTest {
                 startDate = "2021-01-01",
                 endDate = "2021-12-30",
             )
-        ).execute().assertSuccessful() {
+        ).execute().assertSuccessful {
             val body = it.body()!!
             println("$body")
         }.body()!!
         println("$result")
     }
-}
 
-internal class FoodDataCentralRemoteApiPrettyPrinter {
-    private lateinit var fdcApi: FoodDataCentralApi
-    private lateinit var testApiKey: String
-
-    @BeforeTest
-    fun setUp() {
-        fdcApi = testDi.direct.instance<FoodDataCentralApi>()
-        testApiKey = testDi.direct.instance(tag = API_KEY_TAG)
-    }
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun prettyPrintGetFoodAbridged(fdcId: String, nutrients: List<Int>? = null) {

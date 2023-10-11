@@ -1,9 +1,10 @@
-
 plugins {
     id("messydiet.kotlin.library")
+    id("messydiet.kotlin.library.remote-api-test")
     alias(libs.plugins.kotlin.serialization.gradle)
     alias(libs.plugins.kotlin.ksp)
 }
+
 
 kotlin {
     sourceSets {
@@ -21,10 +22,20 @@ kotlin {
             }
         }
 
-        val testFixturesLocal by creating {
-        }
+        val testFixturesLocal by creating {}
 
         val test by getting {
+            dependsOn(testFixturesLocal)
+            dependencies {
+                implementation(libs.nutrition.test)
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlin.coroutine.test)
+                implementation(libs.mockk)
+                implementation(project(":core:remote:food-data-central-test"))
+            }
+        }
+
+        val remoteApiTest by getting {
             dependsOn(testFixturesLocal)
             dependencies {
                 implementation(libs.nutrition.test)

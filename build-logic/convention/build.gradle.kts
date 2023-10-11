@@ -17,6 +17,7 @@ tasks.withType<KotlinJvmCompile>().configureEach {
 
 dependencies {
     compileOnly(libs.kotlin.android.gradlePlugin)
+    compileOnly(libs.kotlin.multiplatform.gradlePlugin)
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
@@ -27,6 +28,10 @@ gradlePlugin {
         register("kotlinLibrary") {
             id = "messydiet.kotlin.library"
             implementationClass = "KotlinLibraryConvention"
+        }
+        register("kotlinLibraryRemoteApiTest") {
+            id = "messydiet.kotlin.library.remote-api-test"
+            implementationClass = "KotlinLibraryRemoteApiTestConvention"
         }
         register("androidLibrary") {
             id = "messydiet.android.library"
