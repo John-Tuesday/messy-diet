@@ -21,9 +21,9 @@ sealed class FoodItemExpectCase(
     val publicationDateDayOfMonth: Int,
 
     ) {
-    open val nutritionPerServing: FoodNutrition = TODO()
-    open val nutritionPer100: FoodNutrition = TODO()
     abstract val foodNutrition: FoodNutrition
+    open val nutritionPerServing: FoodNutrition get() = foodNutrition
+    open val nutritionPer100: FoodNutrition get() = foodNutrition
 
     open val name: String get() = searchDescription
 }
@@ -39,9 +39,6 @@ data object FoodItemExpect {
         publicationDateDayOfMonth = 31,
         publicationDateYear = 8,
     ) {
-        override val nutritionPerServing: FoodNutrition
-            get() = foodNutrition
-
         override val foodNutrition: FoodNutrition = FoodNutrition(
             portion = Portion(360.milliliters),
             foodEnergy = 39.kilocalories,
@@ -62,6 +59,8 @@ data object FoodItemExpect {
                 NutrientType.VitaminA to 0.micrograms,
             ),
         )
+
+        override val nutritionPerServing: FoodNutrition = foodNutrition
     }
 
     data object CheeriosTestA : FoodItemExpectCase(
