@@ -21,7 +21,7 @@ include(":app")
 
 include(":core:android:hilt")
 include(":core:remote:food-data-central")
-include(":core:test:remote:food-data-central")
+include(":core:remote:food-data-central-test")
 
 
 include(":feature:bmi:presentation")

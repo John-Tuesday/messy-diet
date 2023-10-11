@@ -10,8 +10,8 @@ import org.calamarfederal.messydiet.feature.search.data.model.SearchStatus
 import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
 import org.calamarfederal.messydiet.food.data.central.model.FDCNutritionInfo
 import org.calamarfederal.messydiet.food.data.central.model.ResultResponse
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpectCase
+import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpect
+import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpectCase
 import org.calamarfederal.physical.measurement.grams
 import org.calamarfederal.physical.measurement.kilocalories
 import org.junit.Rule

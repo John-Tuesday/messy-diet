@@ -1,12 +1,8 @@
+
 plugins {
     id("messydiet.kotlin.library")
     alias(libs.plugins.kotlin.serialization.gradle)
     alias(libs.plugins.kotlin.ksp)
-    `java-test-fixtures`
-}
-
-configurations.testFixturesCompileOnlyApi.configure {
-    extendsFrom(configurations.mainSourceElements.get())
 }
 
 kotlin {
@@ -25,25 +21,19 @@ kotlin {
             }
         }
 
-        val testFixtures by getting {
-            dependsOn(main)
+        val testFixturesLocal by creating {
         }
 
         val test by getting {
-            dependsOn(testFixtures)
+            dependsOn(testFixturesLocal)
             dependencies {
                 implementation(libs.nutrition.test)
                 implementation(libs.kotlin.test)
                 implementation(libs.kotlin.coroutine.test)
                 implementation(libs.mockk)
+                implementation(project(":core:remote:food-data-central-test"))
             }
         }
-    }
-}
-
-tasks.test {
-    filter {
-        excludePatterns += "*"
     }
 }
 

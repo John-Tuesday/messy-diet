@@ -22,13 +22,15 @@ kotlin {
 
         val test by getting {
             dependencies {
-                implementation(project(":core:test:remote:food-data-central"))
                 implementation(libs.mockk)
                 implementation(libs.junit)
+                implementation(project(":core:remote:food-data-central-test"))
             }
         }
+
     }
 }
+
 
 dependencies {
     debugImplementation(libs.bundles.compose.debug)

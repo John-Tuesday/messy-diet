@@ -1,4 +1,4 @@
-package org.calamarfederal.messydiet.test.food.data.central
+package org.calamarfederal.messydiet.remote.food.data.central.test
 
 import io.github.john.tuesday.nutrition.FoodNutrition
 import io.github.john.tuesday.nutrition.NutrientType
@@ -21,8 +21,9 @@ sealed class FoodItemExpectCase(
     val publicationDateDayOfMonth: Int,
 
     ) {
-    abstract val nutritionPerServing: FoodNutrition
-    abstract val nutritionPer100: FoodNutrition
+    open val nutritionPerServing: FoodNutrition = TODO()
+    open val nutritionPer100: FoodNutrition = TODO()
+    abstract val foodNutrition: FoodNutrition
 
     open val name: String get() = searchDescription
 }
@@ -38,10 +39,10 @@ data object FoodItemExpect {
         publicationDateDayOfMonth = 31,
         publicationDateYear = 8,
     ) {
-        override val nutritionPer100: FoodNutrition
-            get() = TODO("Not yet implemented")
+        override val nutritionPerServing: FoodNutrition
+            get() = foodNutrition
 
-        override val nutritionPerServing: FoodNutrition = FoodNutrition(
+        override val foodNutrition: FoodNutrition = FoodNutrition(
             portion = Portion(360.milliliters),
             foodEnergy = 39.kilocalories,
             nutritionMap = mapOf(
@@ -121,6 +122,8 @@ data object FoodItemExpect {
                 NutrientType.Cholesterol to 0.milligrams,
             ),
         )
+
+        override val foodNutrition: FoodNutrition = nutritionPerServing
     }
 
     data object TridentGumTest : FoodItemExpectCase(
@@ -150,5 +153,7 @@ data object FoodItemExpect {
                 NutrientType.Sodium to 0.grams,
             ),
         )
+
+        override val foodNutrition: FoodNutrition = CheeriosTestA.nutritionPerServing
     }
 }

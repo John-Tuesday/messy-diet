@@ -12,8 +12,8 @@ import org.calamarfederal.messydiet.feature.search.data.model.foodId
 import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
 import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError
 import org.calamarfederal.messydiet.food.data.central.model.ResultResponse
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpect
-import org.calamarfederal.messydiet.test.food.data.central.FoodItemExpectCase
+import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpect
+import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpectCase
 import org.junit.Rule
 import org.junit.experimental.theories.DataPoints
 import org.junit.experimental.theories.Theories

@@ -2,8 +2,6 @@ plugins {
     id("messydiet.kotlin.library")
 }
 
-group = "org.calamarfederal.messydiet.test.remote"
-
 kotlin {
     sourceSets {
         val main by getting {

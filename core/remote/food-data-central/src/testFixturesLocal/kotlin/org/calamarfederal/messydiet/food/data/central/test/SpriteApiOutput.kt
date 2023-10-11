@@ -1,7 +1,23 @@
-package org.calamarfederal.messydiet.food.data.central
+package org.calamarfederal.messydiet.food.data.central.test
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapter
+import org.calamarfederal.messydiet.food.data.central.remote.schema.BrandedFoodItemSchema
+import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpect
 
-internal const val SpriteTestApiOutput = """
+@OptIn(ExperimentalStdlibApi::class)
+internal fun parseJson(json: String): BrandedFoodItemSchema = Moshi
+    .Builder()
+    .build()
+    .adapter<BrandedFoodItemSchema>()
+    .fromJson(json)!!
+
+internal val FoodItemExpect.SpriteTest.getFoodResultSchema: BrandedFoodItemSchema
+    get() = parseJson(
+        SpriteTestApiGetOutput
+    )
+
+internal const val SpriteTestApiGetOutput = """
     {
     "fdcId": 2613419,
     "availableDate": "10/1/2018",
