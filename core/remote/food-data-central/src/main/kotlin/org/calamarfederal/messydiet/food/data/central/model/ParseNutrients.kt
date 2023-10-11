@@ -178,7 +178,7 @@ private fun servingSizeOr100Units(servingSize: Portion, nutrientDerivationType: 
     }
 
 internal fun List<AbridgedFoodNutrientSchema>.toNutritionInfo(
-    servingSize: Portion,
+    servingSize: Portion = Portion(0.grams),
     strict: Boolean = false,
 ): Map<NutrientDerivationType, FDCNutritionInfo> =
     parseToNutritionalInfo(
@@ -196,7 +196,7 @@ internal fun List<AbridgedFoodNutrientSchema>.toNutritionInfo(
     )
 
 internal fun List<FoodNutrientSchema>.toNutritionInfo(
-    servingSize: Portion,
+    servingSize: Portion = Portion(0.grams),
     strict: Boolean = false,
 ): Map<NutrientDerivationType, FDCNutritionInfo> =
     parseToNutritionalInfo(
