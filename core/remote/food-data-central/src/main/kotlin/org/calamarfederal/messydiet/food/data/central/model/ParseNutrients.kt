@@ -177,6 +177,7 @@ private fun servingSizeOr100Units(servingSize: Portion, nutrientDerivationType: 
         is VolumePortion -> VolumePortion(100.milliliters)
     }
 
+@JvmName("abridgedToNutritionInfo")
 internal fun List<AbridgedFoodNutrientSchema>.toNutritionInfo(
     servingSize: Portion = Portion(0.grams),
     strict: Boolean = false,
@@ -210,7 +211,7 @@ internal fun List<FoodNutrientSchema>.toNutritionInfo(
             )
         },
         getPortion = { servingSizeOr100Units(servingSize, it) },
-        strict = strict,
+//        strict = strict,
     )
 
 internal fun Map<NutrientDerivationType, FoodNutrition>.chooseBest(): FoodNutrition? =
