@@ -70,10 +70,14 @@ class SearchFdcViewModel(
         searchRepository
             .searchWithUpcGtin(query)
             .onEach { status -> _searchStatusState.update { status } }
+            .onEach {
+                if (it is SearchStatus.Success && it.results.size == 1) {
+                    getFoodDetails(it.results.single().foodId)
+                }
+            }
             .launchIn(viewModelScope + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
                 throwable.printStackTrace()
                 throw (throwable)
-//                _searchStatusState.update { SearchStatus.Failure("Unknown external error") }
             })
     }
 

@@ -133,7 +133,6 @@ fun NavGraphBuilder.searchFoodGraph(
             route = SearchFoodScreen.route,
             arguments = SearchFoodScreen.arguments,
         ) { backStackEntry ->
-//            val viewModel: SearchFdcViewModel = hiltViewModel(backStackEntry)
             val viewModel: SearchFdcViewModel = SearchFoodScreen.viewModel(module = module)
 
 
