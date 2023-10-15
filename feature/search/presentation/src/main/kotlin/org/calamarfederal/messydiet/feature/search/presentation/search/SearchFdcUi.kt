@@ -24,7 +24,7 @@ import org.calamarfederal.messydiet.feature.search.presentation.R
 import org.calamarfederal.messydiet.feature.search.presentation.detail.FoodItemDetailsLayoutFromStatus
 
 @Composable
-fun SearchFdcUi(
+internal fun SearchFdcUi(
     onNavigateUp: () -> Unit,
     toAllMeals: () -> Unit,
     toBarcodeScanner: () -> Unit,
