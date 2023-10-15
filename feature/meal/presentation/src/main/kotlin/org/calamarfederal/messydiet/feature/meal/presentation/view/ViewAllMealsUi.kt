@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
@@ -33,7 +32,7 @@ fun ViewAllMealsUi(
     onViewMeal: (Long) -> Unit,
     onEditMeal: (Long) -> Unit,
     onSearchRemoteMeal: () -> Unit,
-    viewModel: ViewAllMealViewModel = hiltViewModel(),
+    viewModel: ViewAllMealViewModel,
 ) {
     val meals by viewModel.allMealsState.collectAsStateWithLifecycle()
 

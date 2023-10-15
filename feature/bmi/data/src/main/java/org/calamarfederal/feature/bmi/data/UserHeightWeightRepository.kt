@@ -16,7 +16,6 @@ import kotlinx.serialization.protobuf.ProtoNumber
 import org.calamarfederal.physical.measurement.*
 import java.io.InputStream
 import java.io.OutputStream
-import javax.inject.Inject
 
 internal const val HeightWeightStoreFileName = "height-weight-store"
 
@@ -56,7 +55,7 @@ interface UserHeightLocalSource {
     suspend fun updateHeightWeight(heightWeightSetter: (HeightWeight) -> HeightWeight)
 }
 
-class UserHeightLocalSourceImplementation @Inject constructor(
+class UserHeightLocalSourceImplementation(
     private val heightWeightStore: DataStore<HeightWeight>,
 ) : UserHeightLocalSource {
     override val heightWeightFlow: Flow<HeightWeight> = heightWeightStore.data
@@ -73,7 +72,7 @@ interface UserHeightMassRepository {
     suspend fun setMass(mass: Mass)
 }
 
-class UserHeightRepositoryImplementation @Inject constructor(
+class UserHeightRepositoryImplementation(
     private val heightMassLocalSource: UserHeightLocalSource,
 ) : UserHeightMassRepository {
     @OptIn(ExperimentalCoroutinesApi::class)

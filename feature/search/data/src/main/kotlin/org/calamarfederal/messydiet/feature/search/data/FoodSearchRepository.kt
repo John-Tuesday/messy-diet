@@ -11,7 +11,6 @@ import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError
 import org.calamarfederal.messydiet.food.data.central.model.fold
 import org.calamarfederal.physical.measurement.grams
 import org.calamarfederal.physical.measurement.kilocalories
-import javax.inject.Inject
 
 /**
  * Search (remote) food items
@@ -46,7 +45,7 @@ internal fun FDCFoodItem.toSearchResultFoodItem(): SearchResultFoodItem = Search
     nutritionInfo = nutritionalInfo ?: FoodNutrition(portion = Portion(0.grams), foodEnergy = 0.kilocalories),
 )
 
-internal class FoodSearchRepositoryImplementation @Inject constructor(
+internal class FoodSearchRepositoryImplementation(
     private val fdcRepo: FoodDataCentralRepository,
 ) : FoodSearchRepository {
     override fun searchWithUpcGtin(upcGtin: String): Flow<SearchStatus> = flow {
@@ -71,7 +70,7 @@ internal fun FDCFoodItem.toFoodItemDetails(): FoodItemDetails = FoodItemDetails(
     nutritionInfo = nutritionalInfo ?: FoodNutrition(portion = Portion(0.grams), foodEnergy = 0.kilocalories),
 )
 
-internal class FoodDetailsRepositoryImplementation @Inject constructor(
+internal class FoodDetailsRepositoryImplementation(
     private val fdcRepo: FoodDataCentralRepository,
 ) : FoodDetailsRepository {
     override fun foodDetails(foodId: FoodId): Flow<FoodDetailsStatus> = flow {
@@ -79,9 +78,10 @@ internal class FoodDetailsRepositoryImplementation @Inject constructor(
         when (foodId) {
             is FdcFoodId -> {
                 val result = fdcRepo.getFoodDetails(foodId.fdcId)
-                emit(result.fold(
-                    onSuccess = {
-                        FoodDetailsStatus.Success(it.toFoodItemDetails())
+                emit(
+                    result.fold(
+                        onSuccess = {
+                            FoodDetailsStatus.Success(it.toFoodItemDetails())
                     },
                     onFailure = {
                         FoodDetailsStatus.Failure(it.toSearchRemoteError())

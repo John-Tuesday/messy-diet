@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
@@ -33,7 +32,7 @@ fun SearchFdcUi(
     onNavigateUp: () -> Unit,
     toAllMeals: () -> Unit,
     toBarcodeScanner: () -> Unit,
-    viewModel: SearchFdcViewModel = hiltViewModel(),
+    viewModel: SearchFdcViewModel,
 ) {
     val searchStatus by viewModel.searchStatusState.collectAsStateWithLifecycle()
     val foodItemDetails by viewModel.detailsStatusState.collectAsStateWithLifecycle()

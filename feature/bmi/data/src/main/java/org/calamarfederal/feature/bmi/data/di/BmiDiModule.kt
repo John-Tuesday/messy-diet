@@ -24,44 +24,30 @@ package org.calamarfederal.feature.bmi.data.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import org.calamarfederal.feature.bmi.data.*
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class BmiDiModule {
+interface FeatureBmiDataModule {
+    fun provideBmiRepository(): BmiRepository
+    fun provideHeightMassLocalRepository(): UserHeightMassRepository
 
-    @Binds
-    abstract fun bindBmiRepository(impl: BmiRepositoryImplementation): BmiRepository
+    companion object {
+        fun implementation(context: Context): FeatureBmiDataModule =
+            FeatureBmiDataModuleImplementation(context = context)
+    }
 }
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class HeightWeightBinder {
-
-    @Binds
-    abstract fun bindHeightWeightLocalSource(impl: UserHeightLocalSourceImplementation): UserHeightLocalSource
-
-    @Binds
-    abstract fun bindHeightWeightRepository(impl: UserHeightRepositoryImplementation): UserHeightMassRepository
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-object HeightWeightProvider {
-
-    @Provides
-    @Singleton
-    fun provideHeightWeightDataSource(@ApplicationContext context: Context): DataStore<HeightWeight> =
+internal class FeatureBmiDataModuleImplementation(
+    private val context: Context,
+) : FeatureBmiDataModule {
+    private val heightWeightDataSource: DataStore<HeightWeight> by lazy {
         context.heightWeightStore
-//        DataStoreFactory.create(
-//            serializer = HeightWeightStoreSerializer,
-//            produceFile = { File(HeightWeightStoreFileName) }
-//        )
+    }
+
+    override fun provideBmiRepository(): BmiRepository = BmiRepositoryImplementation()
+    override fun provideHeightMassLocalRepository(): UserHeightMassRepository = UserHeightRepositoryImplementation(
+        heightMassLocalSource = provideHeightMassLocalSource()
+    )
+
+    internal fun provideHeightMassLocalSource(): UserHeightLocalSource =
+        UserHeightLocalSourceImplementation(heightWeightStore = heightWeightDataSource)
 }

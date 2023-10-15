@@ -21,7 +21,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.calamarfederal.messydiet.feature.meal.presentation.R
 import org.calamarfederal.messydiet.feature.measure.*
@@ -39,7 +38,7 @@ private fun String.filterWithDecimalFormat(decimalSeparator: Char = '.'): String
 
 @Composable
 fun CreateMealUi(
-    viewModel: CreateMealViewModel = hiltViewModel(),
+    viewModel: CreateMealViewModel,
     onNavigateUp: () -> Unit,
 ) {
     val saveEnabled by viewModel.enableSaveState.collectAsStateWithLifecycle()

@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.calamarfederal.feature.bmi.data.Bmi
 import org.calamarfederal.feature.bmi.data.BmiCategory.*
@@ -51,7 +50,7 @@ import java.util.Locale
 @Composable
 fun EnterStatsScreen(
     onNavigateUp: () -> Unit,
-    viewModel: EnterStatsViewModel = hiltViewModel(),
+    viewModel: EnterStatsViewModel,
 ) {
     val bmi by viewModel.bmiState.collectAsStateWithLifecycle()
     val inputState by viewModel.heightAndWeightInputState.collectAsStateWithLifecycle()

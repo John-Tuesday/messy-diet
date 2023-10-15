@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
@@ -14,14 +16,13 @@ import kotlinx.coroutines.plus
 import org.calamarfederal.messydiet.feature.search.data.FoodDetailsRepository
 import org.calamarfederal.messydiet.feature.search.data.FoodSearchRepository
 import org.calamarfederal.messydiet.feature.search.data.SaveFoodDetailsRepository
+import org.calamarfederal.messydiet.feature.search.data.di.FeatureSearchDataModule
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
 import org.calamarfederal.messydiet.feature.search.data.model.SearchStatus
-import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
-@HiltViewModel
-class SearchFdcViewModel @Inject constructor(
+class SearchFdcViewModel(
     private val searchRepository: FoodSearchRepository,
     private val foodDetailsRepository: FoodDetailsRepository,
     private val saveFoodDetailsRepository: SaveFoodDetailsRepository,
@@ -74,5 +75,17 @@ class SearchFdcViewModel @Inject constructor(
                 throw (throwable)
 //                _searchStatusState.update { SearchStatus.Failure("Unknown external error") }
             })
+    }
+
+    companion object {
+        internal fun factor(module: FeatureSearchDataModule): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SearchFdcViewModel(
+                    foodDetailsRepository = module.provideFoodDetailsRepository(),
+                    searchRepository = module.provideFoodSearchRepository(),
+                    saveFoodDetailsRepository = module.provideSaveFoodDetailsRepository(),
+                )
+            }
+        }
     }
 }

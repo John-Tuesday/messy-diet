@@ -1,6 +1,5 @@
 plugins {
     id("messydiet.android.feature")
-    id("messydiet.android.hilt")
 }
 
 

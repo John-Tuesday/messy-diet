@@ -7,14 +7,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import io.github.john.tuesday.nutrition.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.calamarfederal.messydiet.feature.meal.data.MealRepository
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
+import org.calamarfederal.messydiet.feature.meal.presentation.FeatureMealsPresentationModule
 import org.calamarfederal.messydiet.feature.measure.PortionInputState
 import org.calamarfederal.messydiet.feature.measure.WeightInputState
 import org.calamarfederal.physical.measurement.Mass
@@ -22,7 +25,6 @@ import org.calamarfederal.physical.measurement.MassUnit
 import org.calamarfederal.physical.measurement.inKilocalories
 import org.calamarfederal.physical.measurement.kilocalories
 import java.util.Locale
-import javax.inject.Inject
 
 class CreateMealUiState(
     val portionInput: PortionInputState = PortionInputState(initialWeightUnit = MassUnit.Gram),
@@ -194,8 +196,7 @@ internal fun CreateMealUiState.matchMeal(meal: Meal, locale: Locale) {
     fatTotalInput.setInputFromWeightOrNull(foodNutrition.totalFat, simpleFormatter)
 }
 
-@HiltViewModel
-class CreateMealViewModel @Inject constructor(
+class CreateMealViewModel(
     private val mealRepo: MealRepository,
 ) : ViewModel() {
     val uiState = CreateMealUiState()
@@ -231,6 +232,16 @@ class CreateMealViewModel @Inject constructor(
                 val id = mealIdState.value
                 val meal = it.copy(id = id ?: 0L)
                 mealRepo.insertMeal(meal = meal, generateId = id == null)
+            }
+        }
+    }
+
+    companion object {
+        internal fun factory(module: FeatureMealsPresentationModule): ViewModelProvider.Factory {
+            return viewModelFactory {
+                initializer {
+                    CreateMealViewModel(module.provideMealRepository())
+                }
             }
         }
     }

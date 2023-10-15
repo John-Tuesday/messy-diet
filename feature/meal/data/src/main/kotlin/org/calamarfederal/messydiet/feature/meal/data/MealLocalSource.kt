@@ -7,14 +7,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
-import org.calamarfederal.messydiet.core.android.hilt.IODispatcher
 import org.calamarfederal.messydiet.feature.meal.data.local.MealEntity
 import org.calamarfederal.messydiet.feature.meal.data.local.MealNutrientEntity
 import org.calamarfederal.messydiet.feature.meal.data.local.SavedMealDao
 import org.calamarfederal.messydiet.feature.meal.data.local.SavedMealLocalDb
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.meal.data.model.MealInfo
-import javax.inject.Inject
 
 sealed class MealDatabaseError : Throwable()
 class TransactionError : MealDatabaseError()
@@ -78,10 +76,9 @@ internal fun MealEntity.toMealInfo(): MealInfo = Meal(
     name = name,
 )
 
-internal class MealLocalSourceImplementation @Inject constructor(
+internal class MealLocalSourceImplementation(
     private val db: SavedMealLocalDb,
     private val dao: SavedMealDao,
-    @IODispatcher
     private val ioDispatcher: CoroutineDispatcher,
 ) : MealLocalSource {
     operator fun FoodNutrition.Companion.invoke(meal: MealEntity, nutrients: NutritionMap): FoodNutrition {

@@ -32,6 +32,7 @@ kotlin {
         val main by getting {
             dependencies {
                 implementation(platform(project(":app-platform")))
+                implementation(project(":feature:bmi:data"))
                 implementation(project(":feature:bmi:presentation"))
                 implementation(project(":feature:meal:presentation"))
                 implementation(project(":feature:search:presentation"))

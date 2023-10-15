@@ -3,7 +3,6 @@ package org.calamarfederal.messydiet.feature.meal.data
 import kotlinx.coroutines.flow.Flow
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.meal.data.model.MealInfo
-import javax.inject.Inject
 
 interface MealRepository {
     /**
@@ -48,7 +47,7 @@ interface MealRepository {
     suspend fun isMealValidUpsert(meal: Meal): Boolean
 }
 
-internal class MealRepositoryImplementation @Inject constructor(
+internal class MealRepositoryImplementation(
     private val mealLocalSource: MealLocalSource,
 ) : MealRepository {
     override fun getMeal(id: Long): Flow<Meal?> = mealLocalSource.getMeal(id = id)

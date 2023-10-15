@@ -21,7 +21,6 @@
  ******************************************************************************/
 plugins {
     id("messydiet.android.feature")
-    id("messydiet.android.hilt")
     id("messydiet.android.room")
 }
 

@@ -1,69 +1,47 @@
 package org.calamarfederal.messydiet.feature.search.data.di
 
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
-import dagger.hilt.components.SingletonComponent
+import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
-import org.calamarfederal.messydiet.core.android.hilt.NetworkDispatcher
+import kotlinx.coroutines.Dispatchers
+import org.calamarfederal.messydiet.feature.meal.data.di.FeatureMealDataModule
 import org.calamarfederal.messydiet.feature.search.data.*
-import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
 import org.calamarfederal.messydiet.food.data.central.di.FoodDataCentral
-import javax.inject.Qualifier
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-internal annotation class FoodDataCentralApiKey
+interface FeatureSearchDataModule {
+    fun provideFoodSearchRepository(): FoodSearchRepository
+    fun provideFoodDetailsRepository(): FoodDetailsRepository
 
-@Module
-@InstallIn(SingletonComponent::class)
-internal object FoodSearchDiModule {
-    @Provides
-    @FoodDataCentralApiKey
-    fun provideApiKey(): String = "DEMO_KEY"
+    fun provideSaveFoodDetailsRepository(): SaveFoodDetailsRepository
 
+    companion object {
+        fun implementation(context: Context): FeatureSearchDataModule = FeatureSearchDataModuleImplementation(
+            mealDataModule = FeatureMealDataModule.implementation(context)
+        )
+    }
 }
 
-@Module
-@InstallIn(ViewModelComponent::class)
-internal object FoodSearchViewModelDiModule {
-    @Provides
-    @ViewModelScoped
-    fun provideFoodDataCentralRepository(
-        @FoodDataCentralApiKey
-        apiKey: String,
-        @NetworkDispatcher
-        networkDispatcher: CoroutineDispatcher,
-    ): FoodDataCentralRepository = FoodDataCentral.repository(
-        networkDispatcher = networkDispatcher,
-        apiKey = apiKey,
+internal class FeatureSearchDataModuleImplementation(
+    private val mealDataModule: FeatureMealDataModule,
+) : FeatureSearchDataModule {
+    internal val networkDispatcher: CoroutineDispatcher get() = Dispatchers.IO
+    internal val foodDataCentralApiKey: String get() = FoodDataCentral.DemoKey
+    internal val foodDataCentralRepository
+        get() = FoodDataCentral.repository(
+            networkDispatcher = networkDispatcher,
+            apiKey = foodDataCentralApiKey,
+        )
+
+    override fun provideFoodSearchRepository(): FoodSearchRepository = FoodSearchRepositoryImplementation(
+        fdcRepo = foodDataCentralRepository,
     )
 
-}
+    override fun provideFoodDetailsRepository(): FoodDetailsRepository = FoodDetailsRepositoryImplementation(
+        fdcRepo = foodDataCentralRepository,
+    )
 
-@Module
-@InstallIn(ViewModelComponent::class)
-internal abstract class FoodSearchDiBindModule {
-    @Binds
-    @ViewModelScoped
-    abstract fun bindFoodSearchRepository(impl: FoodSearchRepositoryImplementation): FoodSearchRepository
-}
+    override fun provideSaveFoodDetailsRepository(): SaveFoodDetailsRepository =
+        SaveFoodDetailsRepositoryImplementation(
+            mealRepository = mealDataModule.provideMealRepository()
+        )
 
-@Module
-@InstallIn(ViewModelComponent::class)
-internal abstract class FoodDetailsDiBindModule{
-    @Binds
-    @ViewModelScoped
-    abstract fun bindFoodSearchRepository(impl: FoodDetailsRepositoryImplementation): FoodDetailsRepository
-}
-
-@Module
-@InstallIn(ViewModelComponent::class)
-internal abstract class SaveFoodDetailsDiBindModule {
-    @Binds
-    @ViewModelScoped
-    abstract fun bindSaveFoodDetailsRepository(impl: SaveFoodDetailsRepositoryImplementation): SaveFoodDetailsRepository
 }

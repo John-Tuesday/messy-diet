@@ -22,7 +22,6 @@
  ******************************************************************************/
 plugins {
     id("messydiet.android.library")
-    id("messydiet.android.hilt")
     id("messydiet.android.room")
     alias(libs.plugins.kotlin.serialization.gradle)
 }

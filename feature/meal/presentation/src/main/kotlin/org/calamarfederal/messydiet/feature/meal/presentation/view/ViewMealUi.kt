@@ -26,7 +26,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.john.tuesday.nutrition.MassPortion
 import io.github.john.tuesday.nutrition.VolumePortion
@@ -39,7 +38,7 @@ import org.calamarfederal.physical.measurement.*
 fun ViewMealUi(
     onNavigateUp: () -> Unit,
     onEditMeal: (Long) -> Unit,
-    viewModel: ViewMealViewModel = hiltViewModel(),
+    viewModel: ViewMealViewModel,
 ) {
     val meal by viewModel.mealState.collectAsStateWithLifecycle()
 

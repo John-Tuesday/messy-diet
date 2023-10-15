@@ -24,24 +24,25 @@ package org.calamarfederal.messydiet.feature.bmi.presentation.enter_stats
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import org.calamarfederal.feature.bmi.data.Bmi
 import org.calamarfederal.feature.bmi.data.BmiRepository
 import org.calamarfederal.feature.bmi.data.UserHeightMassRepository
+import org.calamarfederal.feature.bmi.data.di.FeatureBmiDataModule
 import org.calamarfederal.physical.measurement.meters
-import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class EnterStatsViewModel @Inject constructor(
+class EnterStatsViewModel(
     private val bmiRepository: BmiRepository,
-    private val userHeightWeightRepository: UserHeightMassRepository,
+    private val userHeightMassRepository: UserHeightMassRepository,
 ) : ViewModel() {
     private fun <T> Flow<T>.stateInViewModel(initial: T) = stateIn(
         scope = viewModelScope,
@@ -51,8 +52,8 @@ class EnterStatsViewModel @Inject constructor(
 
     private val _heightAndWeightInputState = MutableStateFlow(HeightAndWeightInputStateImpl().apply {
         runBlocking {
-            setHeight(userHeightWeightRepository.heightFlow.first())
-            setWeight(userHeightWeightRepository.massFlow.first())
+            setHeight(userHeightMassRepository.heightFlow.first())
+            setWeight(userHeightMassRepository.massFlow.first())
         }
     })
     val heightAndWeightInputState: StateFlow<HeightAndWeightInputState> = _heightAndWeightInputState.asStateFlow()
@@ -65,8 +66,8 @@ class EnterStatsViewModel @Inject constructor(
                     height = height,
                     mass = mass,
                 ).also {
-                    userHeightWeightRepository.setHeight(height)
-                    userHeightWeightRepository.setMass(mass)
+                    userHeightMassRepository.setHeight(height)
+                    userHeightMassRepository.setMass(mass)
                 }
             else
                 Bmi()
@@ -74,4 +75,17 @@ class EnterStatsViewModel @Inject constructor(
     }
         .flattenConcat()
         .stateInViewModel(Bmi())
+
+    companion object {
+        internal fun factory(module: FeatureBmiDataModule): ViewModelProvider.Factory {
+            return viewModelFactory {
+                initializer {
+                    EnterStatsViewModel(
+                        bmiRepository = module.provideBmiRepository(),
+                        userHeightMassRepository = module.provideHeightMassLocalRepository(),
+                    )
+                }
+            }
+        }
+    }
 }

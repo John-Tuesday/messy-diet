@@ -1,29 +1,86 @@
 package org.calamarfederal.messydiet.feature.meal.presentation
 
+import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
-import androidx.navigation.NavType.Companion
 import androidx.navigation.compose.composable
+import org.calamarfederal.messydiet.feature.meal.data.di.FeatureMealDataModule
 import org.calamarfederal.messydiet.feature.meal.presentation.create.CreateMealUi
 import org.calamarfederal.messydiet.feature.meal.presentation.create.CreateMealViewModel
+import org.calamarfederal.messydiet.feature.meal.presentation.view.ViewAllMealViewModel
 import org.calamarfederal.messydiet.feature.meal.presentation.view.ViewAllMealsUi
 import org.calamarfederal.messydiet.feature.meal.presentation.view.ViewMealUi
+import org.calamarfederal.messydiet.feature.meal.presentation.view.ViewMealViewModel
 
 private const val MEALS_GRAPH_ROUTE = "meals-graph"
+
+internal interface FeatureMealsPresentationModule : FeatureMealDataModule {
+    companion object
+}
+
+internal class FeatureMealsPresentationModuleImplementation(
+    private val dataModule: FeatureMealDataModule,
+) : FeatureMealsPresentationModule, FeatureMealDataModule by dataModule
+
+internal fun FeatureMealsPresentationModule.Companion.implementation(
+    context: Context,
+): FeatureMealsPresentationModule {
+    return FeatureMealsPresentationModuleImplementation(
+        dataModule = FeatureMealDataModule.implementation(context)
+    )
+}
+
+@Composable
+internal fun rememberFeatureMealsPresentationModule(
+    context: Context = LocalContext.current,
+): FeatureMealsPresentationModule = remember {
+    FeatureMealsPresentationModule.implementation(context = context)
+}
 
 data object MealsGraph {
     const val route: String = MEALS_GRAPH_ROUTE
 }
 
-sealed class NutritionScreen(staticRoute: String = "") {
-    internal open val route: String = staticRoute
+data class MealsGraphModule(
+    val context: Context,
+) {
+    internal val featureMealsPresentationModule: FeatureMealsPresentationModule by lazy {
+        FeatureMealsPresentationModule.implementation(context)
+    }
+
+    fun NavGraphBuilder.mealsGraph(
+        navController: NavController,
+        navigateToSearchRemoteMeal: () -> Unit,
+    ) {
+        mealsGraph(
+            navController = navController,
+            navigateToSearchRemoteMeal = navigateToSearchRemoteMeal,
+            featureMealsPresentationModule = featureMealsPresentationModule,
+        )
+    }
 }
 
-data object ViewAllMealsScreen : NutritionScreen("view-all-meals")
-data object CreateMealScreen : NutritionScreen() {
+sealed class NutritionScreen<VM : ViewModel>(staticRoute: String = "") {
+    internal open val route: String = staticRoute
+
+    @Composable
+    internal abstract fun viewModel(module: FeatureMealsPresentationModule): VM
+}
+
+data object ViewAllMealsScreen : NutritionScreen<ViewAllMealViewModel>("view-all-meals") {
+    @Composable
+    override fun viewModel(module: FeatureMealsPresentationModule): ViewAllMealViewModel {
+        return viewModel(factory = ViewAllMealViewModel.factory(module))
+    }
+}
+
+data object CreateMealScreen : NutritionScreen<CreateMealViewModel>() {
     internal const val MealIdKey = "meal-id-key"
     private const val BaseRoute = "create-meal"
     override val route: String = "$BaseRoute/{$MealIdKey}"
@@ -32,9 +89,14 @@ data object CreateMealScreen : NutritionScreen() {
     )
 
     internal fun navRoute(mealId: Long) = "$BaseRoute/$mealId"
+
+    @Composable
+    override fun viewModel(module: FeatureMealsPresentationModule): CreateMealViewModel {
+        return viewModel(factory = CreateMealViewModel.factory(module))
+    }
 }
 
-data object ViewMealScreen : NutritionScreen() {
+data object ViewMealScreen : NutritionScreen<ViewMealViewModel>() {
     internal const val MealIdKey = "meal-id-key"
     private const val BaseRoute = "view-meal"
     override val route: String = "$BaseRoute/{$MealIdKey}"
@@ -43,6 +105,11 @@ data object ViewMealScreen : NutritionScreen() {
     )
 
     internal fun navRoute(mealId: Long) = "$BaseRoute/$mealId"
+
+    @Composable
+    override fun viewModel(module: FeatureMealsPresentationModule): ViewMealViewModel {
+        return viewModel(factory = ViewMealViewModel.factory(module))
+    }
 }
 
 fun NavController.toViewMeal(mealId: Long) {
@@ -65,9 +132,10 @@ fun NavController.toViewAllMealsScreen() {
     navigate(ViewAllMealsScreen.route)
 }
 
-fun NavGraphBuilder.mealsGraph(
+private fun NavGraphBuilder.mealsGraph(
     navController: NavController,
     navigateToSearchRemoteMeal: () -> Unit,
+    featureMealsPresentationModule: FeatureMealsPresentationModule,
 ) {
     navigation(
         startDestination = ViewAllMealsScreen.route,
@@ -77,6 +145,7 @@ fun NavGraphBuilder.mealsGraph(
             route = ViewAllMealsScreen.route
         ) {
             ViewAllMealsUi(
+                viewModel = ViewAllMealsScreen.viewModel(module = featureMealsPresentationModule),
                 onCreateMeal = {
                     navController.toCreateMealScreen()
                 },
@@ -95,7 +164,7 @@ fun NavGraphBuilder.mealsGraph(
             route = CreateMealScreen.route,
             arguments = CreateMealScreen.arguments,
         ) { backStackEntry ->
-            val viewModel: CreateMealViewModel = hiltViewModel()
+            val viewModel: CreateMealViewModel = CreateMealScreen.viewModel(module = featureMealsPresentationModule)
 
             val mealId = remember(backStackEntry.arguments) {
                 backStackEntry.arguments?.getLong(CreateMealScreen.MealIdKey)
@@ -123,7 +192,7 @@ fun NavGraphBuilder.mealsGraph(
                 onEditMeal = {
                     navController.toEditMealScreen(it)
                 },
-                viewModel = hiltViewModel(),
+                viewModel = ViewMealScreen.viewModel(module = featureMealsPresentationModule),
             )
         }
 

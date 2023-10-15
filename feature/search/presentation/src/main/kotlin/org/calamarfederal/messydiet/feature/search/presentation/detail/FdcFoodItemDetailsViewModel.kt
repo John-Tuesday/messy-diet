@@ -1,18 +1,20 @@
 package org.calamarfederal.messydiet.feature.search.presentation.detail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.plus
 import org.calamarfederal.messydiet.feature.search.data.FoodDetailsRepository
+import org.calamarfederal.messydiet.feature.search.data.di.FeatureSearchDataModule
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
 import javax.inject.Inject
 
-@HiltViewModel
 class FdcFoodItemDetailsViewModel @Inject constructor(
     private val foodDetailRepo: FoodDetailsRepository,
 ) : ViewModel() {
@@ -28,7 +30,7 @@ class FdcFoodItemDetailsViewModel @Inject constructor(
             return
         foodDetailRepo
             .foodDetails(foodId)
-            .onEach { status -> _detailsStatusState.update{ status } }
+            .onEach { status -> _detailsStatusState.update { status } }
             .launchIn(viewModelScope + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
                 throwable.printStackTrace()
                 throw (throwable)
@@ -36,5 +38,15 @@ class FdcFoodItemDetailsViewModel @Inject constructor(
 //                    FoodDetailsStatus.Failure("Unknown network error\nfoodId: id=${foodId.id} type=${foodId.type}")
 //                }
             })
+    }
+
+    companion object {
+        internal fun factor(module: FeatureSearchDataModule): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                FdcFoodItemDetailsViewModel(
+                    foodDetailRepo = module.provideFoodDetailsRepository(),
+                )
+            }
+        }
     }
 }
