@@ -1,44 +1,32 @@
 [versions]
-androidxComposeCompilerVersion = "1.5.3"
-
-composeMaterialVersion = "1.6.0-alpha07"
-composeMaterial3Version = "1.2.0-alpha09"
-composeUiVersion = "1.6.0-alpha07"
-androidJUnitVersion = "1.1.5"
-androidCoreVersion = "1.12.0"
-androidEspressoVersion = "3.5.1"
 androidActivityVersion = "1.8.0"
-androidLifecycleVersion = "2.6.2"
-androidDatastoreVersion = "1.0.0"
-
+androidBuildVersion = "8.1.2"
 androidCameraxVersion = "1.3.0-rc02"
-
+androidCoreVersion = "1.12.0"
+androidDatastoreVersion = "1.0.0"
+androidEspressoVersion = "3.5.1"
+androidJUnitVersion = "1.1.5"
+androidLifecycleVersion = "2.6.2"
 androidMlKitBarcodeVersion = "17.2.0"
-
-measureVersion = "1.1.1"
-nutritionVersion = "0.1.1"
-navVersion = "2.7.4"
-
-hiltVersion = "2.48"
-hiltNavComposeVersion = "1.0.0"
-
-roomVersion = "2.5.2"
-
-retrofitVersion = "2.9.0"
-moshiVersion = "1.14.0"
-
+androidxComposeCompilerVersion = "1.5.3"
+composeMaterial3Version = "1.2.0-alpha09"
+composeMaterialVersion = "1.6.0-alpha07"
+composeUiVersion = "1.6.0-alpha07"
 coroutineVersion = "1.7.3"
-
+hiltNavComposeVersion = "1.0.0"
+hiltVersion = "2.48"
 kodeinVersion = "7.20.2"
+kotlinSerialization = "1.5.1"
+kotlinVersion = "1.9.10"
+kspVersion = "1.9.10-1.0.13"
+measureVersion = "1.1.1"
 # Cannot inline bytecode built with JVM target 11 into bytecode that is being built with JVM target 1.8 https://github.com/gradle/gradle/issues/2534
 mockkVersion = "1.13.7"
-
-# Plugins
-kotlinVersion = "1.9.10"
-kotlinSerialization = "1.5.1"
-#kaptVersion = "1.9.10"
-kspVersion = "1.9.10-1.0.13"
-androidBuildVersion = "8.1.2"
+moshiVersion = "1.14.0"
+navVersion = "2.7.4"
+nutritionVersion = "0.1.1"
+retrofitVersion = "2.9.0"
+roomVersion = "2.5.2"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidActivityVersion" }
