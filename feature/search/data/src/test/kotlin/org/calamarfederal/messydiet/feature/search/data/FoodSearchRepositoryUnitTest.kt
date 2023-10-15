@@ -1,5 +1,6 @@
 package org.calamarfederal.messydiet.feature.search.data
 
+import io.github.john.tuesday.nutrition.FoodNutrition
 import io.github.john.tuesday.nutrition.Portion
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
@@ -7,8 +8,9 @@ import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.runBlocking
 import org.calamarfederal.messydiet.feature.search.data.model.SearchStatus
+import org.calamarfederal.messydiet.feature.search.data.repository.FoodSearchRepository
+import org.calamarfederal.messydiet.feature.search.data.repository.FoodSearchRepositoryImplementation
 import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
-import org.calamarfederal.messydiet.food.data.central.model.FDCNutritionInfo
 import org.calamarfederal.messydiet.food.data.central.model.ResultResponse
 import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpect
 import org.calamarfederal.messydiet.remote.food.data.central.test.FoodItemExpectCase
@@ -59,7 +61,7 @@ class FoodSearchRepositoryUnitTest(
                 mockk {
                     every { fdcId } returns expectCase.fdcId
                     every { description } returns expectCase.searchDescription
-                    every { nutritionalInfo } returns FDCNutritionInfo(
+                    every { nutritionalInfo } returns FoodNutrition(
                         portion = Portion(0.grams),
                         foodEnergy = 0.kilocalories
                     )
@@ -91,7 +93,7 @@ class FoodSearchRepositoryUnitTest(
                             assertEquals(expectCase.name, foodItem.name)
                             assertEquals(expectCase.fdcIdInt, foodItem.id)
                             assertEquals(
-                                FDCNutritionInfo(portion = Portion(0.grams), foodEnergy = 0.kilocalories),
+                                FoodNutrition(portion = Portion(0.grams), foodEnergy = 0.kilocalories),
                                 foodItem.nutritionInfo
                             )
                         }

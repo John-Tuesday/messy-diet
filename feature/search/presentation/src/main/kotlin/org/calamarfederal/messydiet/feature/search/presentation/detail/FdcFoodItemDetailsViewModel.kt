@@ -9,10 +9,10 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.plus
-import org.calamarfederal.messydiet.feature.search.data.FoodDetailsRepository
 import org.calamarfederal.messydiet.feature.search.data.di.FeatureSearchDataModule
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
+import org.calamarfederal.messydiet.feature.search.data.repository.FoodDetailsRepository
 import javax.inject.Inject
 
 class FdcFoodItemDetailsViewModel @Inject constructor(

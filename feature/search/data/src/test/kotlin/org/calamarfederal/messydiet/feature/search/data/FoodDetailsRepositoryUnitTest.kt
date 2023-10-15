@@ -9,6 +9,8 @@ import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodIdDummy
 import org.calamarfederal.messydiet.feature.search.data.model.SearchRemoteError
 import org.calamarfederal.messydiet.feature.search.data.model.foodId
+import org.calamarfederal.messydiet.feature.search.data.repository.FoodDetailsRepository
+import org.calamarfederal.messydiet.feature.search.data.repository.FoodDetailsRepositoryImplementation
 import org.calamarfederal.messydiet.food.data.central.FoodDataCentralRepository
 import org.calamarfederal.messydiet.food.data.central.model.FoodDataCentralError
 import org.calamarfederal.messydiet.food.data.central.model.ResultResponse

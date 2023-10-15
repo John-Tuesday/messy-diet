@@ -1,4 +1,4 @@
-package org.calamarfederal.messydiet.feature.search.data
+package org.calamarfederal.messydiet.feature.search.data.repository
 
 import io.github.john.tuesday.nutrition.FoodNutrition
 import org.calamarfederal.messydiet.feature.meal.data.MealRepository

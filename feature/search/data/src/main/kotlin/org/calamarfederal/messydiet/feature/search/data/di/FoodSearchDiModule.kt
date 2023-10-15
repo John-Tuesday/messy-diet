@@ -4,7 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.calamarfederal.messydiet.feature.meal.data.di.FeatureMealDataModule
-import org.calamarfederal.messydiet.feature.search.data.*
+import org.calamarfederal.messydiet.feature.search.data.repository.*
 import org.calamarfederal.messydiet.food.data.central.di.FoodDataCentral
 
 interface FeatureSearchDataModule {

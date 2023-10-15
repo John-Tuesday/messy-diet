@@ -13,13 +13,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
-import org.calamarfederal.messydiet.feature.search.data.FoodDetailsRepository
-import org.calamarfederal.messydiet.feature.search.data.FoodSearchRepository
-import org.calamarfederal.messydiet.feature.search.data.SaveFoodDetailsRepository
 import org.calamarfederal.messydiet.feature.search.data.di.FeatureSearchDataModule
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
 import org.calamarfederal.messydiet.feature.search.data.model.SearchStatus
+import org.calamarfederal.messydiet.feature.search.data.repository.FoodDetailsRepository
+import org.calamarfederal.messydiet.feature.search.data.repository.FoodSearchRepository
+import org.calamarfederal.messydiet.feature.search.data.repository.SaveFoodDetailsRepository
 import kotlin.coroutines.cancellation.CancellationException
 
 class SearchFdcViewModel(
