@@ -1,13 +1,13 @@
 [versions]
 androidxComposeCompilerVersion = "1.5.3"
 
-composeMaterialVersion = "1.6.0-alpha06"
-composeMaterial3Version = "1.2.0-alpha08"
-composeUiVersion = "1.6.0-alpha06"
+composeMaterialVersion = "1.6.0-alpha07"
+composeMaterial3Version = "1.2.0-alpha09"
+composeUiVersion = "1.6.0-alpha07"
 androidJUnitVersion = "1.1.5"
 androidCoreVersion = "1.12.0"
 androidEspressoVersion = "3.5.1"
-androidActivityVersion = "1.7.2"
+androidActivityVersion = "1.8.0"
 androidLifecycleVersion = "2.6.2"
 androidDatastoreVersion = "1.0.0"
 
@@ -17,7 +17,7 @@ androidMlKitBarcodeVersion = "17.2.0"
 
 measureVersion = "1.1.1"
 nutritionVersion = "0.1.1"
-navVersion = "2.7.3"
+navVersion = "2.7.4"
 
 hiltVersion = "2.48"
 hiltNavComposeVersion = "1.0.0"
