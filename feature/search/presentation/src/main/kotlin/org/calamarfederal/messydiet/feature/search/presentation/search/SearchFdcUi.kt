@@ -8,11 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -66,12 +62,30 @@ internal fun SearchFdcScreen(
     foodItemDetailStatus: FoodDetailsStatus? = null,
     searchStatus: SearchStatus? = null,
 ) {
+    var searchBarActive: Boolean by remember {
+        mutableStateOf(false)
+    }
+    val onChangeSearchBarActive: (Boolean) -> Unit = remember {
+        { searchBarActive = it }
+    }
+
+    LaunchedEffect(searchStatus) {
+        if (searchStatus is SearchStatus.Loading)
+            onChangeSearchBarActive(true)
+    }
+    LaunchedEffect(foodItemDetailStatus) {
+        if (foodItemDetailStatus is FoodDetailsStatus.Loading)
+            onChangeSearchBarActive(false)
+    }
+
     Scaffold(
         topBar = {
             SearchFdcTopBar(
                 queryInput = queryInput,
                 onQueryChange = onQueryChange,
                 onSubmitQuery = onSubmitQuery,
+                active = searchBarActive,
+                onActiveChange = onChangeSearchBarActive,
                 searchStatus = searchStatus,
                 onNavigateUp = onNavigateUp,
                 onFoodItemClick = getFoodItemDetails,
@@ -137,16 +151,14 @@ private fun SearchFdcTopBar(
     queryInput: String,
     onQueryChange: (String) -> Unit,
     onSubmitQuery: () -> Unit,
+    active: Boolean,
+    onActiveChange: (Boolean) -> Unit,
     onNavigateUp: () -> Unit,
     onFoodItemClick: (FoodId) -> Unit,
     useBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     searchStatus: SearchStatus? = null,
 ) {
-    var active by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -156,7 +168,7 @@ private fun SearchFdcTopBar(
             onQueryChange = onQueryChange,
             onSearch = { onSubmitQuery() },
             active = active,
-            onActiveChange = { active = it },
+            onActiveChange = onActiveChange,
             placeholder = {
                 Text(text = stringResource(id = R.string.search_searchbar_hint))
             },
@@ -167,7 +179,7 @@ private fun SearchFdcTopBar(
             },
             leadingIcon = {
                 if (active) {
-                    IconButton(onClick = { active = false }) {
+                    IconButton(onClick = { onActiveChange(false) }) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, null)
                     }
                 } else
@@ -181,7 +193,7 @@ private fun SearchFdcTopBar(
                 modifier = Modifier.fillMaxSize(),
                 onFoodItemClick = {
                     onFoodItemClick(it)
-                    active = false
+                    onActiveChange(false)
                 },
             )
         }
