@@ -112,9 +112,9 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinVersion" }
-kotlin-serialization-gradle = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 kotlin-serialization-compiler = { id = "kotlinx-serialization-compiler-plugin", version.ref = "kotlinVersion" }
 kotlin-serialization-compiler-embeddable = { id = "kotlinx-serialization-compiler-plugin-embeddable", version.ref = "kotlinVersion" }
+kotlin-serialization-gradle = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 
 [bundles]
 compose-implementation = [
