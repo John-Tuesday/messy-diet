@@ -38,8 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.calamarfederal.feature.bmi.data.Bmi
-import org.calamarfederal.feature.bmi.data.BmiCategory.*
+import org.calamarfederal.feature.bmi.data.model.Bmi
+import org.calamarfederal.feature.bmi.data.model.BmiCategory
 import org.calamarfederal.messydiet.feature.bmi.presentation.R
 import org.calamarfederal.messydiet.feature.measure.MeasuredUnitField
 import org.calamarfederal.messydiet.feature.measure.fullString
@@ -138,11 +138,11 @@ private fun BmiDisplay(
     bmi: Bmi,
     modifier: Modifier = Modifier,
     contentColor: Color = when (bmi.category) {
-        VerySeverelyUnderweight, SeverelyUnderweight -> MaterialTheme.colorScheme.tertiary
-        Underweight -> MaterialTheme.colorScheme.secondary
-        Normal -> MaterialTheme.colorScheme.primary
-        Overweight -> MaterialTheme.colorScheme.secondary
-        ModeratelyObese, SeverelyObese, VerySeverelyObese -> MaterialTheme.colorScheme.tertiary
+        BmiCategory.VerySeverelyUnderweight, BmiCategory.SeverelyUnderweight -> MaterialTheme.colorScheme.tertiary
+        BmiCategory.Underweight -> MaterialTheme.colorScheme.secondary
+        BmiCategory.Normal -> MaterialTheme.colorScheme.primary
+        BmiCategory.Overweight -> MaterialTheme.colorScheme.secondary
+        BmiCategory.ModeratelyObese, BmiCategory.SeverelyObese, BmiCategory.VerySeverelyObese -> MaterialTheme.colorScheme.tertiary
     },
 ) {
     Surface(

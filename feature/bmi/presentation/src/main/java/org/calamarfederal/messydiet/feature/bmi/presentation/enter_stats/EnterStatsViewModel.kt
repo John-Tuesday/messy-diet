@@ -31,10 +31,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
-import org.calamarfederal.feature.bmi.data.Bmi
-import org.calamarfederal.feature.bmi.data.BmiRepository
-import org.calamarfederal.feature.bmi.data.UserHeightMassRepository
 import org.calamarfederal.feature.bmi.data.di.FeatureBmiDataModule
+import org.calamarfederal.feature.bmi.data.model.Bmi
+import org.calamarfederal.feature.bmi.data.repository.BmiRepository
+import org.calamarfederal.feature.bmi.data.repository.UserHeightMassRepository
 import org.calamarfederal.physical.measurement.meters
 import kotlin.time.Duration.Companion.seconds
 

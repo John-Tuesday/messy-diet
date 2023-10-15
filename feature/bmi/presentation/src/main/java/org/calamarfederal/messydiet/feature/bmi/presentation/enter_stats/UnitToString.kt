@@ -10,9 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import org.calamarfederal.feature.bmi.data.Bmi
-import org.calamarfederal.feature.bmi.data.BmiCategory
-import org.calamarfederal.feature.bmi.data.BmiCategory.*
+import org.calamarfederal.feature.bmi.data.model.Bmi
+import org.calamarfederal.feature.bmi.data.model.BmiCategory
 import org.calamarfederal.messydiet.feature.bmi.presentation.R
 import org.calamarfederal.messydiet.feature.bmi.presentation.enter_stats.HeightInputType.FeetAndInches
 import org.calamarfederal.messydiet.feature.measure.lengthUnitFullString
@@ -50,12 +49,12 @@ internal val BmiCategory.text: String
     get() = stringResource(bmiCategoryRId(this))
 
 internal fun bmiCategoryRId(category: BmiCategory) = when (category) {
-    VerySeverelyObese -> R.string.bmi_very_severely_obese
-    SeverelyObese -> R.string.bmi_severely_obese
-    ModeratelyObese -> R.string.bmi_moderately_obese
-    Overweight -> R.string.bmi_overweight
-    Normal -> R.string.bmi_normal
-    Underweight -> R.string.bmi_underweight
-    SeverelyUnderweight -> R.string.bmi_severely_underweight
-    VerySeverelyUnderweight -> R.string.bmi_very_severely_underweight
+    BmiCategory.VerySeverelyObese -> R.string.bmi_very_severely_obese
+    BmiCategory.SeverelyObese -> R.string.bmi_severely_obese
+    BmiCategory.ModeratelyObese -> R.string.bmi_moderately_obese
+    BmiCategory.Overweight -> R.string.bmi_overweight
+    BmiCategory.Normal -> R.string.bmi_normal
+    BmiCategory.Underweight -> R.string.bmi_underweight
+    BmiCategory.SeverelyUnderweight -> R.string.bmi_severely_underweight
+    BmiCategory.VerySeverelyUnderweight -> R.string.bmi_very_severely_underweight
 }

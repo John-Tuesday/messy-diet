@@ -20,34 +20,29 @@
  * SOFTWARE.                                                                  *
  ******************************************************************************/
 
-package org.calamarfederal.feature.bmi.data.di
+package org.calamarfederal.feature.bmi.data.repository
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import org.calamarfederal.feature.bmi.data.*
+import org.calamarfederal.feature.bmi.data.model.Bmi
+import org.calamarfederal.physical.measurement.Length
+import org.calamarfederal.physical.measurement.Mass
+import org.calamarfederal.physical.measurement.inKilograms
+import org.calamarfederal.physical.measurement.inMeters
+import kotlin.math.pow
 
-interface FeatureBmiDataModule {
-    fun provideBmiRepository(): BmiRepository
-    fun provideHeightMassLocalRepository(): UserHeightMassRepository
-
-    companion object {
-        fun implementation(context: Context): FeatureBmiDataModule =
-            FeatureBmiDataModuleImplementation(context = context)
-    }
+interface BmiRepository {
+    /**
+     * Correctly build a [Bmi] given [height] and [mass]
+     */
+    fun bmiOf(height: Length, mass: Mass): Bmi
 }
 
-internal class FeatureBmiDataModuleImplementation(
-    private val context: Context,
-) : FeatureBmiDataModule {
-    private val heightWeightDataSource: DataStore<HeightWeight> by lazy {
-        context.heightWeightStore
+class BmiRepositoryImplementation : BmiRepository {
+    override fun bmiOf(height: Length, mass: Mass): Bmi {
+        val heightMeters = height.inMeters()
+        require(heightMeters != 0.00) {
+            "Height is a divisor and so cannot be zero"
+        }
+        val bmiIndex = mass.inKilograms() / heightMeters.pow(2)
+        return Bmi.fromBmiIndex(bmiIndex)
     }
-
-    override fun provideBmiRepository(): BmiRepository = BmiRepositoryImplementation()
-    override fun provideHeightMassLocalRepository(): UserHeightMassRepository = UserHeightRepositoryImplementation(
-        heightMassLocalSource = provideHeightMassLocalSource()
-    )
-
-    internal fun provideHeightMassLocalSource(): UserHeightLocalSource =
-        UserHeightLocalSourceImplementation(heightWeightStore = heightWeightDataSource)
 }
