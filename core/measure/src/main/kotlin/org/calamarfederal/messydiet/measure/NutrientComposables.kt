@@ -1,4 +1,4 @@
-package org.calamarfederal.messydiet.feature.measure
+package org.calamarfederal.messydiet.measure
 
 import android.icu.number.LocalizedNumberFormatter
 import android.icu.number.NumberFormatter
@@ -22,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.john.tuesday.nutrition.*
+import org.calamarfederal.messydiet.measure.NutrientInfoTextStyle.Companion
+import org.calamarfederal.messydiet.measure.R.string
 import org.calamarfederal.physical.measurement.*
 
 val simpleFormatter: LocalizedNumberFormatter
@@ -54,7 +56,7 @@ data class NutrientInfoTextStyle(
  * Combine the current [LocalTextStyle] with [MaterialTheme] to form the default [NutrientInfoTextStyle]
  */
 @Composable
-fun NutrientInfoTextStyle.Companion.default(
+fun Companion.default(
     servingSizeLabelStyle: TextStyle = LocalTextStyle.current + MaterialTheme.typography.titleLarge,
     servingSizeValueStyle: TextStyle = LocalTextStyle.current + MaterialTheme.typography.titleLarge,
     caloriesLabelStyle: TextStyle = LocalTextStyle.current + MaterialTheme.typography.titleMedium.copy(),
@@ -99,13 +101,13 @@ fun NutritionInfoColumn(
         if (!hidePortion)
             item(key = R.string.serving_size) {
                 NutritionRow(
-                    label = stringResource(id = R.string.serving_size),
+                    label = stringResource(id = string.serving_size),
                     amount = nutrition.portion.mass?.inGrams() ?: nutrition.portion.volume?.inMilliliters()
                     ?: throw (NoServingSizeSpecified()),
                     unitLabel = if (nutrition.portion.volume != null)
-                        stringResource(id = R.string.milliliter_label)
+                        stringResource(id = string.milliliter_label)
                     else
-                        stringResource(id = R.string.gram_label),
+                        stringResource(id = string.gram_label),
                     labelStyle = textStyles.servingSizeLabelStyle,
                     amountStyle = textStyles.servingSizeValueStyle,
                     unitStyle = textStyles.servingSizeValueStyle,
@@ -115,7 +117,7 @@ fun NutritionInfoColumn(
 
         item(key = R.string.calories) {
             NutritionRow(
-                label = stringResource(id = R.string.calories),
+                label = stringResource(id = string.calories),
                 amount = nutrition.foodEnergy.inKilocalories(),
                 unitLabel = "",//stringResource(id = R.string.kilocalories_label),
                 labelStyle = textStyles.caloriesLabelStyle,
@@ -127,9 +129,9 @@ fun NutritionInfoColumn(
 
         item(key = R.string.fat) {
             NutritionRow(
-                label = stringResource(id = R.string.fat),
+                label = stringResource(id = string.fat),
                 amount = nutrition.totalFat?.inGrams() ?: 0.00,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.macroNutrientLabelStyle,
                 amountStyle = textStyles.macroNutrientValueStyle,
                 unitStyle = textStyles.macroNutrientValueStyle,
@@ -141,9 +143,9 @@ fun NutritionInfoColumn(
             key = R.string.polyunsaturated_fat,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.polyunsaturated_fat),
+                label = stringResource(id = string.polyunsaturated_fat),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -154,9 +156,9 @@ fun NutritionInfoColumn(
             key = R.string.monounsaturated_fat,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.monounsaturated_fat),
+                label = stringResource(id = string.monounsaturated_fat),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -167,9 +169,9 @@ fun NutritionInfoColumn(
             key = R.string.saturated_fat,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.saturated_fat),
+                label = stringResource(id = string.saturated_fat),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -180,9 +182,9 @@ fun NutritionInfoColumn(
             key = R.string.trans_fat,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.trans_fat),
+                label = stringResource(id = string.trans_fat),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -193,9 +195,9 @@ fun NutritionInfoColumn(
             key = R.string.omega3_fat,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.omega3_fat),
+                label = stringResource(id = string.omega3_fat),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -206,9 +208,9 @@ fun NutritionInfoColumn(
             key = R.string.omega6_fat,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.omega6_fat),
+                label = stringResource(id = string.omega6_fat),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -218,9 +220,9 @@ fun NutritionInfoColumn(
         nutrition.cholesterol?.let {
             item(key = R.string.cholesterol) {
                 NutritionRow(
-                    label = stringResource(id = R.string.cholesterol),
+                    label = stringResource(id = string.cholesterol),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.macroNutrientLabelStyle,
                     amountStyle = textStyles.macroNutrientValueStyle,
                     unitStyle = textStyles.macroNutrientValueStyle,
@@ -230,9 +232,9 @@ fun NutritionInfoColumn(
 
         item(key = R.string.carbohydrates) {
             NutritionRow(
-                label = stringResource(id = R.string.carbohydrates),
+                label = stringResource(id = string.carbohydrates),
                 amount = nutrition.totalCarbohydrate?.inGrams() ?: 0.00,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.macroNutrientLabelStyle,
                 amountStyle = textStyles.macroNutrientValueStyle,
                 unitStyle = textStyles.macroNutrientValueStyle,
@@ -244,9 +246,9 @@ fun NutritionInfoColumn(
             key = R.string.fiber,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.fiber),
+                label = stringResource(id = string.fiber),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -257,9 +259,9 @@ fun NutritionInfoColumn(
             key = R.string.starch,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.starch),
+                label = stringResource(id = string.starch),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -270,9 +272,9 @@ fun NutritionInfoColumn(
             key = R.string.sugar,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.sugar),
+                label = stringResource(id = string.sugar),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -283,9 +285,9 @@ fun NutritionInfoColumn(
             key = R.string.sugar_alcohol,
         ) {
             NutritionRow(
-                label = stringResource(id = R.string.sugar_alcohol),
+                label = stringResource(id = string.sugar_alcohol),
                 amount = it,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.childNutrientLabelStyle,
                 amountStyle = textStyles.childNutrientValueStyle,
                 unitStyle = textStyles.childNutrientValueStyle,
@@ -294,9 +296,9 @@ fun NutritionInfoColumn(
 
         item(key = R.string.protein) {
             NutritionRow(
-                label = stringResource(id = R.string.protein),
+                label = stringResource(id = string.protein),
                 amount = nutrition.protein?.inGrams() ?: 0.00,
-                unitLabel = stringResource(id = R.string.gram_label),
+                unitLabel = stringResource(id = string.gram_label),
                 labelStyle = textStyles.macroNutrientLabelStyle,
                 amountStyle = textStyles.macroNutrientValueStyle,
                 unitStyle = textStyles.macroNutrientValueStyle,
@@ -307,9 +309,9 @@ fun NutritionInfoColumn(
         nutrition.sodium?.let {
             item(key = R.string.sodium) {
                 NutritionRow(
-                    label = stringResource(id = R.string.sodium),
+                    label = stringResource(id = string.sodium),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.macroNutrientLabelStyle,
                     amountStyle = textStyles.macroNutrientValueStyle,
                     unitStyle = textStyles.macroNutrientValueStyle,
@@ -320,9 +322,9 @@ fun NutritionInfoColumn(
         nutrition.calcium?.let {
             item(R.string.calcium) {
                 NutritionRow(
-                    label = stringResource(id = R.string.calcium),
+                    label = stringResource(id = string.calcium),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
                     amountStyle = textStyles.mineralValueStyle,
                     unitStyle = textStyles.mineralValueStyle,
@@ -332,9 +334,9 @@ fun NutritionInfoColumn(
         nutrition.chloride?.let {
             item(R.string.chloride) {
                 NutritionRow(
-                    label = stringResource(id = R.string.chloride),
+                    label = stringResource(id = string.chloride),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
                     amountStyle = textStyles.mineralValueStyle,
                     unitStyle = textStyles.mineralValueStyle,
@@ -344,9 +346,9 @@ fun NutritionInfoColumn(
         nutrition.iron?.let {
             item(R.string.iron) {
                 NutritionRow(
-                    label = stringResource(id = R.string.iron),
+                    label = stringResource(id = string.iron),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
                     amountStyle = textStyles.mineralValueStyle,
                     unitStyle = textStyles.mineralValueStyle,
@@ -356,9 +358,9 @@ fun NutritionInfoColumn(
         nutrition.magnesium?.let {
             item(R.string.magnesium) {
                 NutritionRow(
-                    label = stringResource(id = R.string.magnesium),
+                    label = stringResource(id = string.magnesium),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
                     amountStyle = textStyles.mineralValueStyle,
                     unitStyle = textStyles.mineralValueStyle,
@@ -368,9 +370,9 @@ fun NutritionInfoColumn(
         nutrition.phosphorous?.let {
             item(key = R.string.phosphorous) {
                 NutritionRow(
-                    label = stringResource(id = R.string.phosphorous),
+                    label = stringResource(id = string.phosphorous),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
                     amountStyle = textStyles.mineralValueStyle,
                     unitStyle = textStyles.mineralValueStyle,
@@ -380,9 +382,9 @@ fun NutritionInfoColumn(
         nutrition.potassium?.let {
             item(key = R.string.potassium) {
                 NutritionRow(
-                    label = stringResource(id = R.string.potassium),
+                    label = stringResource(id = string.potassium),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
                     amountStyle = textStyles.mineralValueStyle,
                     unitStyle = textStyles.mineralValueStyle,
@@ -392,9 +394,9 @@ fun NutritionInfoColumn(
         nutrition.vitaminA?.let {
             item(key = R.string.vitamin_a) {
                 NutritionRow(
-                    label = stringResource(id = R.string.vitamin_a),
+                    label = stringResource(id = string.vitamin_a),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
                     amountStyle = textStyles.mineralValueStyle,
                     unitStyle = textStyles.mineralValueStyle,
@@ -404,9 +406,9 @@ fun NutritionInfoColumn(
         nutrition.vitaminC?.let {
             item(key = R.string.vitamin_c) {
                 NutritionRow(
-                    label = stringResource(id = R.string.vitamin_c),
+                    label = stringResource(id = string.vitamin_c),
                     amount = it.inMilligrams(),
-                    unitLabel = stringResource(id = R.string.milligram_label),
+                    unitLabel = stringResource(id = string.milligram_label),
                     labelStyle = textStyles.mineralLabelStyle,
                     amountStyle = textStyles.mineralValueStyle,
                     unitStyle = textStyles.mineralValueStyle,

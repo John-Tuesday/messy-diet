@@ -1,4 +1,4 @@
-package org.calamarfederal.messydiet.feature.measure
+package org.calamarfederal.messydiet.measure
 
 import android.icu.number.LocalizedNumberFormatter
 import androidx.activity.ComponentActivity

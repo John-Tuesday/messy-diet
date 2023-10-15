@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.calamarfederal.messydiet.feature.meal.presentation.R
-import org.calamarfederal.messydiet.feature.measure.*
-import org.calamarfederal.messydiet.feature.measure.R as M
+import org.calamarfederal.messydiet.measure.*
+import org.calamarfederal.messydiet.measure.R as M
 
 private fun String.filterWithDecimalFormat(decimalSeparator: Char = '.'): String {
     var hasDecimalSeparator = false

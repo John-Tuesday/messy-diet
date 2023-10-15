@@ -18,16 +18,16 @@ import kotlinx.coroutines.launch
 import org.calamarfederal.messydiet.feature.meal.data.MealRepository
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
 import org.calamarfederal.messydiet.feature.meal.presentation.FeatureMealsPresentationModule
-import org.calamarfederal.messydiet.feature.measure.PortionInputState
-import org.calamarfederal.messydiet.feature.measure.WeightInputState
+import org.calamarfederal.messydiet.measure.PortionInputState
+import org.calamarfederal.messydiet.measure.WeightInputState
 import org.calamarfederal.physical.measurement.Mass
-import org.calamarfederal.physical.measurement.MassUnit
+import org.calamarfederal.physical.measurement.MassUnit.Gram
 import org.calamarfederal.physical.measurement.inKilocalories
 import org.calamarfederal.physical.measurement.kilocalories
 import java.util.Locale
 
 class CreateMealUiState(
-    val portionInput: PortionInputState = PortionInputState(initialWeightUnit = MassUnit.Gram),
+    val portionInput: PortionInputState = PortionInputState(initialWeightUnit = Gram),
 
     val proteinInput: WeightInputState = WeightInputState(),
 

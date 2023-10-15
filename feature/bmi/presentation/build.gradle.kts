@@ -34,7 +34,7 @@ kotlin {
             dependencies {
                 implementation(platform(project(":app-platform")))
                 implementation(project(":feature:bmi:data"))
-                implementation(project(":feature:measure"))
+                implementation(project(":core:measure"))
                 implementation(libs.measure)
                 implementation(libs.lifecycle.compose.utils)
                 implementation(libs.bundles.compose.implementation)

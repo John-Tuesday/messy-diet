@@ -13,7 +13,7 @@ kotlin {
             dependencies {
                 implementation(platform(project(":app-platform")))
                 implementation(project(":feature:search:data"))
-                implementation(project(":feature:measure"))
+                implementation(project(":core:measure"))
                 implementation(libs.measure)
                 implementation(libs.nutrition)
                 implementation(libs.androidx.camera.core)

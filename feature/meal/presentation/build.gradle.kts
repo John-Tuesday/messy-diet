@@ -13,7 +13,7 @@ kotlin {
             dependencies {
                 implementation(platform(project(":app-platform")))
                 implementation(project(":feature:meal:data"))
-                implementation(project(":feature:measure"))
+                implementation(project(":core:measure"))
                 implementation(libs.nutrition)
                 implementation(libs.measure)
                 implementation(libs.lifecycle.compose.utils)

@@ -1,4 +1,4 @@
-package org.calamarfederal.messydiet.feature.measure
+package org.calamarfederal.messydiet.measure
 
 import android.icu.number.LocalizedNumberFormatter
 import androidx.compose.runtime.*
@@ -7,6 +7,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import io.github.john.tuesday.nutrition.Portion
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import org.calamarfederal.messydiet.measure.PortionInputState.Companion
 import org.calamarfederal.physical.measurement.*
 
 /**
@@ -167,7 +168,7 @@ internal class PortionInputStateImplementation private constructor(
     }
 }
 
-val PortionInputState.Companion.saver
+val Companion.saver
     get() = listSaver<PortionInputState, String>(
         save = { state ->
             listOf(

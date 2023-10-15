@@ -41,9 +41,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.calamarfederal.feature.bmi.data.model.Bmi
 import org.calamarfederal.feature.bmi.data.model.BmiCategory
 import org.calamarfederal.messydiet.feature.bmi.presentation.R
-import org.calamarfederal.messydiet.feature.measure.MeasuredUnitField
-import org.calamarfederal.messydiet.feature.measure.fullString
-import org.calamarfederal.messydiet.feature.measure.labelString
+import org.calamarfederal.messydiet.measure.MeasuredUnitField
+import org.calamarfederal.messydiet.measure.fullString
+import org.calamarfederal.messydiet.measure.labelString
 import org.calamarfederal.physical.measurement.MassUnit
 import java.util.Locale
 

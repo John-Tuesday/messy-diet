@@ -31,10 +31,10 @@ dependencies {
         api(project(":feature:bmi:data"))
         api(project(":feature:meal:data"))
         api(project(":feature:meal:presentation"))
-        api(project(":feature:measure"))
         api(project(":feature:search:data"))
         api(project(":feature:search:presentation"))
         api(project(":core:remote:food-data-central"))
         api(project(":core:remote:food-data-central-test"))
+        api(project(":core:measure"))
     }
 }

@@ -14,7 +14,7 @@ import org.calamarfederal.feature.bmi.data.model.Bmi
 import org.calamarfederal.feature.bmi.data.model.BmiCategory
 import org.calamarfederal.messydiet.feature.bmi.presentation.R
 import org.calamarfederal.messydiet.feature.bmi.presentation.enter_stats.HeightInputType.FeetAndInches
-import org.calamarfederal.messydiet.feature.measure.lengthUnitFullString
+import org.calamarfederal.messydiet.measure.lengthUnitFullString
 
 
 internal fun heightInputTypeToOptionString(

@@ -12,7 +12,7 @@ kotlin {
         val main by getting {
             dependencies {
                 implementation(platform(project(":app-platform")))
-                implementation(project(":feature:measure"))
+                implementation(project(":core:measure"))
                 implementation(libs.measure)
                 implementation(libs.nutrition)
                 implementation(libs.lifecycle.compose.utils)

@@ -1,4 +1,4 @@
-package org.calamarfederal.messydiet.feature.measure
+package org.calamarfederal.messydiet.measure
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer

@@ -31,7 +31,7 @@ import io.github.john.tuesday.nutrition.MassPortion
 import io.github.john.tuesday.nutrition.VolumePortion
 import io.github.john.tuesday.nutrition.scaleToPortion
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
-import org.calamarfederal.messydiet.feature.measure.*
+import org.calamarfederal.messydiet.measure.*
 import org.calamarfederal.physical.measurement.*
 
 @Composable

@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.john.tuesday.nutrition.FoodNutrition
 import io.github.john.tuesday.nutrition.Portion
-import org.calamarfederal.messydiet.feature.measure.NutritionInfoColumn
 import org.calamarfederal.messydiet.feature.search.data.model.FoodDetailsStatus
 import org.calamarfederal.messydiet.feature.search.data.model.FoodId
 import org.calamarfederal.messydiet.feature.search.data.model.FoodIdDummy
 import org.calamarfederal.messydiet.feature.search.data.model.FoodItemDetails
 import org.calamarfederal.messydiet.feature.search.presentation.R
+import org.calamarfederal.messydiet.measure.NutritionInfoColumn
 import org.calamarfederal.physical.measurement.grams
 import org.calamarfederal.physical.measurement.kilocalories
 

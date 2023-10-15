@@ -21,11 +21,11 @@ include(":app")
 
 include(":core:remote:food-data-central")
 include(":core:remote:food-data-central-test")
+include(":core:measure")
 
 
 include(":feature:bmi:presentation")
 include(":feature:bmi:data")
-include(":feature:measure")
 include(":feature:meal:presentation")
 include(":feature:meal:data")
 include(":feature:search:presentation")

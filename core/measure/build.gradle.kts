@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "org.calamarfederal.messydiet.feature.measure"
+    namespace = "org.calamarfederal.messydiet.measure"
 }
 
 kotlin {
