@@ -4,7 +4,13 @@ import android.content.res.Resources
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import io.github.john.tuesday.nutrition.MassPortion
 import io.github.john.tuesday.nutrition.NutrientType
+import io.github.john.tuesday.nutrition.Portion
+import io.github.john.tuesday.nutrition.VolumePortion
+import org.calamarfederal.physical.measurement.MassUnit
+import org.calamarfederal.physical.measurement.VolumeUnit
+import org.calamarfederal.physical.measurement.inUnitsOf
 
 /**
  * use [LocalContext] to get the current [Resources] and get the name of `this`
@@ -13,10 +19,12 @@ val NutrientType.fullName: String
     @Composable
     get() = nutrientFullName(this, LocalContext.current.resources)
 
+fun NutrientType.getFullName(resources: Resources): String = nutrientFullName(this, resources)
+
 /**
  * get the [R.string] resource id full name of `this` [NutrientType]
  */
-internal val NutrientType.stringResId: Int
+val NutrientType.stringResId: Int
     @StringRes
     get() = when (this) {
         NutrientType.Protein -> R.string.protein
@@ -49,3 +57,45 @@ internal val NutrientType.stringResId: Int
 
 internal fun nutrientFullName(nutrient: NutrientType, resources: Resources): String =
     resources.getString(nutrient.stringResId)
+
+fun NutrientType.defaultUnit(): MassUnit = when (this) {
+    NutrientType.Protein -> MassUnit.Gram
+
+    NutrientType.TotalCarbohydrate -> MassUnit.Gram
+    NutrientType.Fiber -> MassUnit.Gram
+    NutrientType.Sugar -> MassUnit.Gram
+    NutrientType.SugarAlcohol -> MassUnit.Gram
+    NutrientType.Starch -> MassUnit.Gram
+
+    NutrientType.TotalFat -> MassUnit.Gram
+    NutrientType.MonounsaturatedFat -> MassUnit.Gram
+    NutrientType.PolyunsaturatedFat -> MassUnit.Gram
+    NutrientType.Omega3 -> MassUnit.Gram
+    NutrientType.Omega6 -> MassUnit.Gram
+    NutrientType.SaturatedFat -> MassUnit.Gram
+    NutrientType.TransFat -> MassUnit.Gram
+    NutrientType.Cholesterol -> MassUnit.Milligram
+
+    NutrientType.Calcium -> MassUnit.Milligram
+    NutrientType.Chloride -> MassUnit.Milligram
+    NutrientType.Iron -> MassUnit.Milligram
+    NutrientType.Magnesium -> MassUnit.Milligram
+    NutrientType.Phosphorous -> MassUnit.Milligram
+    NutrientType.Potassium -> MassUnit.Milligram
+    NutrientType.Sodium -> MassUnit.Milligram
+    NutrientType.VitaminA -> MassUnit.Milligram
+    NutrientType.VitaminC -> MassUnit.Milligram
+}
+
+fun Portion.inDefaultUnits(): Double = when (this) {
+    is MassPortion -> mass.inUnitsOf(defaultUnit())
+    is VolumePortion -> volume.inUnitsOf(defaultUnit())
+}
+
+fun Portion.defaultUnitLabel(resources: Resources): String = when (this) {
+    is MassPortion -> weightUnitShortString(defaultUnit(), resources)
+    is VolumePortion -> volumeUnitShortString(defaultUnit(), resources)
+}
+
+fun MassPortion.defaultUnit(): MassUnit = MassUnit.Gram
+fun VolumePortion.defaultUnit(): VolumeUnit = VolumeUnit.Milliliter

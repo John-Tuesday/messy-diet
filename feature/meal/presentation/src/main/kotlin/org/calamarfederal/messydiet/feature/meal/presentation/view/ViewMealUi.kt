@@ -21,6 +21,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -31,6 +33,7 @@ import io.github.john.tuesday.nutrition.MassPortion
 import io.github.john.tuesday.nutrition.VolumePortion
 import io.github.john.tuesday.nutrition.scaleToPortion
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
+import org.calamarfederal.messydiet.feature.meal.presentation.R
 import org.calamarfederal.messydiet.measure.*
 import org.calamarfederal.physical.measurement.*
 
@@ -205,9 +208,11 @@ private fun AdjustableServingSize(
                 .fillMaxWidth()
                 .padding(4.dp)
         ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .semantics(true) {}) {
                 Text(
-                    text = "Serving Size",
+                    text = stringResource(id = R.string.serving_size),
                     style = labelStyle,
                     modifier = Modifier
                         .alignByBaseline()

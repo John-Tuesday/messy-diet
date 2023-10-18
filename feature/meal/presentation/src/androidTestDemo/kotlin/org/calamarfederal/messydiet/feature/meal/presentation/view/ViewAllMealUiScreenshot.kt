@@ -11,7 +11,9 @@ import org.calamarfederal.messydiet.screenshot.saveScreenshot
 import org.junit.Rule
 import org.junit.runner.RunWith
 import kotlin.test.BeforeTest
+import kotlin.test.Ignore
 import kotlin.test.Test
+
 
 object ScreenshotContent {
     val meals = listOf(
@@ -22,6 +24,7 @@ object ScreenshotContent {
 }
 
 @RunWith(AndroidJUnit4::class)
+@Ignore("Should move modules")
 class ViewAllMealUiScreenshot {
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()

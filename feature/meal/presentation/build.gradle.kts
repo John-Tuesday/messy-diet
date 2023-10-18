@@ -26,6 +26,7 @@ kotlin {
         val androidTest by getting {
             dependencies {
                 implementation(libs.bundles.compose.androidTest)
+                implementation(libs.nutrition.test)
             }
         }
 
