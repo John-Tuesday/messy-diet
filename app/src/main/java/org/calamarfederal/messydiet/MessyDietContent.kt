@@ -22,7 +22,7 @@ fun MessyDietContent(
 ) {
     MessyDietTheme {
         val context = LocalContext.current
-        val mealsGraph = remember { MealsGraphModule(context) }
+        val mealsGraph = remember { MealsGraphModule.implementation(context) }
         val bmiGraph = remember { BmiGraph(context) }
         val searchGraph = remember { SearchFoodGraphModule(context) }
         NavHost(

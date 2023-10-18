@@ -10,6 +10,9 @@ import org.calamarfederal.messydiet.feature.meal.data.MealRepository
 import org.calamarfederal.messydiet.feature.meal.data.MealRepositoryImplementation
 import org.calamarfederal.messydiet.feature.meal.data.local.SavedMealLocalDb
 
+/**
+ * DI Module
+ */
 interface FeatureMealDataModule {
     fun provideMealRepository(): MealRepository
 
@@ -21,16 +24,16 @@ interface FeatureMealDataModule {
 }
 
 
-internal class FeatureMealDataModuleImplementation(
+internal open class FeatureMealDataModuleImplementation(
     private val context: Context,
 ) : FeatureMealDataModule {
     companion object {
         internal const val DatabaseName = "savedmeallocal.db"
     }
 
-    private val ioDispatcher: CoroutineDispatcher
+    protected open val ioDispatcher: CoroutineDispatcher
         get() = Dispatchers.IO
-    private val mealLocalDb: SavedMealLocalDb by lazy {
+    protected open val mealLocalDb: SavedMealLocalDb by lazy {
         Room
             .databaseBuilder(
                 context = context,
@@ -41,7 +44,7 @@ internal class FeatureMealDataModuleImplementation(
             .build()
     }
 
-    internal fun provideMealLocalSource(): MealLocalSource = MealLocalSourceImplementation(
+    internal open fun provideMealLocalSource(): MealLocalSource = MealLocalSourceImplementation(
         db = mealLocalDb,
         dao = mealLocalDb.getSavedMealDao(),
         ioDispatcher = ioDispatcher,

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.calamarfederal.messydiet.feature.meal.data.MealRepository
 import org.calamarfederal.messydiet.feature.meal.data.model.Meal
-import org.calamarfederal.messydiet.feature.meal.presentation.FeatureMealsPresentationModule
+import org.calamarfederal.messydiet.feature.meal.presentation.di.FeatureMealsPresentationModule
 import org.calamarfederal.messydiet.measure.PortionInputState
 import org.calamarfederal.messydiet.measure.WeightInputState
 import org.calamarfederal.physical.measurement.Mass

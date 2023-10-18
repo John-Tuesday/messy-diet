@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.calamarfederal.messydiet.feature.meal.data.MealRepository
-import org.calamarfederal.messydiet.feature.meal.presentation.FeatureMealsPresentationModule
+import org.calamarfederal.messydiet.feature.meal.presentation.di.FeatureMealsPresentationModule
 import kotlin.time.Duration.Companion.seconds
 
 class ViewAllMealViewModel(

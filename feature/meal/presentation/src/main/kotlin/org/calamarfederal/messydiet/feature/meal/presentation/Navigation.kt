@@ -5,14 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
 import androidx.navigation.compose.composable
-import org.calamarfederal.messydiet.feature.meal.data.di.FeatureMealDataModule
 import org.calamarfederal.messydiet.feature.meal.presentation.create.CreateMealUi
 import org.calamarfederal.messydiet.feature.meal.presentation.create.CreateMealViewModel
+import org.calamarfederal.messydiet.feature.meal.presentation.di.FeatureMealsPresentationModule
+import org.calamarfederal.messydiet.feature.meal.presentation.di.implementation
 import org.calamarfederal.messydiet.feature.meal.presentation.view.ViewAllMealViewModel
 import org.calamarfederal.messydiet.feature.meal.presentation.view.ViewAllMealsUi
 import org.calamarfederal.messydiet.feature.meal.presentation.view.ViewMealUi
@@ -20,39 +20,9 @@ import org.calamarfederal.messydiet.feature.meal.presentation.view.ViewMealViewM
 
 private const val MEALS_GRAPH_ROUTE = "meals-graph"
 
-internal interface FeatureMealsPresentationModule : FeatureMealDataModule {
-    companion object
-}
 
-internal class FeatureMealsPresentationModuleImplementation(
-    private val dataModule: FeatureMealDataModule,
-) : FeatureMealsPresentationModule, FeatureMealDataModule by dataModule
-
-internal fun FeatureMealsPresentationModule.Companion.implementation(
-    context: Context,
-): FeatureMealsPresentationModule {
-    return FeatureMealsPresentationModuleImplementation(
-        dataModule = FeatureMealDataModule.implementation(context)
-    )
-}
-
-@Composable
-internal fun rememberFeatureMealsPresentationModule(
-    context: Context = LocalContext.current,
-): FeatureMealsPresentationModule = remember {
-    FeatureMealsPresentationModule.implementation(context = context)
-}
-
-data object MealsGraph {
-    const val route: String = MEALS_GRAPH_ROUTE
-}
-
-data class MealsGraphModule(
-    val context: Context,
-) {
-    internal val featureMealsPresentationModule: FeatureMealsPresentationModule by lazy {
-        FeatureMealsPresentationModule.implementation(context)
-    }
+abstract class MealsGraphModule {
+    internal abstract val featureMealsPresentationModule: FeatureMealsPresentationModule
 
     fun NavGraphBuilder.mealsGraph(
         navController: NavController,
@@ -63,6 +33,22 @@ data class MealsGraphModule(
             navigateToSearchRemoteMeal = navigateToSearchRemoteMeal,
             featureMealsPresentationModule = featureMealsPresentationModule,
         )
+    }
+
+    companion object {
+        fun implementation(context: Context): MealsGraphModule = MealsGraphModuleImplementation(context)
+    }
+}
+
+data object MealsGraph {
+    const val route: String = MEALS_GRAPH_ROUTE
+}
+
+internal class MealsGraphModuleImplementation(
+    private val context: Context,
+) : MealsGraphModule() {
+    override val featureMealsPresentationModule: FeatureMealsPresentationModule by lazy {
+        FeatureMealsPresentationModule.implementation(context)
     }
 }
 
